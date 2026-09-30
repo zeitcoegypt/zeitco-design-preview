@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="data.js"></script>
+<script src="rules.js"></script>
+<script src="calls.js"></script>
+<script src="shell.js"></script>
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#10231C; text-decoration:underline; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="min-height:{{ minH }};background:#FAF6EE;font-family:{{ face }};color:#3A4A43">
+  <sc-if value="{{ showTop }}" hint-placeholder-val="{{ true }}">
+  <div style="position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #E4DFD4">
+    <div style="max-width:1360px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;gap:16px">
+      <span style="font-size:16px;font-weight:700;color:#10231C;letter-spacing:.01em">Zeitco</span>
+      <span style="font-size:14px;font-weight:600;color:#1F5240;border-bottom:2px solid #1F5240;height:54px;display:flex;align-items:center">{{ L.title }}</span>
+      <span style="flex:1"></span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.signedAs }}</span>
+        <sc-for list="{{ roles }}" as="r" hint-placeholder-count="2">
+          <button type="button" onClick="{{ r.pick }}" style="height:28px;padding:0 11px;border:1px solid {{ r.edge }};border-radius:14px;background:{{ r.bg }};color:{{ r.ink }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ r.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden">
+        <button type="button" onClick="{{ setEn }}" style="border:0;height:26px;padding:0 10px;background:{{ enBg }};color:{{ enInk }};font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">EN</button>
+        <button type="button" onClick="{{ setAr }}" style="border:0;height:26px;padding:0 10px;background:{{ arBg }};color:{{ arInk }};font-family:'Noto Kufi Arabic',sans-serif;font-size:12px;font-weight:600;cursor:pointer">ع</button>
+      </div>
+      <a href="agent.dc.html" style="font-size:12px;font-weight:600;color:#1F5240;white-space:nowrap">{{ L.toAgent }}</a>
+    </div>
+  </div>
+  </sc-if>
+
+  <div style="max-width:1360px;margin:0 auto;padding:{{ pad }};display:grid;grid-template-columns:minmax(260px,360px) minmax(0,1fr);gap:14px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden">
+        <div style="padding:11px 14px;background:#FDF4F2;border-bottom:1px solid #E8B4AE;display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="min-width:0">
+            <span style="display:block;font-size:14px;font-weight:700;color:#10231C">{{ L.queueTitle }}</span>
+            <span style="display:block;font-size:11px;color:#55655D">{{ L.queueNote }}</span>
+          </span>
+          <span class="num" style="font-size:12px;font-weight:600;color:#B3261E;background:#fff;border:1px solid #E8B4AE;border-radius:999px;padding:2px 9px">{{ queueCount }}</span>
+        </div>
+        <sc-for list="{{ queue }}" as="q" hint-placeholder-count="3">
+          <button type="button" onClick="{{ q.pick }}" style="display:block;width:100%;text-align:start;border:0;border-bottom:1px solid #F4F1EA;border-inline-start:3px solid {{ q.rail }};background:{{ q.bg }};padding:10px 14px;font-family:inherit;cursor:pointer">
+            <span style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+              <span style="font-size:13px;font-weight:600;color:#10231C;min-width:0">{{ q.name }}</span>
+              <span style="font-size:11px;font-weight:600;color:{{ q.waitInk }};white-space:nowrap">{{ q.wait }}</span>
+            </span>
+            <span style="display:block;font-size:12px;color:#55655D;margin-top:2px">{{ q.line }}</span>
+            <span style="display:block;font-size:11px;color:#8A9188;margin-top:1px">{{ q.who }}</span>
+          </button>
+        </sc-for>
+        <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0;padding:16px 14px;font-size:12px;color:#8A9188">{{ queueEmpty }}</p>
+        </sc-if>
+      </section>
+
+      <sc-if value="{{ hasAnswered }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden">
+          <div style="padding:10px 14px;border-bottom:1px solid #EFEBE1">
+            <span style="display:block;font-size:14px;font-weight:700;color:#10231C">{{ L.answeredTitle }}</span>
+            <span style="display:block;font-size:11px;color:#55655D">{{ L.answeredNote }}</span>
+          </div>
+          <sc-for list="{{ answered }}" as="a" hint-placeholder-count="2">
+            <div style="padding:8px 14px;border-bottom:1px solid #F4F1EA;display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+              <span style="min-width:0">
+                <span style="display:block;font-size:13px;font-weight:600;color:#10231C">{{ a.name }}</span>
+                <span style="display:block;font-size:11px;color:#8A9188;text-wrap:pretty">{{ a.reason }}</span>
+              </span>
+              <span style="font-size:12px;font-weight:600;color:{{ a.ink }};white-space:nowrap">{{ a.what }}</span>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+    </div>
+
+    <div style="min-width:0;display:flex;flex-direction:column;gap:12px">
+      <sc-if value="{{ noPick }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:28px 20px;text-align:center">
+          <p style="margin:0;font-size:13px;color:#55655D">{{ noPick }}</p>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ ask }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:14px 16px 16px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap">
+            <h1 style="margin:0;font-size:20px;font-weight:700;color:#10231C">{{ ask.name }}</h1>
+            <span style="font-size:12px;color:#63736A">{{ ask.sub }}</span>
+          </div>
+          <p style="margin:6px 0 0;font-size:13px;color:#3A4A43;text-wrap:pretty">{{ ask.story }}</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:12px">
+            <sc-for list="{{ ask.facts }}" as="f" hint-placeholder-count="6">
+              <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;padding:9px 12px;min-width:0">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ f.label }}</div>
+                <div class="num" style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:{{ f.ink }};margin-top:3px">{{ f.value }}</div>
+                <div style="font-size:11px;color:#8A9188;margin-top:1px;text-wrap:pretty">{{ f.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ ask.hasRounds }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:12px">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ L.rounds }}</div>
+              <sc-for list="{{ ask.rounds }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid #F4F1EA;font-size:12px">
+                  <span style="color:#55655D">{{ r.who }}</span>
+                  <span class="num" style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ r.ink }}">{{ r.amount }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </section>
+
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:14px 16px 16px">
+          <h2 style="margin:0 0 2px;font-size:15px;font-weight:700;color:#10231C">{{ L.answerTitle }} <span style="color:#B3261E">*</span></h2>
+          <p style="margin:0 0 10px;font-size:12px;color:#55655D">{{ L.answerNote }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ ask.kinds }}" as="k" hint-placeholder-count="3">
+              <button type="button" onClick="{{ k.pick }}" style="min-height:36px;padding:6px 16px;border:1px solid {{ k.edge }};border-radius:18px;background:{{ k.bg }};color:{{ k.ink }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ k.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ ask.whatNext }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:8px 0 0;font-size:12px;color:#55655D;text-wrap:pretty">{{ ask.whatNext }}</p>
+          </sc-if>
+          <sc-if value="{{ ask.showFigure }}" hint-placeholder-val="{{ false }}">
+            <label style="display:flex;flex-direction:column;gap:3px;margin-top:12px;max-width:260px">
+              <span style="font-size:12px;font-weight:600;color:#55655D">{{ L.figureLabel }} <span style="color:#B3261E">*</span></span>
+              <input type="text" inputmode="decimal" value="{{ ask.figure }}" onChange="{{ ask.setFigure }}" placeholder="{{ ask.figureHint }}" style="height:36px;box-sizing:border-box;border:1px solid {{ ask.figureEdge }};border-radius:10px;padding:0 11px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#10231C;background:#fff">
+              <span style="font-size:11px;color:{{ ask.figureInk }}">{{ ask.figureNote }}</span>
+            </label>
+          </sc-if>
+          <sc-if value="{{ ask.showReason }}" hint-placeholder-val="{{ false }}">
+            <label style="display:flex;flex-direction:column;gap:3px;margin-top:12px">
+              <span style="font-size:12px;font-weight:600;color:#55655D">{{ L.reasonLabel }} <span style="color:#B3261E">*</span></span>
+              <textarea rows="2" value="{{ ask.reason }}" onChange="{{ ask.setReason }}" placeholder="{{ L.reasonHint }}" style="box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;padding:8px 11px;font-family:inherit;font-size:13px;color:#10231C;background:#fff;resize:vertical"></textarea>
+              <span style="font-size:11px;color:#8A9188">{{ L.reasonNote }}</span>
+            </label>
+          </sc-if>
+        </section>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ bar }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:6;padding:0 20px 12px;pointer-events:none">
+      <div style="max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:{{ bar.bg }};border:1px solid {{ bar.edge }};border-radius:12px;padding:11px 16px;box-shadow:0 -4px 18px rgba(16,35,28,.10);pointer-events:auto">
+        <div style="min-width:0;flex:1">
+          <div style="font-size:13px;font-weight:700;color:{{ bar.ink }};text-wrap:pretty">{{ bar.title }}</div>
+          <div style="font-size:12px;color:#3A4A43;text-wrap:pretty">{{ bar.line }}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <sc-if value="{{ bar.second }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ bar.second.go }}" style="height:38px;padding:0 16px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ bar.second.label }}</button>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:flex-end">
+            <button type="button" onClick="{{ bar.main.go }}" disabled="{{ bar.main.off }}" style="height:38px;padding:0 18px;border:0;border-radius:10px;background:{{ bar.main.bg }};color:{{ bar.main.ink }};font-family:inherit;font-size:13px;font-weight:600;cursor:{{ bar.main.cursor }};white-space:nowrap">{{ bar.main.label }}</button>
+            <sc-if value="{{ bar.main.why }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:11px;color:#B3261E;margin-top:3px">{{ bar.main.why }}</span>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: null, sel: null, kind: "", reason: "", figure: "", sure: false, done: null, role: "senior" };
+
+  componentDidMount() {
+    const S = window.ZSHELL;
+    this.setState({ lang: S ? S.lang() : "en" });
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  // Added: shown inside the Senior / Financial Manager screen (embedded), which
+  // owns the top bar, the language and who is signed in.
+  get lang() { return (this.props.embedded && this.props.lang) || this.state.lang || "en"; }
+  get role() { return (this.props.embedded && this.props.role) || this.state.role; }
+  setLang(l) { if (window.ZSHELL) window.ZSHELL.setLang(l); this.setState({ lang: l }); }
+  t(v) { return v == null ? "" : typeof v === "string" ? v : (this.lang === "ar" ? v.ar : v.en) || v.en || ""; }
+
+  // Where the shop is now: its agreed price, or for a Lead the last figure we put to them.
+  nowAt(s) {
+    if (s.agreedPrice) return parseFloat(s.agreedPrice);
+    const ours = (s.rounds || []).filter((r) => r.side !== "them" && r.amount).slice(-1)[0];
+    return ours ? parseFloat(ours.amount) : null;
+  }
+
+  pick(id) { this.setState({ sel: id, kind: "", reason: "", figure: "", sure: false, done: null }); }
+
+  decide(s, ceiling) {
+    const D = window.ZEITCO, st = this.state;
+    const by = this.role === "financial" ? { en: "Financial Manager", ar: "المدير المالي" } : { en: "Senior Manager", ar: "المدير العام" };
+    const decision = { kind: st.kind === "approve" ? "approved" : st.kind === "counter" ? "counter" : "refused",
+      by, reason: st.reason.trim(), on: D.asDate(window.ZEITCO.today.en), asked: s.askedPrice };
+    const f = { decision, withApprover: null };
+    if (st.kind === "approve") Object.assign(f, { price: "counter_offered", counterPrice: Number(s.askedPrice).toFixed(2), counterOn: D.asDate(window.ZEITCO.today.en) });
+    else if (st.kind === "counter") Object.assign(f, { price: "counter_offered", counterPrice: parseFloat(st.figure).toFixed(2), counterOn: D.asDate(window.ZEITCO.today.en) });
+    else Object.assign(f, { price: "refused", refusedOn: D.asDate(window.ZEITCO.today.en), atRisk: s.stage === "supplier" ? true : null });
+    D.journal.add({ op: "patch", shop: s.id, fields: f });
+    const owner = D.ownerNow(s);
+    this.setState({ sure: false, done: { id: s.id, name: this.t(s.name), owner: this.t(owner), kind: st.kind } });
+  }
+
+  renderVals() {
+    const D = window.ZEITCO, R = window.ZRULES;
+    const ar = this.lang === "ar", st = this.state, t = (v) => this.t(v);
+    const RED = "#B3261E", GREEN = "#1F5240", INK = "#10231C", MUTED = "#55655D", FAINT = "#8A9188";
+    const base = {
+      showTop: !this.props.embedded, minH: this.props.embedded ? "0" : "100vh", pad: this.props.embedded ? "0 0 110px" : "16px 20px 110px",
+      dir: ar ? "rtl" : "ltr", face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      setEn: () => this.setLang("en"), setAr: () => this.setLang("ar"),
+      enBg: ar ? "#fff" : GREEN, enInk: ar ? MUTED : "#fff", arBg: ar ? GREEN : "#fff", arInk: ar ? "#fff" : MUTED,
+      L: {
+        title: ar ? "الموافقات" : "Approvals",
+        signedAs: ar ? "بصفتي (للاختبار)" : "Signed in as (testing)",
+        toAgent: ar ? "→ شاشة الموظف (للاختبار)" : "← Agent screen (testing)",
+        queueTitle: ar ? "بانتظار قرار" : "Waiting For A Decision",
+        queueNote: ar ? "الأقدم أولاً · أيّنا يراه أولاً يجيب" : "Oldest first · whichever of us sees it first answers",
+        answeredTitle: ar ? "أُجيب في هذه الجلسة" : "Answered This Session",
+        answeredNote: ar ? "عاد كل منها إلى موظفه كمكالمة اليوم." : "Each went back to its agent as a call today.",
+        rounds: ar ? "جولات التفاوض" : "Negotiation rounds",
+        answerTitle: ar ? "قراري" : "My Answer",
+        answerNote: ar ? "يعود إلى الموظف كمكالمة «الإدارة أجابت — أبلِغهم»، ومعه السبب." : "It goes back to the agent as a \"Management answered — tell them\" call, with the reason.",
+        figureLabel: ar ? "أقصى ما يعرضه الموظف (ج.م للكجم)" : "The most the agent may offer (EGP a Kg)",
+        reasonLabel: ar ? "السبب" : "Reason",
+        reasonHint: ar ? "مثلاً: كمية ثابتة منذ سنة، السعر يستحق" : "e.g. Steady volume for a year, worth the price",
+        reasonNote: ar ? "يراه الموظف ويبقى في سجل المحل." : "The agent sees it, and it stays on the outlet's record.",
+      },
+      roles: [["senior", ar ? "المدير العام" : "Senior Manager"], ["financial", ar ? "المدير المالي" : "Financial Manager"]].map(([k, l]) => {
+        const on = this.role === k;
+        return { label: l, bg: on ? GREEN : "#fff", ink: on ? "#fff" : INK, edge: on ? GREEN : "#8A9188", pick: () => this.setState({ role: k }) };
+      }),
+    };
+    if (!D || !R) return Object.assign(base, { queue: [], queueCount: "0", queueEmpty: "Loading…", answered: [], hasAnswered: false, noPick: "", ask: null, bar: null });
+
+    const ceiling = R.ceiling;
+    const waitDays = (s) => { const n = D.dayNumber(s.askedOn); return n === null ? 0 : Math.max(0, D.todayNumber - n); };
+    const q = D.shops.filter((s) => s.price === "increase_requested").sort((a, b) => waitDays(b) - waitDays(a));
+    const sel = st.sel && D.byId(st.sel) && D.byId(st.sel).price === "increase_requested" ? D.byId(st.sel) : null;
+    const queue = q.map((s) => {
+      const now = this.nowAt(s), w = waitDays(s), on = sel && sel.id === s.id;
+      return {
+        name: t(s.name), pick: () => this.pick(s.id),
+        bg: on ? "#F1F6F3" : "#fff", rail: on ? GREEN : "transparent",
+        wait: w === 0 ? (ar ? "اليوم" : "today") : (ar ? "منذ " + w + " يوم" : w + (w === 1 ? " day" : " days")),
+        waitInk: w >= 2 ? RED : MUTED,
+        line: (ar ? "يطلبون " : "They ask ") + s.askedPrice + (now ? (ar ? " · الآن " : " · now ") + now.toFixed(2) : "")
+          + " · " + t(D.label.stage[s.stage]),
+        who: (ar ? "الموظف " : "Agent ") + t(D.ownerNow(s)),
+      };
+    });
+
+    const answered = D.shops.filter((s) => s.decision && s.decision.on && s.price !== "increase_requested").map((s) => {
+      const k = s.decision.kind;
+      return { name: t(s.name), reason: t(s.decision.by) + " · " + (s.decision.reason || ""),
+        what: k === "approved" ? (ar ? "موافقة " : "Approved ") + s.counterPrice : k === "counter" ? (ar ? "مقابل " : "Counter ") + s.counterPrice : (ar ? "رفض" : "Refused"),
+        ink: k === "refused" ? RED : GREEN };
+    });
+
+    let ask = null, bar = null;
+    if (sel) {
+      const s = sel, asked = parseFloat(s.askedPrice), now = this.nowAt(s), u = D.usual ? D.usual(s) : null;
+      const month = u && u.month ? u.month : (s.volume || 0);
+      const hist = D.history ? D.history(s) : [];
+      const life = hist.reduce((x, c) => x + c.kg, 0);
+      const ref = now || ceiling;
+      const extra = month ? Math.round((asked - ref) * month) : null;
+      const figN = parseFloat(st.figure);
+      const figOk = st.kind !== "counter" || (figN > (now || 0) + 0.0001 && figN < asked - 0.0001);
+      const reasonOk = st.reason.trim().length >= 3;
+      const ready = !!st.kind && reasonOk && figOk;
+      const K = { approve: [ar ? "موافقة على " + s.askedPrice : "Approve " + s.askedPrice, GREEN],
+        counter: [ar ? "سعر مقابل" : "Counter", "#2C5578"], refuse: [ar ? "رفض" : "Refuse", RED] };
+      ask = {
+        name: t(s.name),
+        sub: s.id + " · " + t(D.label.stage[s.stage]) + " · " + t(s.area) + (s.collectionDay ? " · " + t(s.collectionDay) : ""),
+        story: ar
+          ? "طلبوا " + s.askedPrice + " ج.م للكجم في " + t(s.askedOn) + "، فوق سقف الموظف " + ceiling.toFixed(2) + ". رفعه " + t(D.ownerNow(s)) + " ولم يردّ عليهم بعد."
+          : "They asked for " + s.askedPrice + " EGP a Kg on " + t(s.askedOn) + ", over the agent's ceiling of " + ceiling.toFixed(2) + ". " + t(D.ownerNow(s)) + " sent it up and has not answered them yet.",
+        facts: [
+          { label: ar ? "يطلبون" : "They Ask", value: s.askedPrice, ink: RED, note: ar ? "ج.م للكجم" : "EGP a Kg" },
+          { label: s.agreedPrice ? (ar ? "المتفق الآن" : "Agreed Now") : (ar ? "آخر عرض لنا" : "Our Last Offer"), value: now ? now.toFixed(2) : "—", ink: INK,
+            note: now ? (ar ? "الفرق +" : "gap +") + (asked - now).toFixed(2) : (ar ? "لا عرض بعد" : "no offer yet") },
+          { label: ar ? "سقف الموظف" : "Agent Ceiling", value: ceiling.toFixed(2), ink: INK, note: ar ? "إعداد الإدارة" : "management setting" },
+          { label: ar ? "المعتاد شهرياً" : "Usual A Month", value: month ? month.toLocaleString("en-US") + (ar ? " كجم" : " Kg") : "—", ink: INK,
+            note: u && u.month ? (ar ? "من الطلبات الفعلية" : "from actual orders") : s.volume ? (ar ? "ما قالوه في المسح" : "what they said on the survey") : (ar ? "غير معروف" : "not known") },
+          { label: ar ? "الكلفة الإضافية شهرياً" : "Extra Cost A Month", value: extra !== null ? extra.toLocaleString("en-US") : "—", ink: INK,
+            note: ar ? "ج.م، إن وافقنا على طلبهم" : "EGP, if we give them their ask" },
+          { label: ar ? "منذ البداية" : "Lifetime", value: life ? life.toLocaleString("en-US") + (ar ? " كجم" : " Kg") : "—", ink: INK,
+            note: hist.length ? hist.length + (ar ? " طلباً منفذاً" : " orders executed") : (ar ? "لم يورّدوا بعد" : "not supplying yet") },
+        ],
+        hasRounds: (s.rounds || []).length > 0,
+        rounds: (s.rounds || []).map((r) => ({ who: (r.side === "them" ? (ar ? "هم" : "Them") : (ar ? "نحن" : "Us")) + (r.when ? " · " + t(r.when) : ""),
+          amount: r.amount, ink: r.side === "them" ? RED : INK })),
+        kinds: ["approve", "counter", "refuse"].map((k) => {
+          const on = st.kind === k;
+          return { label: K[k][0], bg: on ? K[k][1] : "#fff", ink: on ? "#fff" : K[k][1], edge: K[k][1],
+            pick: () => this.setState({ kind: k, sure: false }) };
+        }),
+        whatNext: st.kind === "approve"
+          ? (ar ? "يبلغهم " + t(D.ownerNow(s)) + " بالموافقة. وإن قبلوا يسري " + s.askedPrice + (s.stage === "lead" ? " ويرتّب التحصيل." : " من التحصيل القادم.")
+                : t(D.ownerNow(s)) + " tells them it's approved. Once they accept, " + s.askedPrice + (s.stage === "lead" ? " is agreed and he sets the collection up." : " is live from the next collection."))
+          : st.kind === "counter"
+          ? (ar ? "يعرض عليهم الموظف رقمك. وإن رفضوا يعود إليك." : "The agent puts your figure to them. If they refuse, it comes back to you.")
+          : st.kind === "refuse"
+          ? (ar ? "يبلغهم الموظف أن " + (s.agreedPrice ? "السعر القائم " + s.agreedPrice + " باقٍ" : "لا زيادة") + (s.stage === "supplier" ? "، ويُعلَّم المحل معرّضاً للفقد." : ".")
+                : "The agent tells them " + (s.agreedPrice ? "the " + s.agreedPrice + " that stands stays" : "there is no increase") + (s.stage === "supplier" ? ", and the shop is marked at risk." : "."))
+          : "",
+        showFigure: st.kind === "counter",
+        figure: st.figure,
+        setFigure: (e) => this.setState({ figure: String(e.target.value).replace(/[^0-9.]/g, "").slice(0, 5), sure: false }),
+        figureHint: now ? ((now + asked) / 2).toFixed(2) : "",
+        figureEdge: st.figure && !figOk ? RED : "#8A9188",
+        figureInk: st.figure && !figOk ? RED : FAINT,
+        figureNote: (ar ? "بين " : "Between ") + (now ? now.toFixed(2) : "0") + (ar ? " و" : " and ") + s.askedPrice + (ar ? "، دون أن يساويهما." : ", not equal to either."),
+        showReason: !!st.kind,
+        reason: st.reason,
+        setReason: (e) => this.setState({ reason: e.target.value, sure: false }),
+      };
+      const kindWord = st.kind ? K[st.kind][0] + (st.kind === "counter" && st.figure ? " " + st.figure : "") : "";
+      if (st.sure) bar = { bg: "#FDF4F2", edge: "#E8B4AE", ink: RED,
+        title: (ar ? "متأكد؟ " : "Are you sure? ") + kindWord + (ar ? " لـ" : " for ") + t(s.name),
+        line: ar ? "لا يمكن التراجع عن هذا. يذهب إلى " + t(D.ownerNow(s)) + " الآن." : "This cannot be undone. It goes to " + t(D.ownerNow(s)) + " now.",
+        main: { label: ar ? "نعم، أرسله" : "Yes, send it", go: () => this.decide(s, ceiling), off: false, bg: RED, ink: "#fff", cursor: "pointer", why: "" },
+        second: { label: ar ? "رجوع" : "Go back", go: () => this.setState({ sure: false }) } };
+      else bar = { bg: "#fff", edge: "#E4DFD4", ink: INK,
+        title: t(s.name) + (kindWord ? " · " + kindWord : ""),
+        line: ready ? (ar ? "جاهز." : "Ready.") : (ar ? "اختر قراراً واكتب السبب." : "Pick an answer and give a reason."),
+        main: { label: ar ? "تأكيد" : "Confirm", go: ready ? () => this.setState({ sure: true }) : () => {}, off: !ready,
+          bg: ready ? GREEN : "#D5DCD7", ink: ready ? "#fff" : "#63736A", cursor: ready ? "pointer" : "default",
+          why: ready ? "" : !st.kind ? (ar ? "اختر قراراً" : "Pick an answer") : !figOk ? (ar ? "رقم غير صالح" : "Check the figure") : (ar ? "اكتب السبب" : "Give a reason") },
+        second: null };
+    } else if (st.done) {
+      const nx = q[0];
+      bar = { bg: "#EEF6F2", edge: "#BFD8C9", ink: GREEN,
+        title: (ar ? "أُرسل إلى " : "Sent to ") + st.done.owner + " · " + st.done.name,
+        line: ar ? "يظهر له الآن كمكالمة اليوم." : "It shows for him now as a call today.",
+        main: nx ? { label: (ar ? "الطلب التالي: " : "Next ask: ") + t(nx.name), go: () => this.pick(nx.id), off: false, bg: GREEN, ink: "#fff", cursor: "pointer", why: "" }
+          : { label: ar ? "لا شيء آخر ينتظر" : "Nothing else waiting", go: () => {}, off: true, bg: "#D5DCD7", ink: "#63736A", cursor: "default", why: "" },
+        second: null };
+    }
+
+    return Object.assign(base, {
+      queue, queueCount: String(q.length),
+      queueEmpty: q.length ? "" : (ar ? "لا شيء ينتظر قراراً." : "Nothing is waiting for a decision."),
+      answered, hasAnswered: answered.length > 0,
+      noPick: sel ? "" : q.length ? (ar ? "اختر طلباً من القائمة." : "Pick an ask from the list.") : (ar ? "لا طلبات. عندما يطلب محل فوق سقف الموظف يظهر هنا." : "No asks. When a shop asks for more than the agent's ceiling, it shows here."),
+      ask, bar,
+    });
+  }
+}
+</script>
+</body>
+</html>

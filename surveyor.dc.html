@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="data.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; height:100%; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; -webkit-text-size-adjust:100%; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+  input, select, button, textarea { font-family:inherit; }
+</style>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#10231C"></rect><path d="M50 28C50 28 34 44 34 55a16 16 0 0 0 32 0c0-11-16-27-16-27Z" fill="#7CC79A"></path><path d="M44 58a7 7 0 0 0 5 7" stroke="#10231C" stroke-width="3.4" stroke-linecap="round" fill="none"></path></svg></template>
+</helmet>
+<div dir="{{ dir }}" style="min-height:100vh;display:flex;flex-direction:column;background:#FAF6EE;max-width:560px;margin:0 auto;font-family:{{ face }}">
+
+  <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <sc-if value="{{ canGoBack }}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{ back }}" style="flex-shrink:0;min-height:28px;padding:3px 9px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#1F5240;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">←</button>
+    </sc-if>
+    <sc-if value="{{ atStart }}" hint-placeholder-val="{{ true }}">
+      <img src="brand/zeitco-drop.svg" alt="" height="22" style="display:block;width:auto;flex-shrink:0">
+    </sc-if>
+    <span style="flex:1;min-width:0;font-size:17px;font-weight:700;color:#10231C">{{ title }}</span>
+    <sc-if value="{{ onSurveyFlow }}" hint-placeholder-val="{{ true }}">
+      <button type="button" onClick="{{ restart }}" style="flex-shrink:0;border:0;background:transparent;padding:0;font-family:inherit;font-size:13px;font-weight:600;color:#1F5240;cursor:pointer">{{ cancelLabel }}</button>
+    </sc-if>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 14px;background:#F1F6F3;border-bottom:1px solid #EFEBE1">
+      <span style="font-size:12px;font-weight:600;color:#1F5240">{{ meWho }}</span>
+      <span style="font-size:11px;color:#55655D">{{ meRole }}</span>
+    </div>
+
+  <div style="display:flex;gap:1px;background:#fff;border-bottom:1px solid #E4DFD4;overflow-x:auto;position:sticky;top:51px;z-index:4">
+    <sc-for list="{{ phoneTabs }}" as="tab" hint-placeholder-count="4">
+      <button type="button" onClick="{{ tab.pick }}" style="border:0;border-bottom:2px solid {{ tab.edge }};background:transparent;padding:9px 13px 8px;font-family:inherit;font-size:13px;font-weight:600;color:{{ tab.color }};white-space:nowrap;cursor:pointer">{{ tab.label }}</button>
+    </sc-for>
+    <span style="margin-inline-start:auto;width:1px;align-self:center;height:18px;background:#E4DFD4;flex-shrink:0"></span>
+    <button type="button" onClick="{{ askLogout }}" style="flex-shrink:0;border:0;background:transparent;padding:9px 13px 8px;font-family:inherit;font-size:13px;font-weight:600;color:#63736A;white-space:nowrap;cursor:pointer">{{ w74 }}</button>
+  </div>
+
+  <sc-if value="{{ confirmLogout }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#FDF4F2;border-bottom:1px solid #E8B4AE;padding:10px 12px;display:flex;align-items:center;gap:9px">
+      <span style="flex:1;min-width:0;font-size:13px;color:#B3261E;text-wrap:pretty">{{ w26 }}</span>
+      <a href="Start.dc.html" style="flex-shrink:0;display:flex;align-items:center;height:34px;padding:0 14px;border-radius:9px;background:#B3261E;color:#fff;font-size:13px;font-weight:600;text-decoration:none">{{ w74 }}</a>
+      <button type="button" onClick="{{ cancelLogout }}" style="flex-shrink:0;height:34px;padding:0 14px;border:1px solid #8A9188;border-radius:9px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ w86 }}</button>
+    </div>
+  </sc-if>
+
+  <div style="flex:1;padding:12px;display:flex;flex-direction:column;gap:10px">
+
+    <div style="display:flex;align-items:center;gap:8px;background:{{ netBg }};border:1px solid {{ netBorder }};border-radius:9px;padding:8px 11px">
+      <span style="width:7px;height:7px;border-radius:999px;background:{{ netBorder }};flex-shrink:0"></span>
+      <span style="flex:1;min-width:0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ netNote }}</span>
+      <button type="button" onClick="{{ toggleOffline }}" style="flex-shrink:0;min-height:24px;padding:3px 9px;border:1px solid #8A9188;border-radius:7px;background:#fff;color:#55655D;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">{{ netToggle }}</button>
+    </div>
+
+    <sc-if value="{{ onPreleads }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+        <div style="padding:10px 13px;border-bottom:1px solid #EFEBE1">
+          <div style="font-size:15px;font-weight:700;color:#10231C">{{ w27 }}</div>
+          <p style="margin:2px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ w4 }}</p>
+        </div>
+        <sc-for list="{{ preleads }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid #EFEBE1">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:15px;font-weight:600;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</div>
+              <div style="font-size:12px;color:#63736A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.meta }}</div>
+            </div>
+            <button type="button" onClick="{{ p.start }}" style="flex-shrink:0;min-height:34px;padding:5px 13px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ p.action }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ onRevisits }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+        <div style="padding:10px 13px;border-bottom:1px solid #EFEBE1">
+          <div style="font-size:15px;font-weight:700;color:#10231C">{{ w54 }}</div>
+          <p style="margin:2px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ w6 }}</p>
+        </div>
+        <sc-for list="{{ revisits }}" as="r" hint-placeholder-count="4">
+          <div style="padding:10px 13px;border-bottom:1px solid #EFEBE1;background:{{ r.rowBg }}">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:baseline;gap:7px">
+                  <span style="font-size:15px;font-weight:600;color:#10231C;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                  <span style="flex-shrink:0;font-size:11px;font-weight:600;color:{{ r.pillColor }}">{{ r.pill }}</span>
+                </div>
+                <div style="font-size:12px;color:#63736A;text-wrap:pretty">{{ r.meta }}</div>
+              </div>
+              <sc-if value="{{ r.closed }}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{ r.open }}" style="flex-shrink:0;min-height:34px;padding:5px 13px;border:1px solid #8A9188;border-radius:9px;background:#fff;color:#1F5240;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ r.action }}</button>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ r.answered }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#EEF6F2;border:1px solid #BFD8C9;border-radius:10px;padding:8px 11px 9px;margin-top:8px">
+                <div style="font-size:12px;font-weight:700;color:#1F5240">{{ w32 }}</div>
+                <div style="font-size:12px;color:#3A4A43;margin-top:3px;text-wrap:pretty">{{ r.answered }}</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ r.open2 }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;padding:9px 11px 11px;margin-top:8px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w16 }}</div>
+                <p style="margin:4px 0 9px;font-size:13px;color:#10231C;text-wrap:pretty">{{ r.asked }}</p>
+
+                <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;padding-bottom:3px;border-bottom:1px solid #EFEBE1">{{ w57 }}</div>
+                <sc-for list="{{ r.onFile }}" as="f" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:4px 0">
+                    <span style="font-size:12px;color:#63736A;flex-shrink:0">{{ f.label }}</span>
+                    <span class="num" style="min-width:0;font-size:13px;font-weight:500;text-align:end;color:{{ f.color }};text-wrap:pretty">{{ f.value }}</span>
+                  </div>
+                </sc-for>
+
+                <label style="display:block;margin-top:9px">
+                  <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ r.fixLabel }}</span>
+                  <textarea rows="3" value="{{ revisitNote }}" onChange="{{ setRevisitNote }}" placeholder="{{ r.fixHint }}" style="width:100%;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:8px 10px;font-family:inherit;font-size:14px;color:#10231C;resize:vertical"></textarea>
+                </label>
+                <div style="display:flex;gap:7px;margin-top:8px">
+                  <button type="button" onClick="{{ r.send }}" style="flex:1;height:42px;border:0;border-radius:10px;background:{{ revisitSendBg }};color:{{ revisitSendColor }};font-family:inherit;font-size:13px;font-weight:600;cursor:{{ revisitSendCursor }}">{{ w28 }}</button>
+                  <button type="button" onClick="{{ closeRevisit }}" style="flex:1;height:42px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ w77 }}</button>
+                </div>
+                <p style="margin:7px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ r.footNote }}</p>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ onMe }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:11px 13px 13px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+          <span style="font-size:15px;font-weight:700;color:#10231C">{{ meWord }}</span>
+          <span style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden;flex-shrink:0">
+            <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+              <button type="button" onClick="{{ l.pick }}" style="border:0;height:28px;padding:0 12px;background:{{ l.bg }};color:{{ l.color }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ l.label }}</button>
+            </sc-for>
+          </span>
+        </div>
+        <sc-for list="{{ meRows }}" as="m" hint-placeholder-count="6">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #F4F1EA">
+            <span style="font-size:13px;color:#55655D;min-width:0">{{ m.label }}</span>
+            <span class="num" style="font-size:14px;font-weight:600;color:#10231C;flex-shrink:0;text-align:end">{{ m.value }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCheck }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <p style="margin:0;font-size:12px;color:#55655D;text-wrap:pretty">{{ w3 }}</p>
+        <input type="text" value="{{ query }}" onChange="{{ setQuery }}" placeholder="Shop name" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C">
+        <button type="button" onClick="{{ runCheck }}" disabled="{{ noQuery }}" style="width:100%;height:46px;border:0;border-radius:10px;background:{{ checkBg }};color:{{ checkColor }};font-family:inherit;font-size:17px;font-weight:600;cursor:{{ checkCursor }}">{{ w83 }}</button>
+        <div style="background:#E8EEF4;border-radius:9px;padding:9px 11px;font-size:12px;color:#2C5578">Searching <strong style="font-weight:600">{{ w58 }}</strong> only — where you are checked in.</div>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:0;font-size:12px;color:#63736A;text-wrap:pretty">{{ checkHint }}</p>
+        </sc-if>
+        <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #B3261E;border-radius:10px;padding:11px 13px">
+          <div style="font-size:13px;font-weight:600;color:#B3261E">{{ w23 }}</div>
+          <p style="margin:4px 0 9px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ w5 }}</p>
+          <div style="border-top:1px solid #EFEBE1;padding:8px 0">
+            <div style="font-size:15px;font-weight:600;color:#10231C">{{ w38 }}</div>
+            <div style="font-size:12px;color:#63736A">{{ w13 }}</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button type="button" onClick="{{ stopSurvey }}" style="flex:1;height:44px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#B3261E;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ w65 }}</button>
+            <button type="button" onClick="{{ next }}" style="flex:1;height:44px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-size:15px;font-weight:600">{{ w33 }}</button>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ stopped }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FBEAE9;border:1px solid #B3261E;border-radius:10px;padding:11px 13px">
+            <div style="font-size:14px;font-weight:700;color:#B3261E">{{ t_stoppedTitle }}</div>
+            <p style="margin:4px 0 10px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_stoppedBody }}</p>
+            <button type="button" onClick="{{ resumeCheck }}" style="width:100%;height:44px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ w34 }}</button>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRecord }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button type="button" onClick="{{ closeRecord }}" style="align-self:flex-start;border:0;background:transparent;padding:0;font-family:inherit;font-size:13px;font-weight:600;color:#1F5240;cursor:pointer">{{ w43 }}</button>
+
+        <div style="background:#fff;border:1px solid #EFEBE1;border-radius:11px;padding:11px 13px 12px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:9px">
+            <span style="font-size:17px;font-weight:700;color:#10231C;min-width:0;text-wrap:pretty">{{ openRecord.shop }}</span>
+            <span style="font-size:12px;font-weight:600;color:{{ openRecord.stateColor }};flex-shrink:0">{{ openRecord.state }}</span>
+          </div>
+          <p style="margin:3px 0 0;font-size:12px;color:#63736A"><span class="num">{{ openRecord.ref }}</span> · surveyed {{ openRecord.at }}</p>
+        </div>
+
+        <div style="background:#fff;border:1px solid #EFEBE1;border-radius:11px;padding:11px 13px 12px">
+          <sc-for list="{{ openRecord.groups }}" as="g" hint-placeholder-count="4">
+            <div style="margin-bottom:9px">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;padding-bottom:3px;border-bottom:1px solid #EFEBE1">{{ g.head }}</div>
+              <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:4px 0">
+                  <span style="font-size:12px;color:#63736A;flex-shrink:0">{{ r.label }}</span>
+                  <span style="min-width:0;font-size:13px;font-weight:500;text-align:end;color:{{ r.color }};text-wrap:pretty">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ openRecord.asked }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FDF4F2;border:1px solid #E8B4AE;border-radius:11px;padding:11px 13px">
+            <div style="font-size:13px;font-weight:700;color:#B3261E">{{ openRecord.askedTitle }}</div>
+            <p style="margin:4px 0 0;font-size:12px;color:#B3261E;text-wrap:pretty">{{ openRecord.asked }}</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ openRecord.editing }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #8A9188;border-radius:11px;padding:11px 13px 12px">
+            <div style="font-size:13px;font-weight:700;color:#10231C">{{ w17 }}</div>
+            <p style="margin:3px 0 8px;font-size:12px;color:#63736A;text-wrap:pretty">{{ openRecord.editNote }}</p>
+            <textarea rows="3" value="{{ editNote }}" onChange="{{ setEditNote }}" placeholder="e.g. the mobile is 0100 1234568, I typed a 7" style="width:100%;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:8px 10px;font-family:inherit;font-size:14px;color:#10231C;resize:vertical"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button type="button" onClick="{{ openRecord.send }}" style="flex:1;height:44px;border:0;border-radius:10px;background:{{ editSendBg }};color:{{ editSendColor }};font-family:inherit;font-size:14px;font-weight:600;cursor:{{ editSendCursor }}">{{ openRecord.sendLabel }}</button>
+              <button type="button" onClick="{{ closeEdit }}" style="flex:1;height:44px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ w77 }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ openRecord.canEdit }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ openRecord.edit }}" style="width:100%;height:46px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:#1F5240;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ w44 }}</button>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isToday }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#E4DFD4;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+          <sc-for list="{{ dayFigures }}" as="f" hint-placeholder-count="3">
+            <div style="background:#fff;padding:9px 11px 10px;min-width:0">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+              <div class="num" style="font-size:22px;font-weight:600;color:{{ f.color }};line-height:1;margin-top:4px">{{ f.value }}</div>
+              <div style="font-size:11px;color:#8A9188;margin-top:3px;text-wrap:pretty">{{ f.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background:#fff;border:1px solid #EFEBE1;border-radius:11px;padding:11px 13px 12px">
+          <h3 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#10231C">{{ dayTitle }}</h3>
+          <p style="margin:0 0 9px;font-size:12px;color:#63736A;text-wrap:pretty">{{ dayNote }}</p>
+          <sc-for list="{{ daySurveys }}" as="d" hint-placeholder-count="4">
+            <button type="button" onClick="{{ d.open }}" style="display:block;width:100%;text-align:start;border:1px solid {{ d.border }};background:{{ d.bg }};border-radius:10px;padding:8px 11px 9px;margin-bottom:7px;font-family:inherit;cursor:pointer">
+              <span style="display:flex;align-items:baseline;justify-content:space-between;gap:9px">
+                <span style="font-size:14px;font-weight:600;color:#10231C;min-width:0;text-wrap:pretty">{{ d.shop }}</span>
+                <span class="num" style="font-size:12px;color:#8A9188;flex-shrink:0">{{ d.at }}</span>
+              </span>
+              <span style="display:flex;align-items:baseline;justify-content:space-between;gap:9px;margin-top:3px">
+                <span class="num" style="font-size:12px;color:#63736A;min-width:0">{{ d.ref }}</span>
+                <span style="font-size:12px;font-weight:600;color:{{ d.stateColor }};flex-shrink:0">{{ d.state }}</span>
+              </span>
+              <span style="display:block;font-size:12px;color:#55655D;margin-top:3px;text-wrap:pretty">{{ d.detail }}</span>
+              <sc-if value="{{ d.asked }}" hint-placeholder-val="{{ false }}">
+                <span style="display:block;font-size:12px;font-weight:600;color:#B3261E;margin-top:5px;text-wrap:pretty">{{ d.asked }}</span>
+              </sc-if>
+            </button>
+          </sc-for>
+          <button type="button" onClick="{{ goSurvey }}" style="width:100%;height:46px;border:0;border-radius:11px;background:#1F5240;color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-top:3px">{{ w29 }}</button>
+        </div>
+
+        <div style="background:#fff;border:1px solid #EFEBE1;border-radius:11px;padding:11px 13px 12px">
+          <h3 style="margin:0 0 8px;font-size:13px;font-weight:700;color:#10231C">{{ stoppedTitle }}</h3>
+          <sc-for list="{{ stopped }}" as="d" hint-placeholder-count="1">
+            <div style="border:1px solid #EFEBE1;background:#F7F4EE;border-radius:10px;padding:8px 11px 9px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:9px">
+                <span style="font-size:14px;font-weight:600;color:#10231C;min-width:0;text-wrap:pretty">{{ d.shop }}</span>
+                <span class="num" style="font-size:12px;color:#8A9188;flex-shrink:0">{{ d.at }}</span>
+              </div>
+              <div style="font-size:12px;color:#55655D;margin-top:3px;text-wrap:pretty">{{ d.detail }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGps }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-if value="{{ forLead }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:11px;padding:10px 13px">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w24 }}</div>
+            <div style="font-size:15px;font-weight:700;color:#10231C;margin-top:3px;text-wrap:pretty">{{ forLead }}</div>
+            <p style="margin:4px 0 0;font-size:12px;color:#55655D;text-wrap:pretty">{{ forLeadNote }}</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ lastSaved }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#EEF6F2;border:1px solid #1F5240;border-radius:11px;padding:11px 13px">
+            <div style="font-size:14px;font-weight:700;color:#1F5240">{{ lastSavedTitle }}</div>
+            <p style="margin:4px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ lastSavedBody }}</p>
+          </div>
+        </sc-if>
+        <div style="background:#fff;border:1px solid #8A9188;border-radius:12px;padding:22px 16px;text-align:center">
+          <div style="font-size:17px;font-weight:700;color:#10231C">{{ w55 }}</div>
+          <p style="margin:6px 0 16px;font-size:12px;color:#55655D;text-wrap:pretty">{{ w7 }}</p>
+          <button type="button" onClick="{{ getLocation }}" style="width:100%;height:50px;border:0;border-radius:12px;background:#1F5240;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">{{ gpsButton }}</button>
+          <button type="button" onClick="{{ toggleDenied }}" style="display:inline-flex;align-items:center;margin-top:8px;height:28px;padding:0 11px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#55655D;font-family:inherit;font-size:11px;font-weight:600;line-height:1;white-space:nowrap;cursor:pointer">{{ gpsDenyToggle }}</button>
+        </div>
+        <sc-if value="{{ gpsOk }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:12px 13px">
+            <div style="font-size:13px;font-weight:600;color:#1F5240">{{ w30 }}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#1F5240;margin-top:3px" dir="ltr">30.056134, 31.345287</div>
+            <div style="font-size:12px;color:#1F5240;margin-top:1px">{{ w10 }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ gpsDenied }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FBEAE9;border:1px solid #B3261E;border-radius:10px;padding:12px 13px">
+            <div style="font-size:13px;font-weight:600;color:#B3261E">{{ w21 }}</div>
+            <p style="margin:4px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ w1 }}</p>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isOutlet }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:11px 13px 13px">
+        <h3 style="margin:0 0 9px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w78 }}</h3>
+        <label style="display:block">
+          <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">Outlet Name <span style="color:#B3261E">*</span></span>
+          <input type="text" value="{{ outletName }}" onChange="{{ setOutletName }}" placeholder="e.g. Al Nour Grill" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #1F5240;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C;box-shadow:0 0 0 3px #EEF6F2">
+        </label>
+        <p style="margin:5px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ nameFromCheck }}</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <span style="font-size:12px;color:#63736A;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ arabicLabel }} <span style="font-family:'Noto Kufi Arabic',sans-serif" dir="rtl">{{ arabicName }}</span></span>
+          <span style="font-size:12px;font-weight:600;color:#1F5240;flex-shrink:0">{{ arabicAction }}</span>
+        </div>
+        <div role="group" aria-label="Shop landline" style="margin-top:11px">
+          <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w52 }}</span>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="num" style="flex-shrink:0;box-sizing:border-box;display:inline-flex;align-items:center;height:46px;padding:0 12px;border:1px solid #EFEBE1;border-radius:10px;background:#F6F2E9;font-size:17px;color:#55655D">{{ areaCode }}</span>
+            <input type="tel" inputmode="numeric" maxlength="8" value="{{ outletLandline }}" onChange="{{ setOutletLandline }}" aria-label="Landline number" placeholder="xxxxxxxx" dir="ltr" style="flex:1;min-width:0;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;color:#10231C">
+          </div>
+          <p style="margin:5px 0 0;font-size:12px;color:{{ areaNoteColor }};text-wrap:pretty">{{ areaNote }}</p>
+        </div>
+        <label style="display:block;margin-top:11px">
+          <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w60 }}</span>
+          <select style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-size:17px;color:#10231C">
+            <option>{{ w39 }}</option>
+            <option>{{ w53 }}</option>
+            <option>{{ w75 }}</option>
+            <option>{{ w87 }}</option>
+            <option>{{ w45 }}</option>
+            <option>{{ w40 }}</option>
+          </select>
+        </label>
+        <div role="group" aria-label="Contact person" style="margin-top:11px">
+          <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w_contact }} <span style="color:#B3261E">*</span></span>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+            <input type="text" value="{{ contactFirst }}" onChange="{{ setContactFirst }}" placeholder="{{ w_first }}" aria-label="{{ w_first }}" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C">
+            <input type="text" value="{{ contactLast }}" onChange="{{ setContactLast }}" placeholder="{{ w_last }}" aria-label="{{ w_last }}" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+            <span style="font-size:12px;color:#63736A;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ contactArabicLabel }} <span style="font-family:'Noto Kufi Arabic',sans-serif" dir="rtl">{{ contactArabicName }}</span></span>
+            <span style="font-size:12px;font-weight:600;color:#1F5240;flex-shrink:0">{{ contactArabicAction }}</span>
+          </div>
+        </div>
+        <label style="display:block;margin-top:11px">
+          <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">Mobile <span style="color:#B3261E">*</span></span>
+          <input type="tel" inputmode="numeric" value="{{ outletPhone }}" onChange="{{ setOutletPhone }}" aria-label="Mobile number" placeholder="0100 1234567" dir="ltr" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;letter-spacing:.02em;color:#10231C">
+          <span style="display:block;font-size:12px;color:{{ mobileNoteColor }};margin-top:5px;text-wrap:pretty">{{ mobileNote }}</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:9px;margin-top:11px">
+          <input type="checkbox" checked="{{ waSame }}" onChange="{{ toggleWa }}" style="width:18px;height:18px;accent-color:#1F5240;flex-shrink:0">
+          <span style="font-size:13px;color:#3A4A43">{{ w19 }}</span>
+        </label>
+        <label style="display:block;margin-top:9px">
+          <span style="display:block;font-size:12px;font-weight:600;color:{{ waLabelColor }};margin-bottom:4px">{{ w46 }}</span>
+          <input type="tel" inputmode="numeric" disabled="{{ waSame }}" value="{{ waNumber }}" onChange="{{ setWaNumber }}" placeholder="{{ waPlaceholder }}" dir="ltr" style="width:100%;height:46px;box-sizing:border-box;border:1px solid {{ waBorder }};border-radius:10px;background:{{ waBg }};padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;letter-spacing:.02em;color:{{ waColor }}">
+          <span style="display:block;font-size:12px;color:{{ waNoteColor }};margin-top:5px;text-wrap:pretty">{{ waNote }}</span>
+        </label>
+        <p style="margin:7px 0 0;font-size:12px;color:{{ outletGateColor }};text-wrap:pretty">{{ outletGate }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLocation }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:11px 13px 13px">
+          <h3 style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w72 }}</h3>
+          <div style="background:#FCFAF5;border-radius:8px;padding:4px 11px">
+            <sc-for list="{{ readOnly }}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+                <span style="color:#55655D;flex-shrink:0">{{ r.label }}</span>
+                <span style="font-weight:500;color:#10231C;text-align:right;min-width:0;font-family:{{ r.font }}" dir="ltr">{{ r.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <label style="display:block;margin-top:11px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w88 }}</span>
+            <select style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-size:17px;color:#10231C">
+              <option>{{ w70 }}</option>
+              <option>{{ w66 }}</option>
+            </select>
+          </label>
+          <label style="display:block;margin-top:11px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w61 }}</span>
+            <select style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-size:17px;color:#10231C">
+              <option>{{ w36 }}</option>
+              <option>{{ w51 }}</option>
+            </select>
+          </label>
+          <label style="display:block;margin-top:11px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">Address details <span style="color:#B3261E">*</span></span>
+            <input type="text" placeholder="Building number, landmark" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C">
+          </label>
+        </div>
+        <div style="display:flex;gap:9px;align-items:flex-start;background:#FBE9E7;border:1px solid #B3261E;border-radius:10px;padding:10px 12px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#B3261E;flex-shrink:0">!</span>
+          <p style="margin:0;font-size:12px;color:#3A4A43;text-wrap:pretty">Similar name &amp; nearby location: <strong style="font-weight:600">{{ w38 }}</strong> — 38 m away, 81% name match.</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isOil }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:11px 13px 13px">
+          <h3 style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w41 }}</h3>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w73 }}</span>
+              <select style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 9px;font-size:17px;color:#10231C">
+                <option>{{ w89 }}</option>
+                <option>{{ w90 }}</option>
+                <option>{{ w67 }}</option>
+                <option>{{ w48 }}</option>
+                <option>{{ w84 }}</option>
+                <option>{{ w85 }}</option>
+              </select>
+            </label>
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w62 }}</span>
+              <input type="text" placeholder="0" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 11px;font-family:'IBM Plex Mono',monospace;font-size:17px;color:#10231C">
+            </label>
+          </div>
+          <label style="display:block;margin-top:11px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ w25 }}</span>
+            <select onChange="{{ pickSelling }}" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-size:17px;color:#10231C">
+              <option>{{ w63 }}</option>
+              <option>{{ w20 }}</option>
+              <option>{{ w71 }}</option>
+            </select>
+          </label>
+          <sc-if value="{{ competitor }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:10px 13px 12px">
+              <h3 style="margin:0 0 7px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w35 }}</h3>
+              <label style="display:block">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">Which competitor <span style="color:#B3261E">*</span></span>
+                <select value="{{ rival }}" onChange="{{ setRival }}" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:17px;color:#10231C">
+                  <sc-for list="{{ rivals }}" as="r" hint-placeholder-count="5">
+                    <option value="{{ r }}">{{ r }}</option>
+                  </sc-for>
+                </select>
+              </label>
+              <label style="display:block;margin-top:10px">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">Committed until <span style="color:#B3261E">*</span></span>
+                <input type="date" value="{{ rivalUntil }}" onChange="{{ setRivalUntil }}" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;color:#10231C">
+              </label>
+              <p style="margin:7px 0 0;font-size:12px;color:{{ rivalNoteColor }};text-wrap:pretty">{{ rivalNote }}</p>
+            </div>
+          </sc-if>
+        </div>
+        <div style="background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:11px 13px">
+          <span style="display:block;font-size:12px;font-weight:600;color:#1F5240;margin-bottom:4px">{{ w18 }}</span>
+          <div style="display:flex;gap:7px;margin-bottom:12px">
+            <sc-for list="{{ willing }}" as="w" hint-placeholder-count="3">
+              <button type="button" onClick="{{ w.pick }}" style="flex:1;height:44px;border:1px solid {{ w.border }};border-radius:10px;background:{{ w.bg }};color:{{ w.color }};font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ w.label }}</button>
+            </sc-for>
+          </div>
+          <span style="display:block;font-size:12px;font-weight:600;color:#1F5240;margin-bottom:4px">{{ w31 }}</span>
+          <div style="display:flex;gap:9px;align-items:center">
+            <input type="text" placeholder="0.00" style="width:104px;height:46px;box-sizing:border-box;border:1px solid #1F5240;border-radius:10px;background:#fff;padding:0 11px;font-family:'IBM Plex Mono',monospace;font-size:17px;color:#10231C">
+            <span style="font-size:13px;color:#3A4A43">{{ w68 }}</span>
+          </div>
+          <p style="margin:8px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ w8 }}</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSave }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="border:1px dashed #8A9188;border-radius:10px;padding:9px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff">
+          <span style="font-size:13px;color:#55655D;min-width:0">{{ w9 }}</span>
+          <button type="button" onClick="{{ toggleSteward }}" style="flex-shrink:0;display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1px solid #8A9188;border-radius:7px;background:#fff;color:#1F5240;font-family:inherit;font-size:13px;font-weight:600;line-height:1;white-space:nowrap;cursor:pointer">{{ stewardBtn }}</button>
+        </div>
+        <sc-if value="{{ stewardOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:11px 13px 13px">
+            <h3 style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w14 }}</h3>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <input type="text" aria-label="First" placeholder="First" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C">
+              <input type="text" aria-label="Last" placeholder="Last" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-size:17px;color:#10231C">
+            </div>
+            <input type="tel" placeholder="01012345678" dir="ltr" style="width:100%;height:46px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:17px;color:#10231C;margin-top:8px">
+          </div>
+        </sc-if>
+        <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;padding:10px 13px">
+          <h3 style="margin:0 0 6px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ w80 }}</h3>
+          <sc-for list="{{ record }}" as="i" hint-placeholder-count="6">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:3px 0;font-size:12px">
+              <span style="color:#63736A;flex-shrink:0">{{ i.label }}</span>
+              <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:{{ i.color }};font-style:{{ i.style }}">{{ i.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+          <div style="background:#fff;border:1px solid #8A9188;border-radius:11px;padding:11px 13px 13px">
+            <h3 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#10231C">{{ w22 }}</h3>
+            <p style="margin:0 0 9px;font-size:12px;color:#63736A;text-wrap:pretty">{{ w2 }}</p>
+            <sc-for list="{{ summary }}" as="g" hint-placeholder-count="4">
+              <div style="margin-bottom:9px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;padding-bottom:3px;border-bottom:1px solid #EFEBE1">{{ g.head }}</div>
+                <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:4px 0">
+                    <span style="font-size:12px;color:#63736A;flex-shrink:0">{{ r.label }}</span>
+                    <span style="min-width:0;font-size:13px;font-weight:500;text-align:end;color:{{ r.color }};font-style:{{ r.style }};text-wrap:pretty">{{ r.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ askingSave }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#EEF6F2;border:1px solid #1F5240;border-radius:11px;padding:11px 13px 12px">
+              <div style="font-size:14px;font-weight:700;color:#1F5240">{{ w37 }}</div>
+              <p style="margin:4px 0 10px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ askingSaveBody }}</p>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ saveSurvey }}" style="flex:1;height:46px;border:0;border-radius:11px;background:#1F5240;color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ w56 }}</button>
+                <button type="button" onClick="{{ cancelSave }}" style="flex:1;height:46px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:#3A4A43;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ w76 }}</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notAskingSave }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ askSave }}" style="width:100%;height:50px;border:0;border-radius:12px;background:#1F5240;color:#fff;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer">{{ w64 }}</button>
+          </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ onSurveyFlow }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;gap:8px;margin-top:2px">
+        <sc-if value="{{ canGoBack }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ back }}" style="flex:1;height:44px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ w81 }}</button>
+        </sc-if>
+        <sc-if value="{{ notLastStep }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ next }}" style="flex:1;height:44px;border:0;border-radius:10px;background:{{ nextBg }};color:{{ nextColor }};font-family:inherit;font-size:15px;font-weight:600;cursor:{{ nextCursor }}">{{ w82 }}</button>
+        </sc-if>
+      </div>
+      <p style="margin:0 0 4px;font-size:12px;color:#63736A;text-align:center">{{ stepLine }}</p>
+    </sc-if>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:900},&quot;language&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ar&quot;,&quot;en&quot;],&quot;default&quot;:&quot;ar&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;},&quot;offline&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
+// Derived from the GPS fix, not typed: Cairo and Giza are 02.
+const AREA_CODE = "02";
+
+// The operator code is three digits and the subscriber number is eight. Written
+// out that reads 0100…, but the fourth digit belongs to the number, so it must
+// never be part of the list — a real 0102… number has to be enterable.
+const PREFIXES = ["010", "011", "012", "015"];
+const DAY_TARGET = 6;
+
+// What was already sent before this session. New saves append to it.
+const SEED = [
+  { shop: "Zad El Malek Koshary", ref: "LEAD-2408", at: "09:54", held: true,
+    detail: "Koshary · 0111 9876543 · sends when you have signal",
+    fields: { type: "Koshary", mobile: "0111 9876543", landline: "—", wa: "Same as mobile",
+      contact: "Ashraf Zaki", area: "Nasr City 3", gps: "Captured · ±8 m",
+      selling: "Not selling", rival: "—", until: "—", willing: "Maybe", price: "—", steward: "No" } },
+  { shop: "Sea Gate Fish", ref: "LEAD-2411", at: "11:26", held: false,
+    detail: "Fish · 02 24145566 · selling to Masria Oils until 12 Mar",
+    fields: { type: "Fish", mobile: "—", landline: "02 24145566", wa: "—",
+      contact: "Magdy Sobhy", area: "Nasr City 3", gps: "Captured · ±6 m",
+      selling: "A competitor", rival: "Masria Oils", until: "12 Mar 2026", willing: "No", price: "—", steward: "Yes" } },
+  { shop: "Al Nour Grill", ref: "LEAD-2416", at: "13:42", held: false,
+    detail: "Grill · 0100 1234567 · willing, asking 6.10",
+    fields: { type: "Grill / charcoal", mobile: "0100 1234567", landline: "—", wa: "Same as mobile",
+      contact: "Sayed Farouk", area: "Nasr City 3", gps: "Captured · ±7 m",
+      selling: "Not selling", rival: "—", until: "—", willing: "Yes", price: "6.10 EGP / kg", steward: "No" } },
+];
+
+// Shops the duplicate check stopped. Not surveys, so they are counted and
+// listed separately rather than under a heading that says otherwise.
+const STOPPED = [
+  { shop: "Hadramout Nasr City", at: "08:40", detail: "Already on file as ZC-0233 — no survey taken" },
+];
+
+const REVISITS = [
+  { name: "Koshary El Sayed", meta: "Phone number wrong · due 11 Sep", late: true,
+    asked: "We rang 0100 1234567 three times — a woman answers who has never heard of the shop. We cannot verify this one until we have a number that reaches them.",
+    onFile: [["Mobile", "0100 1234567", true], ["Landline", "—", true], ["Contact", "Sayed Farouk", false]],
+    fixLabel: "The number that actually reaches them",
+    fixHint: "e.g. the owner's mobile is 0122 3456789, the shop has no landline" },
+  { name: "Hadramout Faisal", meta: "Wrong number, dead end · due 12 Sep", late: true,
+    asked: "The landline is someone's flat. The mobile we have is switched off. Nobody at the shop has confirmed they want to sell to us.",
+    onFile: [["Landline", "02 33445566", true], ["Mobile", "0111 2223334", true], ["Willingness", "Maybe", false]],
+    fixLabel: "What is right, and who you spoke to",
+    fixHint: "e.g. spoke to the manager Hossam, mobile 0100 7654321, he is willing" },
+  { name: "Cilantro Maadi", meta: "Number not working · due 13 Sep", late: false,
+    asked: "The number rings out. We also have no asking price on the record, so we cannot open a negotiation.",
+    onFile: [["Mobile", "0155 4443332", true], ["Asking price", "—", true], ["Willingness", "Yes", false]],
+    fixLabel: "The working number and their asking price",
+    fixHint: "e.g. 0155 4443331, they want 6.20 a kilo" },
+  { name: "Gad Mohandessin", meta: "Owner never available · due 15 Sep", late: false,
+    asked: "The number works but the owner is never there and the staff will not speak for him. We need a named person and a time he is in.",
+    onFile: [["Contact", "—", true], ["Mobile", "02 37778889", false], ["Oil Collection Representative", "No", false]],
+    fixLabel: "Who to ask for, and when",
+    fixHint: "e.g. ask for Mr Gamal, he is there before 11 in the morning" },
+];
+
+function clockNow() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+
+// 0100 1234567 — four then seven, the way the number is written and read out.
+function spaceMobile(v) {
+  const d = (v || "").replace(/\D/g, "").slice(0, 11);
+  return [d.slice(0, 4), d.slice(4)].filter(Boolean).join(" ");
+}
+
+// Every Egyptian mobile starts 01, so those two digits are refused at the
+// keystroke if they are anything else — no wrong number reaches the field.
+function mobileInput(v) {
+  const d = (v || "").replace(/\D/g, "").slice(0, 11);
+  if (d.length >= 1 && d[0] !== "0") return "";
+  if (d.length >= 2 && d[1] !== "1") return "0";
+  return spaceMobile(d);
+}
+
+// The few names the phone can transliterate offline. Anything else is left to
+// the call center rather than guessed.
+const ARABIC = {
+  "al nour grill": "النور جريل",
+  "al nour": "النور",
+  "sea gate fish": "بوابة البحر للأسماك",
+};
+
+const WORDS = {"w1":"You must allow location access to create a new outlet record. This confirms the surveyor was physically present at the outlet.","w2":"Everything you entered. The call center works from this, so a wrong number means nobody can reach the shop.","w3":"Type the shop's name to see whether it's already on file nearby — before you start the full survey.","w4":"Shops somebody has spotted or phoned in. Surveying one starts with the same duplicate check.","w5":"These aren't exact matches, but are close. Is the shop in front of you one of these?","w6":"Shops the call center could not verify, sent back for you to check in person.","w7":"Before creating an outlet record, we need to verify your current location.","w8":"Opens the price negotiation — saves as “Submitted – deal agreed on site”.","w9":"Oil Collection Representative — the person who hands over the oil, if different","w10":"Accuracy: ±14 m · you can start the form","w11":"Similar name &amp; nearby location:","w12":"only — where you are checked in.","w13":"Mostafa El Nahhas · 38 m · near","w14":"Operational / Oil Collection Representative Contact","w15":"— 38 m away, 81% name match.","w16":"What they could not verify","w17":"What should be corrected?","w18":"Willingness To Sell To Us","w19":"WhatsApp same as mobile","w20":"Selling to a Competitor","w21":"Location access denied","w22":"Check before you save","w23":"Similar shops nearby","w24":"Surveying a pre-survey","w25":"Currently selling to","w26":"Log out of the app?","w27":"Pre-surveys To Survey","w28":"Send the correction","w29":"Survey another shop","w30":"✓ Location captured","w31":"Shop's Asking Price","w32":"Corrected and sent","w33":"No, it's different","w34":"Check another shop","w35":"Competitor Details","w36":"Mostafa El Nahhas","w37":"Send this survey?","w38":"Al Nour Broasted","w39":"Grill / charcoal","w40":"Hotel / catering","w41":"Used Cooking Oil","w42":"Which competitor","w43":"← Back to today","w44":"Request an edit","w45":"Bakery / sweets","w46":"WhatsApp number","w47":"Address details","w48":"Palm Shortening","w49":"Committed until","w50":"Contact person","w51":"Abbas El Akkad","w52":"Shop landline","w53":"Fried chicken","w54":"Revisits Due","w55":"GPS Check-In","w56":"Yes, send it","w57":"On file now","w58":"Nasr City 3","w59":"Outlet Name","w60":"Outlet type","w61":"Street Name","w62":"Volume (kg)","w63":"Not Selling","w64":"Save survey","w65":"Yes — stop","w66":"Heliopolis","w67":"Palm Olein","w68":"EGP per kg","w69":"Searching","w70":"Nasr City","w71":"Undecided","w72":"Location","w73":"Oil Type","w74":"Log out","w75":"Koshary","w76":"Go back","w77":"Cancel","w78":"Outlet","w79":"Mobile","w80":"Record","w81":"← Back","w82":"Next →","w83":"Check","w84":"Blend","w85":"Other","w86":"Stay","w87":"Fish","w88":"Area","w89":"Corn","w90":"Soya"};
+const AR_WORDS = {"Log out":"خروج","Log out of the app?":"الخروج من التطبيق؟","Stay":"البقاء","Pre-surveys To Survey":"محلات قبل المسح للمسح","Shops somebody has spotted or phoned in. Surveying one starts with the same duplicate check.":"محلات رصدها أحدهم أو اتصل بشأنها. ومسح أي منها يبدأ بفحص التكرار نفسه.","Revisits Due":"زيارات مستحقة","Shops the call center could not verify, sent back for you to check in person.":"محلات لم يتمكن مركز الاتصال من التحقق منها، أُعيدت إليك لتتأكد منها بنفسك.","Corrected and sent":"صُحِّح وأُرسل","What they could not verify":"ما لم يتمكنوا من التحقق منه","On file now":"المسجَّل حالياً","Send the correction":"إرسال التصحيح","Cancel":"إلغاء","Type the shop's name to see whether it's already on file nearby — before you start the full survey.":"اكتب اسم المحل لترى إن كان مسجَّلاً بالقرب — قبل أن تبدأ المسح الكامل.","Check":"فحص","Searching":"البحث في","Nasr City 3":"مدينة نصر 3","only — where you are checked in.":"فقط — حيث سجّلت حضورك.","Similar shops nearby":"محلات مشابهة بالقرب","These aren't exact matches, but are close. Is the shop in front of you one of these?":"ليست مطابقة تماماً لكنها قريبة. هل المحل أمامك أحد هؤلاء؟","Al Nour Broasted":"النور بروستد","Mostafa El Nahhas · 38 m · near":"مصطفى النحاس · 38 م · قريب","Yes — stop":"نعم — أوقف","No, it's different":"لا، مختلف","Check another shop":"فحص محل آخر","← Back to today":"→ العودة إلى اليوم","What should be corrected?":"ما الذي يجب تصحيحه؟","Request an edit":"طلب تعديل","Survey another shop":"مسح محل آخر","Surveying a pre-survey":"مسح قبل المسح","GPS Check-In":"تسجيل الموقع","Before creating an outlet record, we need to verify your current location.":"قبل إنشاء ملف المحل، نحتاج إلى التحقق من موقعك الحالي.","✓ Location captured":"✓ تم تحديد الموقع","Accuracy: ±14 m · you can start the form":"الدقة: ±14 م · يمكنك بدء النموذج","Location access denied":"رُفض الوصول إلى الموقع","You must allow location access to create a new outlet record. This confirms the surveyor was physically present at the outlet.":"يجب السماح بالوصول إلى الموقع لإنشاء ملف محل جديد. وهذا يثبت أن المساح كان موجوداً في المحل.","Outlet":"المحل","Outlet Name":"اسم المحل","Shop landline":"أرضي المحل","Outlet type":"نوع المحل","Grill / charcoal":"مشويات / فحم","Fried chicken":"دجاج مقلي","Koshary":"كشري","Fish":"أسماك","Bakery / sweets":"مخبوزات / حلويات","Hotel / catering":"فندق / تعهدات","Contact person":"المسؤول عن المحل","Mobile":"الموبايل","WhatsApp same as mobile":"واتساب نفس الموبايل","WhatsApp number":"رقم الواتساب","Location":"الموقع","Area":"المنطقة","Nasr City":"مدينة نصر","Heliopolis":"مصر الجديدة","Street Name":"اسم الشارع","Mostafa El Nahhas":"مصطفى النحاس","Abbas El Akkad":"عباس العقاد","Address details":"تفاصيل العنوان","Similar name &amp; nearby location:":"اسم مشابه وموقع قريب:","— 38 m away, 81% name match.":"— على 38 م، تشابه الاسم 81%.","Used Cooking Oil":"زيت الطهي المستعمل","Oil Type":"نوع الزيت","Corn":"ذرة","Soya":"صويا","Palm Olein":"أولين نخيل","Palm Shortening":"سمن نخيل","Blend":"خليط","Other":"أخرى","Volume (kg)":"الكمية (كجم)","Currently selling to":"يبيع حالياً إلى","Not Selling":"لا يبيع","Selling to a Competitor":"يبيع لمنافس","Undecided":"غير محدد","Competitor Details":"بيانات المنافس","Which competitor":"أي منافس","Committed until":"مُلتزم حتى","Willingness To Sell To Us":"الرغبة في البيع لنا","Shop's Asking Price":"السعر المطلوب من المحل","EGP per kg":"ج.م للكجم","Opens the price negotiation — saves as “Submitted – deal agreed on site”.":"يفتح التفاوض على السعر — ويُحفظ كـ«مُرسل – اتفاق في الموقع».","Oil Collection Representative — the person who hands over the oil, if different":"المسؤول — من يسلّم الزيت، إن كان مختلفاً","Operational / Oil Collection Representative Contact":"بيانات المسؤول التشغيلي","Record":"السجل","Check before you save":"راجع قبل الحفظ","Everything you entered. The call center works from this, so a wrong number means nobody can reach the shop.":"كل ما أدخلته. مركز الاتصال يعمل من هذا، فالرقم الخطأ يعني ألا يصل أحد إلى المحل.","Send this survey?":"إرسال هذا المسح؟","Yes, send it":"نعم، أرسله","Go back":"رجوع","Save survey":"حفظ المسح","← Back":"→ رجوع","Next →":"التالي ←","Get My Location":"تحديد موقعي","Show no signal":"إظهار انقطاع الشبكة","Show signal":"إظهار الشبكة","Allow location":"السماح بالموقع","Show access denied":"إظهار رفض الوصول","Online — every answer is saved as you go.":"متصل — كل إجابة تُحفظ أثناء العمل.","No signal — answers are held on the phone and sent when you are back.":"لا شبكة — الإجابات محفوظة على الهاتف وتُرسل عند عودتها.","Survey":"المسح","Today":"اليوم","Pre-surveys":"محلات قبل المسح","Revisits":"زيارات","Me":"حسابي","GPS check-in":"تسجيل الموقع","Check if already recorded":"فحص التسجيل المسبق","New survey · Outlet":"مسح جديد · المحل","New survey · Location":"مسح جديد · الموقع","New survey · Oil":"مسح جديد · الزيت","New survey · Oil Collection Representative":"مسح جديد · المسؤول","Start over":"البدء من جديد","Correct it":"صحّحه","Answered":"تم الرد","Overdue":"متأخرة","Due":"مستحقة","Sent":"أُرسل","Held on phone":"محفوظ على الهاتف","Surveyed":"مسحتها","Stopped":"أوقفت","Target":"الهدف","Surveyed today":"ما مسحته اليوم","Stopped — already on file":"أوقفت — مسجّلة مسبقاً","Edit requested":"طُلب تعديل","Correction attached":"أُرفق تصحيح","Send the request":"إرسال الطلب","Attach the correction":"إرفاق التصحيح","Oil":"الزيت","Oil Collection Representative":"المسؤول","Type":"النوع","Contact":"المسؤول","Landline":"الأرضي","WhatsApp":"واتساب","GPS":"الموقع","Competitor":"المنافس","Willingness":"الرغبة","Asking price":"السعر المطلوب","Separate representative":"مسؤول منفصل","Name":"الاسم","Yes":"نعم","No":"لا","Maybe":"ربما","Not selling":"لا يبيع","A competitor":"منافس","Same as mobile":"نفس الموبايل","Select competitor":"اختر المنافس","Signal is back":"عادت الشبكة","No signal — saved on this phone, will send when you're back.":"لا شبكة — محفوظ على هذا الهاتف وسيُرسل عند عودتها.","Press Check to search the shops already on file in this zone.":"اضغط فحص للبحث في المحلات المسجّلة في هذه المنطقة.","Type the shop's name first.":"اكتب اسم المحل أولاً.","Locate me again":"تحديد موقعي مرة أخرى","What you sent from this phone today. The call center works through these as Unverified.":"ما أرسلته من هذا الهاتف اليوم. ومركز الاتصال يعمل عليها كغير مُتحقَّق منها.","This one has not gone yet, so the correction travels with it when it sends.":"هذا لم يُرسل بعد، فالتصحيح يسافر معه عند إرساله.","The call center holds this survey. They make the change and it stays on the record that you asked.":"مركز الاتصال يحتفظ بهذا المسح. هم يجرون التغيير ويبقى في السجل أنك طلبته.","Goes back to the call center against this shop, with your name and the time on it.":"يعود إلى مركز الاتصال على هذا المحل، باسمك ووقته.","Arabic (auto):":"بالعربية (تلقائي):","Arabic:":"بالعربية:","edit":"تعديل","the call center adds it":"مركز الاتصال يضيفه","Carried over from the check you just ran. Correct it if the sign says something else.":"منقول من الفحص الذي أجريته للتو. صحّحه إن كانت اللوحة تقول غير ذلك.","Eleven digits, starting 010, 011, 012 or 015.":"أحد عشر رقماً، تبدأ بـ010 أو 011 أو 012 أو 015.","Already on file — nothing to survey":"مسجّل مسبقاً — لا شيء لمسحه","A number is on file — the call center can reach this shop.":"يوجد رقم مسجَّل — يمكن لمركز الاتصال الوصول إلى المحل.","You need a mobile or a landline — eight digits after the code either way — before you can go on. Without a number nobody can call this shop.":"تحتاج موبايلاً أو أرضياً — ثمانية أرقام بعد الكود في الحالتين — قبل أن تتابع. وبلا رقم لا يستطيع أحد الاتصال بالمحل.","Held on the phone and sent the moment you have signal. The call center sees it as Unverified until they reach the owner.":"محفوظ على الهاتف ويُرسل لحظة توفر الشبكة. ومركز الاتصال يراه غير مُتحقَّق منه حتى يصلوا إلى المالك.","Sent. The call center sees it as Unverified until they reach the owner and confirm the details.":"أُرسل. ومركز الاتصال يراه غير مُتحقَّق منه حتى يصلوا إلى المالك ويؤكدوا البيانات.","— none":"— لا شيء","— not captured":"— لم يُحدَّد","— not named":"— لم يُسمَّ","— no date":"— لا تاريخ","Yes — entered":"نعم — مُدخل","No, the owner hands over":"لا، المالك يسلّم","It is held on the phone and goes the moment you have signal. You cannot change it afterwards.":"محفوظ على الهاتف ويُرسل لحظة توفر الشبكة. ولا يمكنك تغييره بعدها.","It goes to the call center now. You cannot change it afterwards.":"يذهب إلى مركز الاتصال الآن. ولا يمكنك تغييره بعدها.","Unnamed shop":"محل بلا اسم","willing to sell to us":"مستعد للبيع لنا","Someone else — not on the list":"شخص آخر — ليس في القائمة","The call center will come back to this shop when that date is near.":"مركز الاتصال يعود إلى هذا المحل عند قرب ذلك التاريخ.","Name the competitor and the date he is committed until — that is when we call him back.":"سمِّ المنافس والتاريخ الذي هو مُلتزم حتى — فذلك موعد اتصالنا به.","assigned on save":"يُخصَّص عند الحفظ","MOD-100 v1 (ownership log)":"MOD-100 v1 (سجل الملكية)","Unnamed grill, Nasr City":"مشويات بلا اسم، مدينة نصر","From M. Fawzy · walk-by":"من م. فوزي · مرور","Fish shop, Dokki":"محل أسماك، الدقي","From the call center · phone-in":"من مركز الاتصال · اتصال","From operations · assigned to you":"من العمليات · أُسند إليك","Koshary stand, Shoubra":"كشري، شبرا","Zone today":"منطقة اليوم","Surveyed this month":"مسحته هذا الشهر","Verified by the call center":"تحقق منه مركز الاتصال","Sent back for a revisit":"أُعيد لزيارة","Al Nour Broasted is the same shop, 38 m away on Mostafa El Nahhas. It is already a record, so a second survey would create a duplicate. Nothing has been saved.":"النور بروستد هو المحل نفسه، على 38 م في مصطفى النحاس. وهو مسجَّل بالفعل، فمسح ثانٍ سيُنشئ تكراراً. ولم يُحفظ شيء.","Surveyor":"المساح","First":"الاسم الأول","Last":"اسم العائلة","Name the person to ask for. A number with no name is a call the center cannot make.":"سمِّ الشخص المطلوب. فرقم بلا اسم مكالمة لا يستطيع المركز إجراءها."};
+
+// Arabic spellings for the given names a surveyor actually meets. Anything not
+// here is left to the call center rather than machine-guessed.
+const PEOPLE_AR = {
+  ahmed: "أحمد", mohamed: "محمد", mahmoud: "محمود", mostafa: "مصطفى", hassan: "حسن",
+  hussein: "حسين", ali: "علي", omar: "عمر", khaled: "خالد", tarek: "طارق", sayed: "سيد",
+  ibrahim: "إبراهيم", youssef: "يوسف", amr: "عمرو", sherif: "شريف", nabil: "نبيل",
+  hany: "هاني", emad: "عماد", ashraf: "أشرف", magdy: "مجدي", adel: "عادل", sami: "سامي",
+  reda: "رضا", gamal: "جمال", saeed: "سعيد","abdel rahman": "عبد الرحمن", fathy: "فتحي",
+  salah: "صلاح", zaki: "زكي", fawzy: "فوزي", selim: "سليم", kamal: "كمال", sobhy: "صبحي",
+  hosny: "حسني", mansour: "منصور", shaker: "شاكر", saber: "صابر", ezz: "عز", adly: "عدلي",
+  nour: "نور", farouk: "فاروق", lotfy: "لطفي", ragab: "رجب", halim: "حليم", wahba: "وهبة",
+  mona: "منى", sara: "سارة", dina: "دينا", nadia: "نادية", hoda: "هدى", amira: "أميرة",
+};
+
+class Component extends DCLogic {
+  state = { tab: "Today", screen: 0, waSame: true, competitor: false, stewardOpen: false, willingness: "Yes", offline: null };
+
+  // Online is the normal case. Losing signal is a state worth showing, but not
+  // the one the screen should open in.
+  get offline() {
+    return this.state.offline === null ? !!this.props.offline : this.state.offline;
+  }
+
+  // No position restore: a survey either starts at the GPS gate or starts over.
+  // Resuming mid-flow would land him past the capture everything else rests on.
+  // Every in-place form and confirmation belongs to the press that raised it.
+  // One rule drops them all, so a new one cannot be forgotten here later.
+  componentDidMount() {
+    try {
+      const s = localStorage.getItem("zeitco-lang");
+      if (s === "ar" || s === "en") this.setState({ lang: s });
+    } catch (e) {}
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  // Added: who this phone belongs to, and his live pre-surveys.
+  surveyorMe() {
+    let n = "M. Fawzy";
+    try { n = new URLSearchParams(window.location.search).get("surveyor") || n; } catch (e) {}
+    return n === "A. Sameh" ? { en: "A. Sameh", ar: "أ. سامح" } : { en: "M. Fawzy", ar: "م. فوزي" };
+  }
+  // Added: this surveyor's revisits. Two kinds: a survey the call center sent
+  // back (a loose pin, or fields missing), and a Lead whose location only
+  // needs confirming at the door (it came from a phone survey).
+  myRevisits() {
+    const Z = window.ZEITCO;
+    if (!Z) return [];
+    const me = this.surveyorMe().en, ar = this.lang === "ar";
+    const en = (v) => (v && typeof v === "object" ? v.en : v) || "";
+    const tx = (v) => (v && typeof v === "object" ? (ar ? v.ar || v.en : v.en) : v) || "";
+    const late = (d) => d && Z.dayNumber(d) !== null && Z.dayNumber(d) < Z.todayNumber;
+    const out = [];
+    Z.shops.forEach((s) => {
+      const sv = s.survey || {};
+      const answered = (s.revisitNote && en(s.revisitNote.by) === me && Z.dayNumber(s.revisitNote.on) === Z.todayNumber) ? s.revisitNote
+        : (s.locationNote && en(s.locationNote.by) === me && Z.dayNumber(s.locationNote.on) === Z.todayNumber) ? s.locationNote : null;
+      if (answered) {
+        out.push({ id: s.id, kind: s.locationNote === answered ? "location" : "sendback", name: tx(s.name), answeredText: answered.text,
+          meta: (s.locationNote === answered ? (ar ? "تأكيد الموقع" : "Location confirmed") : (ar ? "أُعيد للتحقق" : "Sent back for verification")) + " · " + tx(s.area),
+          late: false, asked: "", onFile: [], fixLabel: "", fixHint: "" });
+        return;
+      }
+      if (s.stage === "survey" && s.sendBack && en(s.surveyor) === me) {
+        const gps = s.sendBack === "gps";
+        out.push({ id: s.id, kind: "sendback", name: tx(s.name),
+          meta: (gps ? (ar ? "الموقع غير دقيق" : "Location pin too loose") : (ar ? "حقول ناقصة" : "Fields missing")) + " · " + tx(s.area),
+          late: false,
+          asked: gps
+            ? (ar ? "الموقع المسجّل بعيد عن المحل (" + (s.gps || "") + "). قف عند الباب وسجّل الموقع مرة أخرى." : "The pin on file is too far from the shop (" + (s.gps || "") + "). Stand at the door and take it again.")
+            : (ar ? "المسح مكتمل بنسبة " + (s.complete || 0) + "% فقط. أكمل الناقص." : "The survey is only " + (s.complete || 0) + "% complete. Fill in what is missing."),
+          onFile: [[ar ? "الموقع" : "Location", sv.coords || "—", gps], [ar ? "الهاتف" : "Mobile", s.phone || "—", !s.phone], [ar ? "جهة الاتصال" : "Contact", tx(s.contact) || "—", !s.contact]],
+          fixLabel: gps ? (ar ? "الموقع الجديد، ومن كان هناك" : "The new pin, and who was there") : (ar ? "ما كان ناقصاً" : "What was missing"),
+          fixHint: gps ? (ar ? "مثلاً: وقفت عند الباب، ±6 م، قابلت المالك" : "e.g. at the door, ±6 m, spoke to the owner") : (ar ? "مثلاً: رقم المالك 0100…، الكمية 200 كجم" : "e.g. owner's mobile 0100…, 200 Kg a month") });
+      } else if (s.locationDue && !s.verifiedOn && !s.locationConfirmedOn && en(s.locationWith || Z.autoSurveyor(s.area)) === me) {
+        out.push({ id: s.id, kind: "location", name: tx(s.name),
+          meta: (ar ? "تأكيد الموقع فقط · حتى " : "Confirm the location only · due ") + tx(s.locationDue),
+          late: late(s.locationDue),
+          asked: ar ? "عميل محتمل من مسح بالهاتف. البيانات مأخوذة؛ المطلوب فقط أن تقف عند المحل وتثبت موقعه. لا تغيّر شيئاً آخر."
+                    : "A Lead from a phone survey. The details are taken — only stand at the shop and prove where it is. Change nothing else.",
+          onFile: [[ar ? "العنوان" : "Address", tx(sv.address) || tx(s.area), false], [ar ? "الهاتف" : "Mobile", s.phone || "—", false], [ar ? "الموقع" : "Location", ar ? "غير مثبت" : "Not proved", true]],
+          fixLabel: ar ? "تأكيد الموقع" : "Confirm the location",
+          fixHint: ar ? "مثلاً: عند الباب، ±5 م" : "e.g. at the door, ±5 m" });
+      }
+    });
+    return out.sort((a, b) => ((a.answeredText ? 1 : 0) - (b.answeredText ? 1 : 0)) || ((b.late ? 1 : 0) - (a.late ? 1 : 0)));
+  }
+  // Added: what this surveyor saved today, read from the shared data.
+  // Added: answering a revisit writes it onto the outlet. A survey sent back
+  // returns to the agent for verification; a location job proves the location.
+  answerRevisit(r, note) {
+    const Z = window.ZEITCO;
+    if (!Z || !r.id) return;
+    const me = this.surveyorMe();
+    const stamp = Z.asDate(Z.today.en + " " + clockNow());
+    if (r.kind === "sendback") Z.journal.add({ op: "patch", shop: r.id, fields: { sendBack: null, surveyedOn: stamp, gps: "±6 m", complete: 100,
+      revisitNote: { by: me, on: stamp, text: note } } });
+    else Z.journal.add({ op: "patch", shop: r.id, fields: { locationConfirmedOn: stamp, locationDue: null, locationWith: null, gps: "±6 m",
+      locationNote: { by: me, on: stamp, text: note } } });
+  }
+
+  mySeed() {
+    const Z = window.ZEITCO;
+    if (!Z) return SEED;
+    const me = this.surveyorMe().en, ar = this.lang === "ar";
+    const en = (v) => (v && typeof v === "object" ? (ar ? v.ar || v.en : v.en) : v) || "";
+    return Z.shops.filter((s) => ((s.surveyor && s.surveyor.en) || s.surveyor) === me && s.surveyedOn && Z.dayNumber(s.surveyedOn) === Z.todayNumber).map((s) => ({
+      shop: en(s.name), ref: s.id, at: Z.timeOf ? Z.timeOf(s.surveyedOn) : "", held: false,
+      detail: [en(s.type), s.phone, s.askedPrice ? "asking " + s.askedPrice : ""].filter(Boolean).join(" · "),
+      fields: { type: en(s.type) || "—", mobile: s.phone || "—", landline: (s.survey && s.survey.outletPhone) || "—", wa: "—",
+        contact: en(s.contact) || "—", area: en(s.area), gps: "Captured · " + (s.gps || ""), selling: "—", rival: "—", until: "—",
+        willing: "—", price: s.askedPrice || "—", steward: "No" } }));
+  }
+
+  myPre() {
+    const Z = window.ZEITCO;
+    if (!Z) return [];
+    const me = this.surveyorMe().en;
+    return Z.shops.filter((s) => s.stage === "pre_survey" && s.surveyWith && s.surveyWith.en === me);
+  }
+
+  static get transient() {
+    return { askingSave: false, editing: null, editNote: "", confirmLogout: false };
+  }
+
+  goTo(n) {
+    this.setState(Object.assign({ screen: Math.max(0, Math.min(5, n)) }, Component.transient));
+    window.scrollTo(0, 0);
+  }
+
+  t(s) { return this.lang === "ar" ? (AR_WORDS[s] || s) : s; }
+  get lang() { return this.state.lang || this.props.language || "ar"; }
+  setLang(l) { try { localStorage.setItem("zeitco-lang", l); } catch (e) {} this.setState({ lang: l }); }
+
+  renderVals() {
+    const ar = this.lang === "ar";
+    const s = this.state.screen;
+    // Location first: the nearby search needs a position to search around, and
+    // the GPS fix is what proves he was standing there.
+    const TITLES = ["GPS check-in", "Check if already recorded", "New survey · Outlet", "New survey · Location", "New survey · Oil", "New survey · Oil Collection Representative"];
+    const WILLING = ["Yes", "No", "Maybe"];
+
+    const off = this.offline;
+    const tab = this.state.tab || "Today";
+    const digits = (v) => (v || "").replace(/\D/g, "");
+    const logged = this.state.logged || this.mySeed();
+    const landDigits = digits(this.state.outletLandline);
+    const landHeadOk = !landDigits.length || "2345".indexOf(landDigits[0]) >= 0;
+    const landOk = landDigits.length === 8 && landHeadOk;
+    // One contact name, computed once, used by the form, the review card and
+    // the saved record — so what he checks is what the call center receives.
+    const contactParts = [this.state.contactFirst, this.state.contactLast]
+      .map((x) => (x || "").trim()).filter(Boolean);
+    const contactName = contactParts.join(" ");
+    const contactKnown = contactParts.map((p) => PEOPLE_AR[p.toLowerCase()]);
+    const contactArabic = contactParts.length && contactKnown.every(Boolean) ? contactKnown.join(" ") : "";
+    const waDigits = digits(this.state.waNumber);
+    const waOk = waDigits.length === 11 && PREFIXES.indexOf(waDigits.slice(0, 3)) >= 0;
+    const mobileDigits = digits(this.state.outletPhone);
+    const mobileOk = mobileDigits.length === 11 && PREFIXES.indexOf(mobileDigits.slice(0, 3)) >= 0;
+    const hasPhone = mobileOk || landOk;
+    const nameNow = this.state.outletName === undefined ? (this.state.query || "") : this.state.outletName;
+    // Contact person carries a red asterisk, so the step enforces it — a number
+    // with nobody to ask for is a call the center cannot make.
+    const outletReady = !!nameNow.trim() && hasPhone && !!contactName;
+    // A shop already committed elsewhere is only worth recording if we know to
+    // whom and until when, so the oil step will not pass without both.
+    const rivalReady = !this.state.competitor
+      || (!!this.state.rival && this.state.rival !== "Select competitor" && !!this.state.rivalUntil);
+    const blocked = (s === 2 && !outletReady) || (s === 4 && !rivalReady);
+
+    return {
+      netBg: off ? "#FBE9E7" : "#EEF6F2",
+      netBorder: off ? "#B3261E" : "#1F5240",
+      netNote: off
+        ? "No signal — saved on this phone, will send when you're back online."
+        : this.t("Online — every answer is saved as you go."),
+      netToggle: off ? this.t("Signal is back") : this.t("Show no signal"),
+      toggleOffline: () => this.setState({ offline: !off }),
+      // A step forward needs a step back, or the only way to the first screen is
+      // reloading the page — and Cancel starts the survey over.
+      // Nothing is searched until he types a name and presses Check, so the
+      // duplicate results cannot sit there claiming a match he never asked for.
+      query: this.state.query || "",
+      setQuery: (e) => this.setState({ query: e.target.value, checked: false }),
+      noQuery: !(this.state.query || "").trim(),
+      checkBg: (this.state.query || "").trim() ? "#1F5240" : "#EFEBE1",
+      checkColor: (this.state.query || "").trim() ? "#fff" : "#8A9188",
+      checkCursor: (this.state.query || "").trim() ? "pointer" : "not-allowed",
+      runCheck: () => this.setState({ checked: true }),
+      hasResults: !!this.state.checked && !this.state.stopped,
+      noResults: !this.state.checked && !this.state.stopped,
+      checkHint: (this.state.query || "").trim()
+        ? this.t("Press Check to search the shops already on file in this zone.")
+        : this.t("Type the shop's name first."),
+      // Neither GPS outcome exists until he asks for his location, and only one
+      // can be true — being told it was captured and refused at once is nonsense.
+      gpsOk: this.state.gps === "ok",
+      gpsDenied: this.state.gps === "denied",
+      // Capturing the location is the only thing this step is for, so it takes
+      // him straight into the form rather than making him press Next as well.
+      getLocation: () => this.setState({ gps: "ok", screen: 1, lastSaved: null }),
+      gpsButton: this.state.gps === "ok" ? this.t("Locate me again") : this.t("Get My Location"),
+      gpsDenyToggle: this.t(this.state.gps === "denied" ? this.t("Allow location") : this.t("Show access denied")),
+      toggleDenied: () => this.setState((p) => ({ gps: p.gps === "denied" ? null : "denied" })),
+      // The survey's own chrome belongs to the survey, not to the other tabs.
+      onSurveyFlow: tab === "Survey",
+      canGoBack: tab === "Survey" && s > 0,
+      atStart: tab !== "Survey" || s === 0,
+      back: () => this.setState((p) => Object.assign({ screen: Math.max(0, p.screen - 1) }, Component.transient)),
+      restart: () => this.setState({ screen: 0, query: "", checked: false, gps: null, stopped: false,
+        saved: false, outletName: undefined, outletPhone: "", outletLandline: "",
+        competitor: false, rival: "", rivalUntil: "", askingSave: false }),
+      cancelLabel: this.t(tab !== "Survey" || s === 0 ? this.t("Cancel") : this.t("Start over")),
+      title: this.t(tab === "Survey" ? TITLES[s] : tab),
+      stepNo: s + 1,
+      stepLine: ar ? "خطوة " + (s + 1) + " من 6" : "Step " + (s + 1) + " of 6",
+      // The survey flow lives on its own tab — the rest are their own lists.
+      isGps: tab === "Survey" && s === 0,
+      isCheck: tab === "Survey" && s === 1,
+      isOutlet: tab === "Survey" && s === 2,
+      isLocation: tab === "Survey" && s === 3,
+      isOil: tab === "Survey" && s === 4,
+      isSave: tab === "Survey" && s === 5,
+      isToday: tab === "Today" && !this.state.viewing,
+      // Every literal the markup used to hold, served from the dictionary.
+      ...Object.keys(WORDS).reduce((acc, k) => {
+        const en = WORDS[k];
+        acc[k] = ar ? (AR_WORDS[en] || en) : en;
+        return acc;
+      }, {}),
+      dir: ar ? "rtl" : "ltr",
+      face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      langs: [["en", "EN"], ["ar", "ع"]].map(([k, label]) => ({
+        label, pick: () => this.setLang(k),
+        bg: this.lang === k ? "#1F5240" : "#fff",
+        color: this.lang === k ? "#fff" : "#55655D",
+      })),
+      meWord: this.t("Me"),
+      forLead: this.state.forLead || "",
+      forLeadNote: ar ? "حدّد الموقع عند المحل نفسه — المسح مرتبط بمكان وقوفك، فلا بد أن يكون عنوان هذا المحل." : "Capture the location at the shop itself — the survey is pinned to where you stand, so it has to be this shop's address.",
+      confirmLogout: !!this.state.confirmLogout,
+      askLogout: () => this.setState({ confirmLogout: true }),
+      cancelLogout: () => this.setState({ confirmLogout: false }),
+      goSurvey: () => this.setState({ tab: "Survey", screen: 0, query: "", checked: false, gps: null,
+        stopped: false, outletName: undefined, outletPhone: "", outletLandline: "", waNumber: "",
+        competitor: false, rival: "", rivalUntil: "", askingSave: false, stewardOpen: false, lastSaved: null }),
+      // One source: the log feeds the counters and the list, so a saved survey
+      // cannot be counted without appearing.
+      dayFigures: [
+        { label: this.t("Surveyed"), value: String(logged.length), color: "#10231C", note: ar ? "منذ 08:10" : "since 08:10" },
+        { label: this.t("Stopped"), value: String(STOPPED.length), color: "#B3261E", note: ar ? "مسجّلة مسبقاً" : "already on file" },
+        { label: this.t("Target"), value: String(DAY_TARGET), color: "#63736A",
+          note: Math.max(0, DAY_TARGET - logged.length) + (ar ? " متبقية" : " to go") },
+      ],
+      dayTitle: this.t("Surveyed today"),
+      dayNote: this.t("What you sent from this phone today. The call center works through these as Unverified."),
+      // A survey already with the call center is not his to change, so he asks
+      // for the correction and they make it. One still on the phone he can edit.
+      daySurveys: logged.slice().reverse().map((d) => {
+        const asked = (this.state.edits || {})[d.ref];
+        return {
+          shop: d.shop, ref: d.ref, at: d.at,
+          state: this.t(d.held ? this.t("Held on phone") : this.t("Sent")),
+          stateColor: d.held ? "#B3261E" : "#1F5240",
+          detail: d.detail,
+          border: d.held ? "#E8B4AE" : d.fresh ? "#BFD8C9" : "#EFEBE1",
+          bg: d.held ? "#FDFAF3" : d.fresh ? "#F6FAF7" : "#fff",
+          asked: asked ? this.t(d.held ? this.t("Correction attached") : this.t("Edit requested")) : "",
+          open: () => this.setState({ viewing: d.ref }),
+        };
+      }),
+      // The record read back in full, with the correction request inside it.
+      isRecord: tab === "Today" && !!this.state.viewing,
+      closeRecord: () => this.setState(Object.assign({ viewing: null }, Component.transient)),
+      openRecord: (() => {
+        const d = logged.filter((x) => x.ref === this.state.viewing)[0] || logged[logged.length - 1];
+        const f = d.fields || {};
+        const asked = (this.state.edits || {})[d.ref];
+        const row = (label, value) => ({ label: this.t(label), value: this.t(value) || "—",
+          color: value && value !== "—" ? "#10231C" : "#63736A" });
+        return {
+          shop: d.shop, ref: d.ref, at: d.at,
+          state: this.t(d.held ? this.t("Held on phone") : this.t("Sent")),
+          stateColor: d.held ? "#B3261E" : "#1F5240",
+          groups: [
+            { head: this.t("Outlet"), rows: [row("Type", f.type),
+              row("Contact", f.contactAr ? f.contact + " · " + f.contactAr : f.contact), row("Mobile", f.mobile), row("Landline", f.landline), row("WhatsApp", f.wa)] },
+            { head: this.t("Location"), rows: [row("Area", f.area), row("GPS", f.gps)] },
+            { head: this.t("Oil"), rows: [row("Currently selling to", f.selling), row("Competitor", f.rival), row("Committed until", f.until), row("Willingness", f.willing), row("Asking price", f.price)] },
+            { head: this.t("Oil Collection Representative"), rows: [row("Separate representative", f.steward)] },
+          ],
+          askedTitle: this.t(d.held ? this.t("Correction attached") : this.t("Edit requested")),
+          asked: asked || "",
+          canEdit: this.state.editing !== d.ref && !asked,
+          editing: this.state.editing === d.ref,
+          sendLabel: this.t(d.held ? this.t("Attach the correction") : this.t("Send the request")),
+          editNote: this.t(d.held
+            ? this.t("This one has not gone yet, so the correction travels with it when it sends.")
+            : this.t("The call center holds this survey. They make the change and it stays on the record that you asked.")),
+          edit: () => this.setState({ editing: d.ref, editNote: "" }),
+          send: () => (this.state.editNote || "").trim()
+            ? this.setState((p) => ({
+                edits: { ...(p.edits || {}), [d.ref]: (p.editNote || "").trim() },
+                editing: null, editNote: "",
+              }))
+            : null,
+        };
+      })(),
+      editNote: this.state.editNote || "",
+      setEditNote: (e) => this.setState({ editNote: e.target.value }),
+      closeEdit: () => this.setState({ editing: null, editNote: "" }),
+      editSendBg: (this.state.editNote || "").trim() ? "#1F5240" : "#EFEBE1",
+      editSendColor: (this.state.editNote || "").trim() ? "#fff" : "#8A9188",
+      editSendCursor: (this.state.editNote || "").trim() ? "pointer" : "not-allowed",
+      stoppedTitle: this.t("Stopped — already on file"),
+      stopped: STOPPED,
+      next: () => (blocked ? null : this.goTo(s + 1)),
+      nextBg: blocked ? "#EFEBE1" : "#1F5240",
+      nextColor: blocked ? "#8A9188" : "#fff",
+      nextCursor: blocked ? "not-allowed" : "pointer",
+      back: () => this.goTo(s - 1),
+      // Saving is the only finish action — no competing "Done" beside it.
+      onLastStep: s === 5,
+      // No Next on the GPS step — capturing the location is what moves him on,
+      // and there is nothing else to press there.
+      // Nor on the duplicate check — "No, it's different" is what moves him on.
+      notLastStep: s !== 5 && s !== 0 && s !== 1,
+      // The name he just checked carries into the form, so he does not retype
+      // the thing the duplicate search was run on.
+      outletName: this.state.outletName === undefined ? (this.state.query || "") : this.state.outletName,
+      setOutletName: (e) => this.setState({ outletName: e.target.value }),
+      // Only claim a transliteration for a name we actually hold one for —
+      // otherwise say it will be added rather than showing another shop's.
+      w_contact: this.t("Contact person"), w_first: this.t("First"), w_last: this.t("Last"),
+      contactFirst: this.state.contactFirst || "",
+      contactLast: this.state.contactLast || "",
+      setContactFirst: (e) => this.setState({ contactFirst: e.target.value }),
+      setContactLast: (e) => this.setState({ contactLast: e.target.value }),
+      // The same treatment as the shop name: show the Arabic spelling we hold
+      // for the parts we know, and say plainly when we do not hold one.
+      contactArabicLabel: this.t(contactArabic ? "Arabic (auto):" : "Arabic:"),
+      contactArabicName: contactArabic || (contactName ? "—" : ""),
+      contactArabicAction: !contactName ? "" : this.t(contactArabic ? "edit" : "the call center adds it"),
+      arabicLabel: this.t(ARABIC[nameNow.trim().toLowerCase()] ? this.t("Arabic (auto):") : this.t("Arabic:")),
+      arabicName: ARABIC[nameNow.trim().toLowerCase()] || (nameNow.trim() ? "—" : ""),
+      arabicAction: this.t(ARABIC[nameNow.trim().toLowerCase()] ? this.t("edit") : this.t("the call center adds it")),
+      nameFromCheck: (this.state.query || "").trim()
+        ? this.t("Carried over from the check you just ran. Correct it if the sign says something else.")
+        : "",
+      outletPhone: this.state.outletPhone || "",
+      // He types all eleven digits and the field spaces them as he goes — too
+      // many codes in use to make it a list, so it is typed and then checked.
+      setOutletPhone: (e) => this.setState({ outletPhone: mobileInput(e.target.value) }),
+      mobileNote: mobileDigits.length === 0
+        ? this.t("Eleven digits, starting 010, 011, 012 or 015.")
+        : mobileDigits.length < 11
+          ? mobileDigits.length + (ar ? " من 11 رقماً." : " of 11 digits.")
+          : mobileOk
+            ? (ar ? "يبدو صحيحاً — " + mobileDigits.slice(0, 3) + " كود شبكة." : "Looks right — " + mobileDigits.slice(0, 3) + " is a carrier code.")
+            : (ar ? mobileDigits.slice(0, 3) + " ليس كود شبكة مصرية. الأكواد 010 و011 و012 و015." : mobileDigits.slice(0, 3) + " is not an Egyptian carrier code. They start 010, 011, 012 or 015."),
+      mobileNoteColor: mobileDigits.length === 11 && !mobileOk ? "#B3261E" : "#63736A",
+      outletLandline: this.state.outletLandline || "",
+      // The city comes from the GPS fix, so the code is known — he types the
+      // eight digits and nothing else.
+      // Habit makes people type the code first, but Cairo numbers also start
+      // with 2 — so only drop a full "02" when doing that still leaves 8 digits.
+      // "24145566" must survive intact; "0224145566" becomes "24145566".
+      setOutletLandline: (e) => {
+        const d = e.target.value.replace(/\D/g, "");
+        const n = d.length === 10 && d.slice(0, 2) === "02" ? d.slice(2) : d;
+        // A first digit outside 2–5 is refused at the keystroke rather than
+        // accepted and then complained about.
+        this.setState({ outletLandline: n && "2345".indexOf(n[0]) < 0 ? "" : n.slice(0, 8) });
+      },
+      areaCode: AREA_CODE,
+      // A Cairo landline starts 2, 3, 4 or 5 — anything else is a mistyped
+      // number, so say which digit is wrong rather than taking it.
+      areaNote: landDigits.length === 0
+        ? (ar ? "ثمانية أرقام، تبدأ بـ2 أو 3 أو 4 أو 5. و" + AREA_CODE + " يُضاف لك — أنت في مدينة نصر، القاهرة." : "Eight digits, starting 2, 3, 4 or 5. " + AREA_CODE + " is added for you — you are in Nasr City, Cairo.")
+        : landDigits.length < 8
+          ? landDigits.length + (ar ? " من 8 أرقام." : " of 8 digits.")
+          : (ar ? "يبدو صحيحاً — " + AREA_CODE + " " + this.state.outletLandline + "." : "Looks right — " + AREA_CODE + " " + this.state.outletLandline + "."),
+      areaNoteColor: "#63736A",
+      // A shop with no number cannot be called, so the record is useless without
+      // one — a mobile or a landline, either will do.
+      // The gate names whichever requirement is actually missing.
+      outletGate: !hasPhone
+        ? this.t("You need a mobile or a landline — eight digits after the code either way — before you can go on. Without a number nobody can call this shop.")
+        : !contactName
+          ? this.t("Name the person to ask for. A number with no name is a call the center cannot make.")
+          : this.t("A number is on file — the call center can reach this shop."),
+      outletGateColor: hasPhone && contactName ? "#1F5240" : "#B3261E",
+      // The saved survey is gone from the phone's form — he is back at the start
+      // with a receipt, and there is nothing left to edit.
+      lastSaved: !!this.state.lastSaved,
+      lastSavedTitle: "Survey saved · " + (this.state.lastSaved || ""),
+      lastSavedBody: off
+        ? this.t("Held on the phone and sent the moment you have signal. The call center sees it as Unverified until they reach the owner.")
+        : this.t("Sent. The call center sees it as Unverified until they reach the owner and confirm the details."),
+      // Read back before saving: the call center works from this record, so a
+      // wrong number is a shop nobody can reach.
+      summary: [
+        { head: this.t("Outlet"), rows: [
+          { label: this.t("Name"), value: nameNow.trim() || "— not entered", color: nameNow.trim() ? "#10231C" : "#B3261E", style: nameNow.trim() ? "normal" : "italic" },
+          { label: this.t("Type"), value: this.t("Grill / charcoal"), color: "#10231C", style: "normal" },
+          { label: this.t("Contact person"),
+            value: contactName ? (contactArabic ? contactName + " · " + contactArabic : contactName) : "— not entered",
+            color: contactName ? "#10231C" : "#B3261E", style: contactName ? "normal" : "italic" },
+          { label: this.t("Mobile"), value: mobileOk ? spaceMobile(mobileDigits) : this.t("— none"), color: mobileOk ? "#10231C" : "#63736A", style: mobileOk ? "normal" : "italic" },
+          { label: this.t("WhatsApp"), value: this.state.waSame ? (mobileOk ? this.t("Same as mobile") : this.t("— none")) : (waOk ? spaceMobile(waDigits) : this.t("— none")), color: (this.state.waSame ? mobileOk : waOk) ? "#10231C" : "#63736A", style: (this.state.waSame ? mobileOk : waOk) ? "normal" : "italic" },
+          { label: this.t("Landline"), value: landOk ? AREA_CODE + " " + this.state.outletLandline : this.t("— none"), color: landOk ? "#10231C" : "#63736A", style: landOk ? "normal" : "italic" },
+        ] },
+        { head: this.t("Location"), rows: [
+          { label: this.t("GPS"), value: this.state.gps === "ok" ? "Captured · ±8 m" : this.t("— not captured"), color: this.state.gps === "ok" ? "#1F5240" : "#B3261E", style: "normal" },
+          { label: this.t("Area"), value: this.t("Nasr City 3"), color: "#10231C", style: "normal" },
+        ] },
+        { head: this.t("Oil"), rows: [
+          { label: this.t("Currently selling to"), value: this.state.competitor ? this.t("A competitor") : this.t("Not selling"), color: "#10231C", style: "normal" },
+          { label: this.t("Competitor"), value: this.state.competitor ? (this.state.rival && this.state.rival !== "Select competitor" ? this.state.rival : this.t("— not named")) : "—", color: this.state.competitor && (!this.state.rival || this.state.rival === "Select competitor") ? "#B3261E" : "#10231C", style: "normal" },
+          { label: this.t("Committed until"), value: this.state.competitor ? (this.state.rivalUntil || "— no date") : "—", color: this.state.competitor && !this.state.rivalUntil ? "#B3261E" : "#10231C", style: "normal" },
+          { label: this.t("Willingness"), value: this.state.willingness, color: "#10231C", style: "normal" },
+        ] },
+        { head: this.t("Oil Collection Representative"), rows: [
+          { label: this.t("Separate representative"), value: this.state.stewardOpen ? this.t("Yes — entered") : this.t("No, the owner hands over"), color: "#10231C", style: "normal" },
+        ] },
+      ],
+      askingSave: !!this.state.askingSave,
+      notAskingSave: !this.state.askingSave,
+      askSave: () => this.setState({ askingSave: true }),
+      cancelSave: () => this.setState({ askingSave: false }),
+      askingSaveBody: off
+        ? this.t("It is held on the phone and goes the moment you have signal. You cannot change it afterwards.")
+        : this.t("It goes to the call center now. You cannot change it afterwards."),
+      saveSurvey: () => {
+        // One above the highest reference actually on the log, so a new survey
+        // can never carry a smaller number than one taken hours earlier.
+        const ref = "LEAD-" + (logged.reduce((hi, d) => {
+          const n = parseInt(String(d.ref).replace(/\D/g, ""), 10);
+          return isNaN(n) ? hi : Math.max(hi, n);
+        }, 2407) + 1);
+        const num = mobileOk ? spaceMobile(mobileDigits) : landOk ? AREA_CODE + " " + this.state.outletLandline : "no number";
+        const entry = {
+          shop: nameNow.trim() || "Unnamed shop", ref, at: clockNow(), held: off, fresh: true,
+          // Kept so the record can be read back later, not just summarised.
+          fields: {
+            type: this.t("Grill / charcoal"),
+            mobile: mobileOk ? spaceMobile(mobileDigits) : "—",
+            landline: landOk ? AREA_CODE + " " + this.state.outletLandline : "—",
+            wa: this.state.waSame ? this.t("Same as mobile") : (waOk ? spaceMobile(waDigits) : "—"),
+            contact: contactName || "—",
+            contactAr: contactArabic,
+            area: this.t("Nasr City 3"), gps: "Captured · ±8 m",
+            selling: this.state.competitor ? this.t("A competitor") : this.t("Not selling"),
+            rival: this.state.competitor ? this.state.rival : "—",
+            until: this.state.competitor ? this.state.rivalUntil : "—",
+            willing: this.state.willingness, price: "—",
+            steward: this.state.stewardOpen ? this.t("Yes") : this.t("No"),
+          },
+          detail: [
+            "Grill / charcoal", num,
+            this.state.competitor
+              ? "selling to " + this.state.rival + " until " + this.state.rivalUntil
+              : this.state.willingness === "Yes" ? this.t("willing to sell to us") : "willingness: " + this.state.willingness,
+          ].join(" · "),
+        };
+        // Added: the survey is written onto the outlet it was for (or a new one),
+        // as a Survey, and goes to the owning agent as a verification call.
+        const Z = window.ZEITCO;
+        if (Z && Z.journal) {
+          const me = this.surveyorMe();
+          const same = (v) => ({ en: v, ar: v });
+          const fields = { stage: "survey", data: "unconfirmed", activity: "not_started", price: "not_discussed",
+            surveyor: me, surveyedOn: Z.asDate(Z.today.en + " " + clockNow()), gps: "±8 m", complete: 100,
+            surveyWith: null, surveyDue: null,
+            phone: mobileOk ? spaceMobile(mobileDigits) : undefined,
+            contact: contactName ? same(contactName) : undefined,
+            survey: { by: "surveyor", outletPhone: landOk ? AREA_CODE + " " + this.state.outletLandline : "",
+              sellingTo: this.state.competitor ? "competitor" : "", competitor: this.state.competitor ? this.state.rival : "",
+              contractEnds: this.state.competitor ? same(this.state.rivalUntil) : undefined, coords: "30.0561, 31.3301" } };
+          Object.keys(fields).forEach((k) => { if (fields[k] === undefined) delete fields[k]; });
+          const target = this.state.forShop && Z.byId(this.state.forShop);
+          if (target) Z.journal.add({ op: "patch", shop: target.id, fields });
+          else {
+            const id = "SV-" + String(700 + Z.shops.filter((x) => /^SV-7/.test(x.id)).length).padStart(4, "0");
+            const area = Z.shops.filter((x) => x.area)[0];
+            Z.journal.add({ op: "shop", shop: Object.assign({ id, name: same(nameNow.trim() || "Unnamed shop"),
+              area: area ? area.area : same("Nasr City 3"), type: same("Grill"),
+              agent: Z.autoAgent({ area: area ? area.area : same("Nasr City 3") }), assigned: "auto",
+              addedBy: { en: me.en + ", surveyor", ar: me.ar + "، مساح" }, addedOn: Z.today }, fields) });
+          }
+        }
+        this.setState({ forShop: null,
+          logged: (this.state.logged || this.mySeed()).concat([entry]),
+          lastSaved: ref, screen: 0, query: "", checked: false, gps: null,
+          stopped: false, outletName: undefined, outletPhone: "", outletLandline: "", waNumber: "",
+          competitor: false, rival: "", rivalUntil: "", stewardOpen: false,
+          askingSave: false, editing: null, editNote: "", confirmLogout: false,
+        });
+      },
+      waSame: this.state.waSame,
+      toggleWa: () => this.setState((p) => ({ waSame: !p.waSame })),
+      // Open unless WhatsApp is the same as his mobile, in which case it shows
+      // that number greyed rather than sitting empty and looking unanswered.
+      waNumber: this.state.waSame ? spaceMobile(mobileDigits) : (this.state.waNumber || ""),
+      setWaNumber: (e) => this.setState({ waNumber: mobileInput(e.target.value) }),
+      waPlaceholder: this.state.waSame ? (ar ? "نفس الموبايل" : "same as mobile") : "0100 1234567",
+      waLabelColor: this.state.waSame ? "#8A9188" : "#55655D",
+      waBorder: this.state.waSame ? "#EFEBE1" : "#8A9188",
+      waBg: this.state.waSame ? "#F6F2E9" : "#fff",
+      waColor: this.state.waSame ? "#8A9188" : "#10231C",
+      waNote: this.state.waSame
+        ? (ar ? "مأخوذ من موبايله. أزل العلامة أعلاه إن كان الواتساب على رقم آخر." : "Taken from his mobile. Untick above if WhatsApp is on a different number.")
+        : waDigits.length === 0
+          ? this.t("Eleven digits, starting 010, 011, 012 or 015.")
+          : waDigits.length < 11
+            ? waDigits.length + (ar ? " من 11 رقماً." : " of 11 digits.")
+            : waOk
+              ? (ar ? "يبدو صحيحاً." : "Looks right.")
+              : (ar ? waDigits.slice(0, 3) + " ليس كود شبكة مصرية." : waDigits.slice(0, 3) + " is not an Egyptian carrier code."),
+      waNoteColor: !this.state.waSame && waDigits.length === 11 && !waOk ? "#B3261E" : "#8A9188",
+      competitor: this.state.competitor,
+      pickSelling: (e) => this.setState({ competitor: e.target.value === "Selling to a Competitor" }),
+      rivals: ["Select competitor", "Masria Oils", "Delta Collect", "Nile Rendering", "Cairo Used Oil", "Someone else — not on the list"],
+      rival: this.state.rival || "Select competitor",
+      setRival: (e) => this.setState({ rival: e.target.value }),
+      rivalUntil: this.state.rivalUntil || "",
+      setRivalUntil: (e) => this.setState({ rivalUntil: e.target.value }),
+      // The date is what makes this worth recording — it tells the call center
+      // when to call back rather than leaving the shop to be chased blindly.
+      rivalNote: rivalReady
+        ? this.t("The call center will come back to this shop when that date is near.")
+        : this.t("Name the competitor and the date he is committed until — that is when we call him back."),
+      rivalNoteColor: rivalReady ? "#1F5240" : "#B3261E",
+      stewardOpen: this.state.stewardOpen,
+      stewardBtn: this.state.stewardOpen ? "Hide" : "+ Add",
+      toggleSteward: () => this.setState((p) => ({ stewardOpen: !p.stewardOpen })),
+      willing: WILLING.map((label) => {
+        const on = this.state.willingness === label;
+        return {
+          label,
+          bg: on ? "#1F5240" : "#fff",
+          color: on ? "#fff" : "#55655D",
+          border: on ? "#1F5240" : "#8A9188",
+          pick: () => this.setState({ willingness: label })
+        };
+      }),
+      readOnly: [
+        { label: "Country", value: "Egypt", font: "inherit" },
+        { label: "City", value: "Cairo", font: "inherit" },
+        { label: "Zone", value: this.t("Nasr City 3"), font: "inherit" },
+        { label: this.t("GPS"), value: "30.056134, 31.345287 · ±14 m", font: "'IBM Plex Mono',monospace" }
+      ],
+      record: [
+        { label: this.t("Surveyor"), value: "M. Fawzy", color: "#3A4A43", style: "normal" },
+        { label: "Status on Save", value: "Unverified", color: "#3A4A43", style: "normal" },
+        // Same source as the confirmation, so the ID cannot read as pending
+        // on a record that has already been saved.
+        this.state.saved
+          ? { label: "Lead ID", value: "LEAD-2416", color: "#10231C", style: "normal" }
+          : { label: "Lead ID", value: this.t("assigned on save"), color: "#63736A", style: "italic" },
+        { label: "Verified By", value: this.t("MOD-100 v1 (ownership log)"), color: "#63736A", style: "italic" }
+      ],
+      meWho: (() => { const m = this.surveyorMe(); return this.lang === "ar" ? m.ar || m.en : m.en; })(),
+      meRole: this.lang === "ar" ? "مساح" : "Surveyor",
+      phoneTabs: ["Survey", "Today", "Pre-surveys", "Revisits", "Me"].map((label) => ({
+        label: label === "Today" ? (this.lang === "ar" ? "يومي" : "My Day") : this.t(label),
+        color: tab === label ? "#1F5240" : "#63736A",
+        edge: tab === label ? "#1F5240" : "transparent",
+        // Returning to Survey starts a fresh one unless the last was saved.
+        // Both branches drop transient UI, and a glance at Today never resets.
+        pick: () => this.setState((p) => label === "Survey" && !p.saved
+          ? Object.assign({ tab: label, screen: 0, query: "", checked: false, gps: null, stopped: false,
+              outletName: undefined, outletPhone: "", outletLandline: "", waNumber: "",
+              competitor: false, rival: "", rivalUntil: "", viewing: null }, Component.transient)
+          : Object.assign({ tab: label, viewing: null }, Component.transient)),
+      })),
+      onToday: tab === "Today",
+      onPreleads: tab === "Pre-surveys",
+      onRevisits: tab === "Revisits",
+      onMe: tab === "Me",
+      // Added: the pre-surveys sent to this surveyor, from the shared data.
+      // Testing: ?surveyor=A.%20Sameh (default M. Fawzy).
+      preleads: this.myPre().map((sh) => ({
+        shopId: sh.id,
+        name: ar ? (sh.name.ar || sh.name.en) : sh.name.en,
+        meta: (ar ? "من " : "From ") + ((sh.addedBy && (ar ? sh.addedBy.ar : sh.addedBy.en)) || (ar ? "مركز الاتصال" : "the call center"))
+          + (sh.surveyDue ? (ar ? " · حتى " + sh.surveyDue.ar : " · due " + sh.surveyDue.en) : ""),
+      })).map((p) => ({ ...p, action: this.t("Survey"),
+        start: () => this.setState(Object.assign({ forShop: p.shopId,
+          tab: "Survey", screen: 0, gps: null, stopped: false, viewing: null,
+          // The name is known, so the duplicate check runs on it rather than
+          // asking him to type a name the app already has.
+          forLead: p.name, query: p.name, checked: false,
+          outletName: undefined, outletPhone: "", outletLandline: "", waNumber: "",
+          competitor: false, rival: "", rivalUntil: "", stewardOpen: false, lastSaved: null,
+        }, Component.transient)) })),
+      revisits: this.myRevisits().map((r) => {
+        const open = this.state.revisiting === r.id;
+        const done = r.answeredText || (this.state.revisitDone || {})[r.id];
+        return {
+          name: r.name, meta: r.meta,
+          rowBg: done ? "#fff" : r.late ? "#FBE9E7" : "#fff",
+          pill: this.t(done ? this.t("Answered") : r.late ? this.t("Overdue") : this.t("Due")),
+          pillColor: done ? "#1F5240" : r.late ? "#B3261E" : "#63736A",
+          action: this.t("Correct it"),
+          closed: !open && !done,
+          open2: open,
+          answered: done || "",
+          asked: r.asked,
+          onFile: r.onFile.map((f) => ({ label: f[0], value: f[1],
+            color: f[2] ? "#B3261E" : "#10231C" })),
+          fixLabel: r.fixLabel,
+          fixHint: r.fixHint,
+          footNote: this.t("Goes back to the call center against this shop, with your name and the time on it."),
+          open: () => this.setState({ revisiting: r.id, revisitNote: "" }),
+          send: () => (this.state.revisitNote || "").trim()
+            ? (this.answerRevisit(r, (this.state.revisitNote || "").trim()), this.setState((p) => ({
+                revisitDone: { ...(p.revisitDone || {}), [r.id]: (p.revisitNote || "").trim() },
+                revisiting: null, revisitNote: "",
+              })))
+            : null,
+        };
+      }),
+      revisitNote: this.state.revisitNote || "",
+      setRevisitNote: (e) => this.setState({ revisitNote: e.target.value }),
+      closeRevisit: () => this.setState({ revisiting: null, revisitNote: "" }),
+      revisitSendBg: (this.state.revisitNote || "").trim() ? "#1F5240" : "#EFEBE1",
+      revisitSendColor: (this.state.revisitNote || "").trim() ? "#fff" : "#8A9188",
+      revisitSendCursor: (this.state.revisitNote || "").trim() ? "pointer" : "not-allowed",
+      meRows: [
+        { label: this.t("Surveyor"), value: "Fatma Ibrahim" },
+        { label: this.t("Zone today"), value: this.t("Nasr City 3") },
+        { label: "Checked in", value: "07:40" },
+        { label: this.t("Surveyed this month"), value: "34 of 40" },
+        { label: this.t("Verified by the call center"), value: "29 of 34" },
+        { label: this.t("Sent back for a revisit"), value: "4" },
+      ],
+      // Stopping is a real outcome: the survey ends and the existing record is
+      // named, rather than the button doing nothing.
+      stopped: !!this.state.stopped,
+      stopSurvey: () => this.setState({ stopped: true }),
+      resumeCheck: () => this.setState({ stopped: false, checked: false, query: "" }),
+      t_stoppedTitle: this.t("Already on file — nothing to survey"),
+      t_stoppedBody: this.t("Al Nour Broasted is the same shop, 38 m away on Mostafa El Nahhas. It is already a record, so a second survey would create a duplicate. Nothing has been saved."),
+    };
+  }
+}
+</script>
+</body>
+</html>

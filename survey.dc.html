@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="data.js"></script>
+<script src="phone-survey-data.js"></script>
+<script src="rules.js"></script>
+<script src="shell.js"></script>
+<script src="survey-ar.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="width:100%;max-width:1440px;margin:0 auto;background:#FAF6EE;font-family:{{ face }};-webkit-font-smoothing:antialiased">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <div style="display:flex;align-items:stretch;gap:14px;padding:0 20px;height:56px">
+      <a href="agent.dc.html" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;padding-inline-end:20px;border-inline-end:1px solid #EFEBE1;flex-shrink:0">
+        <img src="../public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto;flex-shrink:0">
+        Zeitco
+      </a>
+      <nav style="display:flex;align-items:stretch;gap:2px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+          <a href="{{ t.href }}" style="display:flex;align-items:center;white-space:nowrap;padding:0 10px;border:0;border-bottom:2.5px solid transparent;background:transparent;color:#55655D;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ t.label }}</a>
+        </sc-for>
+      </nav>
+      <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+          <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden">
+            <button type="button" onClick="{{ setEn }}" style="border:0;height:26px;padding:0 10px;background:{{ enBg }};color:{{ enInk }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">EN</button>
+            <button type="button" onClick="{{ setAr }}" style="border:0;height:26px;padding:0 10px;background:{{ arBg }};color:{{ arInk }};font-family:'Noto Kufi Arabic',sans-serif;font-size:12px;font-weight:600;cursor:pointer">ع</button>
+          </div>
+          <a href="Start.dc.html" style="font-size:13px;font-weight:500;color:#55655D;white-space:nowrap">{{ T.k6 }}</a>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1120px;margin:0 auto;padding:12px 20px 10px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <h1 style="margin:0;font-size:19px;font-weight:700;color:#10231C;letter-spacing:-0.01em">{{ pageTitle }}</h1>
+        <p style="margin:3px 0 0;font-size:12px;color:#63736A">{{ shopLine }}</p>
+        <p style="margin:2px 0 0;font-size:12px;color:#8A9188;max-width:640px;text-wrap:pretty">{{ pageKind }}</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <a href="{{ backTopHref }}" style="height:30px;padding:0 13px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center">{{ backLabel }}</a>
+        <button type="button" onClick="{{ toggleNotes }}" style="height:30px;padding:0 13px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap">{{ notesLabel }}</button>
+        <button type="button" onClick="{{ toggleOffline }}" style="height:30px;padding:0 13px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap">{{ offlineLabel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px 14px;display:grid;grid-template-columns:{{ shellCols }};gap:12px;align-items:start">
+
+    <div style="min-width:0;display:flex;flex-direction:column;gap:10px">
+
+      <sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;background:#FBE9E7;border:1px solid #B3261E;border-radius:10px;padding:9px 13px">
+          <span style="width:8px;height:8px;border-radius:999px;background:#B3261E;flex-shrink:0"></span>
+          <span style="flex:1;font-size:13px;color:#3A4A43">{{ T.k7 }} <strong style="font-weight:600">{{ T.k8 }}</strong></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#B3261E;white-space:nowrap">draft 18:21</span>
+        </div>
+      </sc-if>
+
+
+
+      <sc-if value="{{ onNegotiate }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">2</span>
+            <h2 style="margin:0;font-size:16px;font-weight:700;color:#10231C">{{ T.k9 }}</h2>
+          </div>
+          <p style="margin:0 0 10px 27px;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k0 }} {{ theirFigure }} {{ ceilingLine }}</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:12px">
+            <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;padding:10px 12px">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;margin-bottom:6px">{{ T.k10 }}</div>
+              <sc-for list="{{ recorded }}" as="r" hint-placeholder-count="8">
+                <div style="display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px;padding:4px 0;border-top:1px solid #EFEBE1">
+                  <span style="font-size:12px;color:#63736A">{{ r.label }}</span>
+                  <span style="font-size:12px;font-weight:600;color:#10231C;text-wrap:pretty">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#fff;border:1px solid #BFD8C9;border-radius:10px;padding:10px 12px">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#1F5240;margin-bottom:6px">{{ T.k11 }}</div>
+              <sc-if value="{{ noRounds }}" hint-placeholder-val="{{ true }}">
+                <p style="margin:0 0 8px;font-size:12px;color:#63736A">{{ T.k12 }}</p>
+              </sc-if>
+              <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="0">
+                <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid #EFEBE1">
+                  <span style="font-size:11px;font-weight:600;color:{{ r.colour }};width:78px;flex-shrink:0">{{ r.who }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:{{ r.priceColour }}">{{ r.price }}</span>
+                  <span style="font-size:11px;color:#8A9188;flex:1;min-width:0;text-wrap:pretty">{{ r.note }}</span>
+                  <button type="button" onClick="{{ r.use }}" style="border:0;background:transparent;color:#1F5240;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;flex-shrink:0">{{ T.k13 }}</button>
+                </div>
+              </sc-for>
+              <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid #EFEBE1">
+                <div style="display:flex;flex-shrink:0;border:1px solid #8A9188;border-radius:9px;overflow:hidden;height:32px">
+                  <button type="button" onClick="{{ sideThem }}" style="border:0;padding:0 11px;white-space:nowrap;flex-shrink:0;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;background:{{ themBg }};color:{{ themInk }}">{{ T.k14 }}</button>
+                  <button type="button" onClick="{{ sideUs }}" style="border:0;border-left:1px solid #8A9188;padding:0 11px;white-space:nowrap;flex-shrink:0;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;background:{{ usBg }};color:{{ usInk }}">{{ T.k15 }}</button>
+                </div>
+                <input type="text" inputmode="decimal" value="{{ roundPrice }}" onChange="{{ setRoundPrice }}" placeholder="0.00" aria-label="EGP a Kg" style="width:90px;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:9px;background:#fff;padding:0 9px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:#10231C">
+                <input type="text" value="{{ roundNote }}" onChange="{{ setRoundNote }}" placeholder="{{ T.k108 }}" style="flex:1;min-width:120px;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:9px;background:#fff;padding:0 9px;font-family:inherit;font-size:12px;color:#10231C">
+                <button type="button" onClick="{{ logRound }}" style="height:32px;padding:0 13px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ T.k16 }}</button>
+              </div>
+              <p style="margin:6px 0 0;font-size:11px;color:{{ roundHintColour }};text-wrap:pretty">{{ roundHint }}</p>
+            </div>
+          </div>
+          <label style="display:block;max-width:260px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k17 }}</span>
+            <input type="text" value="{{ agreedPriceValue }}" onChange="{{ setAgreedPrice }}" placeholder="0.00" style="width:120px;height:34px;box-sizing:border-box;border:1px solid #1F5240;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:14px;color:#10231C">
+          </label>
+          <p style="margin:9px 0 12px;font-size:12px;font-weight:500;color:{{ priceVerdictColour }};text-wrap:pretty">{{ priceVerdict }}</p>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ onCollect }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">3</span>
+            <h2 style="margin:0;font-size:16px;font-weight:700;color:#10231C">{{ T.k18 }}</h2>
+          </div>
+          <p style="margin:0 0 10px 27px;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k19 }}</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px 12px">
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k20 }}</span>
+              <select value="{{ collFreq }}" onChange="{{ setCollFreq }}" style="width:100%;height:34px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                <option value="">{{ T.k21 }}</option>
+                <sc-for list="{{ freqOptions }}" as="o" hint-placeholder-count="4">
+                  <option value="{{ o.value }}">{{ o.label }}</option>
+                </sc-for>
+              </select>
+            </label>
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k22 }}</span>
+              <select value="{{ collDay1 }}" onChange="{{ setCollDay1 }}" style="width:100%;height:34px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                <option value="">{{ T.k23 }}</option>
+                <sc-for list="{{ dayOptions }}" as="o" hint-placeholder-count="6">
+                  <option value="{{ o.value }}">{{ o.label }}</option>
+                </sc-for>
+              </select>
+            </label>
+            <sc-if value="{{ twoDays }}" hint-placeholder-val="{{ false }}">
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k24 }}</span>
+                <select value="{{ collDay2 }}" onChange="{{ setCollDay2 }}" style="width:100%;height:34px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ T.k23 }}</option>
+                  <sc-for list="{{ dayOptions2 }}" as="o" hint-placeholder-count="6">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </label>
+            </sc-if>
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k25 }}</span>
+              <input type="text" value="{{ meetName }}" onChange="{{ setMeetName }}" placeholder="{{ T.k109 }}" style="width:100%;height:34px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+            </label>
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k26 }}</span>
+              <input type="tel" value="{{ meetPhone }}" onChange="{{ setMeetPhone }}" placeholder="01012345678" dir="ltr" style="width:100%;height:34px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+            </label>
+          </div>
+          <p style="margin:9px 0 12px;font-size:12px;color:#B3261E;text-wrap:pretty">{{ collectMiss }}</p>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ onOrder }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">4</span>
+            <h2 style="margin:0;font-size:16px;font-weight:700;color:#10231C">{{ T.k27 }}</h2>
+          </div>
+          <p style="margin:0 0 10px 27px;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k28 }}</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:9px 12px">
+            <label style="display:block;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k29 }}</span>
+              <input type="text" value="{{ orderKg }}" onChange="{{ setOrderKg }}" placeholder="{{ T.k110 }}" style="width:100%;height:34px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+            </label>
+            <div style="min-width:0;grid-column:1 / -1">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:5px">{{ T.k30 }}</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ dueDays }}" as="d" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ d.pick }}" style="height:32px;padding:0 12px;border:1px solid {{ d.border }};border-radius:16px;background:{{ d.bg }};color:{{ d.colour }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ d.label }}</button>
+                </sc-for>
+                <button type="button" onClick="{{ duePick }}" style="height:32px;padding:0 12px;border:1px dashed {{ duePickChip.border }};border-radius:16px;background:{{ duePickChip.bg }};color:{{ duePickChip.colour }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ T.k31 }}</button>
+              </div>
+              <sc-if value="{{ dueCalendar }}" hint-placeholder-val="{{ false }}">
+                <input type="date" onChange="{{ setOrderDueIso }}" min="{{ minTomorrow }}" style="margin-top:8px;width:180px;max-width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+              </sc-if>
+            </div>
+          </div>
+          <p style="margin:9px 0 12px;font-size:12px;color:#B3261E;text-wrap:pretty">{{ orderMiss }}</p>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ ended }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #1F5240;border-radius:12px;padding:13px 15px 15px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:22px;height:22px;border-radius:999px;background:#1F5240;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">✓</span>
+            <h2 style="margin:0;font-size:16px;font-weight:700;color:#10231C">{{ endTitle }}</h2>
+          </div>
+          <p style="margin:0 0 11px 31px;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k32 }}</p>
+          <div style="background:#FCFAF5;border-radius:9px;padding:4px 11px;margin-bottom:12px">
+            <sc-for list="{{ endLines }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;align-items:baseline;gap:12px;padding:5px 0;border-bottom:1px solid #EFEBE1;font-size:12px">
+                <span style="color:#1F5240;font-weight:600;flex-shrink:0;min-width:120px">{{ l.label }}</span>
+                <span style="color:#10231C;min-width:0;text-wrap:pretty">{{ l.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <a href="{{ backHref }}" style="height:34px;display:inline-flex;align-items:center;padding:0 16px;border-radius:9px;background:#1F5240;color:#fff;font-size:13px;font-weight:600;white-space:nowrap">{{ backList }}</a>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ onStart }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 13px 12px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">1</span>
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ T.k33 }}</h2>
+          </div>
+          <p style="margin:0 0 9px 26px;font-size:12px;color:#63736A;text-wrap:pretty">{{ startIntro }}</p>
+          <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+            <label style="width:170px;min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k34 }}</span>
+              <select value="{{ startCity }}" onChange="{{ setStartCity }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                <sc-for list="{{ cityOptions }}" as="c" hint-placeholder-count="2">
+                  <option value="{{ c.value }}">{{ c.label }}</option>
+                </sc-for>
+              </select>
+            </label>
+            <label style="flex:1;min-width:200px">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k35 }}</span>
+              <input type="text" value="{{ startName }}" onChange="{{ setStartName }}" placeholder="{{ T.k111 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+            </label>
+            <button type="button" onClick="{{ runCheck }}" style="height:32px;padding:0 15px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer">{{ T.k36 }}</button>
+          </div>
+          <sc-if value="{{ cantCheck }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:8px 0 0;font-size:12px;color:#B3261E">{{ T.k37 }}</p>
+          </sc-if>
+          <div style="display:flex;align-items:center;gap:8px;background:#E8EEF4;border-radius:8px;padding:7px 11px;margin-top:10px">
+            <span style="font-size:12px;color:#2C5578">{{ T.k38 }} <strong style="font-weight:600">{{ startCity }}</strong>{{ T.k39 }}</span>
+          </div>
+
+          <sc-if value="{{ resNone }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;margin-top:10px;padding:10px 12px">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;margin-bottom:6px">{{ T.k1 }} {{ startCity }}</div>
+              <p style="margin:0 0 10px;font-size:12px;color:#3A4A43">{{ T.k40 }}</p>
+              <button type="button" onClick="{{ startGo }}" style="height:32px;padding:0 14px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ T.k41 }}</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ resSimilar }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff;border:1px solid #B3261E;border-radius:10px;margin-top:10px;padding:10px 12px">
+              <div style="font-size:13px;font-weight:600;color:#B3261E">{{ T.k42 }}</div>
+              <p style="margin:4px 0 8px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ T.k43 }}</p>
+              <sc-for list="{{ hits }}" as="h" hint-placeholder-count="2">
+                <div style="border-top:1px solid #EFEBE1;padding:7px 0">
+                  <a href="{{ h.href }}" style="font-size:13px;font-weight:600;color:#1F5240">{{ h.name }}</a>
+                  <div style="font-size:12px;color:#63736A">{{ h.meta }}</div>
+                </div>
+              </sc-for>
+              <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+                <a href="agent.dc.html" style="height:34px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#B3261E;font-size:13px;font-weight:600">{{ T.k44 }}</a>
+                <button type="button" onClick="{{ startGo }}" style="height:34px;padding:0 14px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ T.k45 }}</button>
+              </div>
+              <p style="margin:8px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k46 }}</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ resExact }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#FBEAE9;border:1px solid #B3261E;border-radius:10px;margin-top:10px;padding:10px 12px">
+              <div style="font-size:13px;font-weight:600;color:#B3261E">{{ T.k47 }}</div>
+              <p style="margin:4px 0 8px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ T.k2 }} {{ startCity }}{{ T.k3 }}</p>
+              <sc-for list="{{ hits }}" as="h" hint-placeholder-count="1">
+                <div style="border-top:1px solid #F1CFCB;padding:7px 0">
+                  <a href="{{ h.href }}" style="font-size:13px;font-weight:600;color:#1F5240">{{ h.name }}</a>
+                  <div style="font-size:12px;color:#63736A">{{ h.meta }}</div>
+                </div>
+              </sc-for>
+              <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+                <a href="agent.dc.html" style="height:34px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-size:13px;font-weight:600">{{ T.k48 }}</a>
+                <button type="button" onClick="{{ startAgain }}" style="height:34px;padding:0 14px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#1F5240;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ T.k49 }}</button>
+              </div>
+              <p style="margin:8px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k50 }}</p>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ showGps }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 13px 12px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">1</span>
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ T.k51 }}</h2>
+          </div>
+          <p style="margin:0 0 9px 26px;font-size:12px;color:#63736A;text-wrap:pretty">{{ gpsBody }}</p>
+          <div style="display:flex;align-items:center;gap:12px;background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:11px 13px">
+            <span style="width:22px;height:22px;border-radius:999px;background:#1F5240;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">✓</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:#1F5240">{{ T.k52 }}</div>
+              <div style="font-size:12px;color:#1F5240;margin-top:1px;text-wrap:pretty">{{ T.k53 }}</div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ showCheckin }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 13px 12px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">1</span>
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ T.k54 }}</h2>
+          </div>
+          <p style="margin:0 0 9px 26px;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k55 }}</p>
+          <sc-if value="{{ notCheckedIn }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ checkIn }}" style="margin-inline-start:26px;height:34px;padding:0 16px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ T.k56 }}</button>
+          </sc-if>
+          <sc-if value="{{ checkedIn }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:11px 13px">
+              <span style="width:22px;height:22px;border-radius:999px;background:#1F5240;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">✓</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:600;color:#1F5240">{{ T.k57 }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#1F5240;margin-top:1px" dir="ltr">30.0561, 31.3301 · ±6 m</div>
+              </div>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ showSurveyor }}" hint-placeholder-val="{{ false }}">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 13px 12px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px">
+            <span style="width:18px;height:18px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">1</span>
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ T.k58 }}</h2>
+          </div>
+          <p style="margin:0 0 9px 26px;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k59 }}</p>
+          <div style="display:flex;align-items:center;gap:12px;background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:11px 13px">
+            <span style="width:22px;height:22px;border-radius:999px;background:#1F5240;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">✓</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:#1F5240">{{ surveyorLine }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#1F5240;margin-top:1px" dir="ltr">{{ surveyorProof }}</div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <div style="display:grid;grid-template-columns:{{ cardCols }};gap:10px;align-items:start">
+
+        <sc-if value="{{ showOutlet }}" hint-placeholder-val="{{ true }}">
+          <section style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:9px 12px 11px;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="width:17px;height:17px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">2</span>
+              <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ T.k60 }}</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px">
+              <div style="min-width:0">
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k35 }} <span style="color:#B3261E">*</span></span>
+                <input type="text" value="{{ outletName }}" onChange="{{ setOutletName }}" placeholder="{{ T.k112 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #1F5240;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C;box-shadow:0 0 0 3px #EEF6F2">
+              <sc-if value="{{ errOutletName }}" hint-placeholder-val="{{ false }}"><span style="display:block;margin-top:3px;font-size:11px;font-weight:600;color:#B3261E">{{ T.k61 }}</span></sc-if>
+              </label>
+              <sc-if value="{{ outletNameAr }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:7px;margin-top:6px;min-width:0">
+                  <span style="font-size:11px;color:#63736A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ T.k62 }} <span style="font-family:'Noto Kufi Arabic',sans-serif" dir="rtl">{{ outletNameAr }}</span></span>
+                  <button type="button" style="flex-shrink:0;border:0;background:transparent;color:#1F5240;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px">{{ T.k63 }}</button>
+                </div>
+              </sc-if>
+              </div>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k64 }}</span>
+                <input type="tel" value="{{ outletPhone }}" onChange="{{ setOutletPhone }}" placeholder="01012345678" maxlength="14" dir="ltr" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+              </label>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k65 }}</span>
+                <select value="{{ outletType }}" onChange="{{ setOutletType }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ T.k66 }}</option>
+                  <sc-for list="{{ outletTypeOptions }}" as="o" hint-placeholder-count="6">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </label>
+            </div>
+            <p style="margin:7px 0 0;font-size:12px;color:#63736A">{{ T.k67 }}</p>
+
+            <div role="group" aria-label="Contact person" style="margin-top:11px">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k68 }} <span style="color:#B3261E">*</span></span>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px">
+                <input type="text" value="{{ contactFirst }}" onChange="{{ setContactFirst }}" aria-label="First" placeholder="{{ T.k113 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+                <input type="text" value="{{ contactLast }}" onChange="{{ setContactLast }}" aria-label="Last" placeholder="{{ T.k114 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+              </div>
+              <sc-if value="{{ errContact }}" hint-placeholder-val="{{ false }}"><span style="display:block;margin-top:3px;font-size:11px;font-weight:600;color:#B3261E">{{ T.k61 }}</span></sc-if>
+              <sc-if value="{{ contactAr }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;margin-top:6px">
+                  <div style="display:flex;align-items:center;gap:7px;min-width:0">
+                    <span style="font-size:11px;color:#63736A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ T.k69 }} <span style="font-family:'Noto Kufi Arabic',sans-serif" dir="rtl">{{ contactFirstAr }}</span></span>
+                    <button type="button" style="flex-shrink:0;border:0;background:transparent;color:#1F5240;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px">{{ T.k63 }}</button>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:7px;min-width:0">
+                    <span style="font-size:11px;color:#63736A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ T.k69 }} <span style="font-family:'Noto Kufi Arabic',sans-serif" dir="rtl">{{ contactLastAr }}</span></span>
+                    <button type="button" style="flex-shrink:0;border:0;background:transparent;color:#1F5240;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px">{{ T.k63 }}</button>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;margin-top:11px">
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k70 }} <span style="color:#B3261E">*</span></span>
+                <input type="tel" value="{{ mobile }}" onChange="{{ setMobile }}" placeholder="01012345678" maxlength="14" dir="ltr" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+              <sc-if value="{{ errMobile }}" hint-placeholder-val="{{ false }}"><span style="display:block;margin-top:3px;font-size:11px;font-weight:600;color:#B3261E">{{ T.k61 }}</span></sc-if>
+              </label>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:9px;cursor:pointer">
+              <input type="checkbox" checked="{{ waSame }}" onChange="{{ toggleWa }}" style="width:16px;height:16px;accent-color:#1F5240;flex-shrink:0">
+              <span style="font-size:13px;color:#3A4A43">{{ T.k71 }}</span>
+            </label>
+            <sc-if value="{{ waDifferent }}" hint-placeholder-val="{{ false }}">
+              <label style="display:block;min-width:0;margin-top:9px">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k72 }}</span>
+                <input type="tel" placeholder="01012345678" maxlength="14" dir="ltr" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+              </label>
+            </sc-if>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ showLocation }}" hint-placeholder-val="{{ true }}">
+          <section style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:9px 12px 11px;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="width:17px;height:17px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">3</span>
+              <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ T.k73 }}</h2>
+            </div>
+            <div style="background:#FCFAF5;border-radius:8px;padding:4px 10px">
+              <sc-for list="{{ readOnly }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px solid #EFEBE1;font-size:12px">
+                  <span style="color:#55655D;flex-shrink:0">{{ r.label }}</span>
+                  <span style="font-weight:500;color:#10231C;text-align:right;min-width:0;font-family:{{ r.font }}" dir="ltr">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;margin-top:11px">
+              <sc-if value="{{ isNewShop }}" hint-placeholder-val="{{ false }}">
+                <label style="display:block;min-width:0">
+                  <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k34 }} <span style="color:#B3261E">*</span></span>
+                  <select value="{{ city }}" onChange="{{ setCity }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                    <option value="">{{ T.k74 }}</option>
+                    <sc-for list="{{ cityOptions }}" as="c" hint-placeholder-count="2">
+                      <option value="{{ c.value }}">{{ c.label }}</option>
+                    </sc-for>
+                  </select>
+                </label>
+              </sc-if>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ areaLabel }}<sc-if value="{{ isNewShop }}" hint-placeholder-val="{{ false }}"><span style="color:#B3261E"> *</span></sc-if></span>
+                <select value="{{ area }}" onChange="{{ setArea }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ areaPlaceholder }}</option>
+                  <sc-for list="{{ areaOptions }}" as="a" hint-placeholder-count="3">
+                    <option value="{{ a }}">{{ a }}</option>
+                  </sc-for>
+                </select>
+              <sc-if value="{{ errArea }}" hint-placeholder-val="{{ false }}"><span style="display:block;margin-top:3px;font-size:11px;font-weight:600;color:#B3261E">{{ T.k61 }}</span></sc-if>
+              </label>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k75 }}</span>
+                <select value="{{ street }}" onChange="{{ setStreet }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ T.k76 }}</option>
+                  <sc-for list="{{ streetOptions }}" as="o" hint-placeholder-count="3">
+                    <option value="{{ o }}">{{ o }}</option>
+                  </sc-for>
+                </select>
+              </label>
+            </div>
+            <label style="display:block;min-width:0;margin-top:9px">
+              <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k77 }} <span style="color:#B3261E">*</span></span>
+              <input type="text" value="{{ address }}" onChange="{{ setAddress }}" placeholder="{{ T.k115 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+            <sc-if value="{{ errAddress }}" hint-placeholder-val="{{ false }}"><span style="display:block;margin-top:3px;font-size:11px;font-weight:600;color:#B3261E">{{ T.k61 }}</span></sc-if>
+            </label>
+
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ showOil }}" hint-placeholder-val="{{ true }}">
+          <section style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:9px 12px 11px;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="width:17px;height:17px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">4</span>
+              <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ T.k78 }}</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px">
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k79 }}</span>
+                <select value="{{ oilType }}" onChange="{{ setOilType }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ T.k80 }}</option>
+                  <sc-for list="{{ oilTypeOptions }}" as="o" hint-placeholder-count="6">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </label>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k81 }}</span>
+                <input type="text" inputmode="numeric" maxlength="5" value="{{ volume }}" onChange="{{ setVolume }}" placeholder="{{ T.k110 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+              </label>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k82 }}</span>
+                <select value="{{ sellingTo }}" onChange="{{ setSellingTo }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ T.k83 }}</option>
+                  <sc-for list="{{ sellingToOptions }}" as="o" hint-placeholder-count="3">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </label>
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k84 }}</span>
+                <select value="{{ willingness }}" onChange="{{ setWillingness }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                  <option value="">{{ T.k85 }}</option>
+                  <sc-for list="{{ willingnessOptions }}" as="o" hint-placeholder-count="3">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </label>
+            </div>
+
+            <sc-if value="{{ competitor }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #EFEBE1;border-radius:10px;padding:9px 12px;margin-top:11px">
+                <h3 style="margin:0 0 7px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ T.k86 }}</h3>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px">
+                  <label style="display:block;min-width:0">
+                    <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k87 }}</span>
+                    <select value="{{ competitorName }}" onChange="{{ setCompetitorName }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 8px;font-family:inherit;font-size:13px;color:#10231C">
+                      <option value="">{{ T.k88 }}</option>
+                      <sc-for list="{{ competitorOptions }}" as="o" hint-placeholder-count="2">
+                        <option value="{{ o.value }}">{{ o.label }}</option>
+                      </sc-for>
+                    </select>
+                  </label>
+                  <label style="display:block;min-width:0">
+                    <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k89 }}</span>
+                    <input type="text" value="{{ contractLength }}" onChange="{{ setContractLength }}" placeholder="{{ T.k116 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+                  </label>
+                  <label style="display:block;min-width:0">
+                    <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k90 }}</span>
+                    <input type="date" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 9px;font-family:inherit;font-size:13px;color:#10231C">
+                  </label>
+                </div>
+              </div>
+            </sc-if>
+
+            <div style="border:1px solid #1F5240;background:#EEF6F2;border-radius:10px;padding:10px 12px;margin-top:11px">
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:12px;font-weight:600;color:#1F5240;line-height:1.2;margin-bottom:3px">{{ T.k91 }}</span>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input type="text" value="{{ askedPrice }}" onChange="{{ setAskedPrice }}" placeholder="0.00" style="width:110px;height:32px;box-sizing:border-box;border:1px solid #1F5240;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+                  <span style="font-size:13px;color:#3A4A43">{{ T.k92 }}</span>
+                </div>
+              </label>
+              <p style="margin:7px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ T.k93 }} <strong style="font-weight:600">{{ T.k94 }}</strong> {{ T.k95 }}</p>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ showSteward }}" hint-placeholder-val="{{ true }}">
+          <section style="min-width:0;display:flex;flex-direction:column;gap:10px">
+            <div style="border:1px dashed #8A9188;border-radius:10px;padding:7px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff">
+              <span style="font-size:12px;color:#55655D;min-width:0">{{ T.k96 }}</span>
+              <button type="button" onClick="{{ toggleSteward }}" style="flex-shrink:0;border:1px solid #8A9188;border-radius:6px;background:#fff;color:#1F5240;font-family:inherit;font-size:12px;font-weight:600;padding:2px 9px;cursor:pointer;white-space:nowrap">{{ stewardBtn }}</button>
+            </div>
+
+            <sc-if value="{{ stewardOpen }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#fff;border:1px solid #EFEBE1;border-radius:10px;padding:9px 12px 11px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <span style="width:17px;height:17px;border-radius:999px;background:#10231C;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">5</span>
+                  <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ T.k97 }}</h2>
+                </div>
+                <div role="group" aria-label="Oil collection representative name">
+                  <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k98 }}</span>
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px">
+                    <input type="text" value="{{ stewardFirst }}" onChange="{{ setStewardFirst }}" aria-label="First" placeholder="{{ T.k113 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+                    <input type="text" value="{{ stewardLast }}" onChange="{{ setStewardLast }}" aria-label="Last" placeholder="{{ T.k114 }}" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 10px;margin-top:10px">
+                  <label style="display:block;min-width:0">
+                    <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k99 }}</span>
+                    <input type="tel" value="{{ stewardPhone }}" onChange="{{ setStewardPhone }}" placeholder="01012345678" maxlength="14" dir="ltr" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+                  </label>
+                  <label style="display:block;min-width:0">
+                    <span style="display:block;font-size:12px;font-weight:600;color:#55655D;line-height:1.2;margin-bottom:3px">{{ T.k100 }}</span>
+                    <input type="tel" placeholder="01012345678" maxlength="14" dir="ltr" style="width:100%;height:32px;box-sizing:border-box;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+                  </label>
+                </div>
+                <p style="margin:8px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ T.k101 }}</p>
+              </div>
+            </sc-if>
+
+          </section>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ railOn }}" hint-placeholder-val="{{ true }}">
+    <aside style="min-width:0;position:sticky;top:68px;display:flex;flex-direction:column;gap:10px">
+      <h2 style="margin:0;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8A9188">{{ T.k102 }}</h2>
+      <sc-if value="{{ barOpen }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;padding:10px 14px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px">
+                <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ T.k103 }}</h2>
+                
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:4px">
+                <sc-for list="{{ record }}" as="i" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;min-width:0;font-size:12px;color:#3A4A43;align-items:baseline">
+                    <span style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;color:#63736A;flex-shrink:0">{{ i.label }}</span>
+                    <span style="min-width:0;text-wrap:pretty;color:{{ i.color }};font-style:{{ i.style }}">{{ i.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:10px">
+
+      <sc-if value="{{ barOpen }}" hint-placeholder-val="{{ true }}">
+
+            <sc-if value="{{ preAlert }}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="background:#FBEAE9;border:1px solid #B3261E;border-radius:10px;padding:10px 14px;margin-top:8px">
+                <div style="font-size:13px;font-weight:700;color:#B3261E">{{ preAlertTitle }}</div>
+                <div style="font-size:12px;font-weight:600;color:#B3261E;margin-top:3px">{{ T.k4 }} {{ preMissText }}{{ T.k5 }}</div>
+                <sc-if value="{{ preCanSave }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+                    <button type="button" onClick="{{ askPre }}" style="height:32px;padding:0 14px;border:1px solid #B3261E;border-radius:9px;background:#fff;color:#B3261E;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ T.k104 }}</button>
+                    <span style="font-size:12px;color:#B3261E">{{ T.k105 }}</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ saveError }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:9px;align-items:flex-start;background:#FBEAE9;border:1px solid #B3261E;border-radius:10px;padding:10px 13px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#B3261E;flex-shrink:0">!</span>
+                <p style="margin:0;font-size:13px;color:#3A4A43;text-wrap:pretty">{{ missText }}</p>
+              </div>
+            </sc-if>
+      </sc-if>
+      </div>
+    </aside>
+    </sc-if>
+
+    <sc-if value="{{ notes }}" hint-placeholder-val="{{ true }}">
+      <aside style="background:#10231C;border-radius:12px;padding:12px 13px 13px;min-width:0">
+        <h2 style="margin:0 0 3px;font-size:15px;font-weight:700;color:#fff">{{ T.k106 }}</h2>
+        <p style="margin:0 0 12px;font-size:12px;color:#A8B8AF;text-wrap:pretty">{{ T.k107 }}</p>
+        <sc-for list="{{ noteList }}" as="n" hint-placeholder-count="6">
+          <div style="display:flex;gap:9px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12)">
+            <span style="width:18px;height:18px;border-radius:999px;background:#7CC79A;color:#10231C;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;flex-shrink:0">{{ n.n }}</span>
+            <div style="min-width:0">
+              <div style="font-size:12px;font-weight:600;color:#fff">{{ n.title }}</div>
+              <p style="margin:3px 0 0;font-size:12px;color:#A8B8AF;text-wrap:pretty">{{ n.body }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </aside>
+    </sc-if>
+  </div>
+
+  <div style="border-top:1px solid #E4DFD4;background:#fff">
+    
+  </div>
+
+  <div style="border-top:1px solid #E4DFD4;background:#FCFAF5">
+    
+  </div>
+
+  <div style="border-top:1px solid #E4DFD4;background:#fff">
+    
+  </div>
+</div>
+
+    <div style="height:96px"></div>
+    <sc-if value="{{ bar }}" hint-placeholder-val="{{ false }}">
+      <div dir="{{ bar.dir }}" style="position:fixed;left:0;right:0;bottom:0;z-index:6;padding:0 20px 12px;pointer-events:none">
+        <div style="max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:{{ bar.bg }};border:1px solid {{ bar.edge }};border-radius:12px;padding:11px 16px;box-shadow:0 -4px 18px rgba(16,35,28,.10);pointer-events:auto">
+          <div style="min-width:0;flex:1">
+            <div style="font-size:13px;font-weight:700;color:{{ bar.ink }};text-wrap:pretty">{{ bar.title }}</div>
+            <div style="font-size:12px;color:{{ bar.sub }};text-wrap:pretty">{{ bar.line }}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <sc-if value="{{ bar.third }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ bar.third.go }}" style="height:38px;padding:0 14px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ bar.third.label }}</button>
+            </sc-if>
+            <sc-if value="{{ bar.second }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ bar.second.go }}" style="height:38px;padding:0 16px;border:1px solid {{ bar.second.edge }};border-radius:10px;background:#fff;color:{{ bar.second.ink }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ bar.second.label }}</button>
+            </sc-if>
+            <sc-if value="{{ bar.main }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;align-items:flex-end">
+                <button type="button" onClick="{{ bar.main.go }}" disabled="{{ bar.main.off }}" style="height:38px;padding:0 18px;border:0;border-radius:10px;background:{{ bar.main.bg }};color:{{ bar.main.ink }};font-family:inherit;font-size:13px;font-weight:600;cursor:{{ bar.main.cursor }};white-space:nowrap">{{ bar.main.label }}</button>
+                <sc-if value="{{ bar.main.why }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11px;color:#B3261E;margin-top:3px">{{ bar.main.why }}</span>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1800},&quot;order&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;code&quot;,&quot;stepped&quot;],&quot;default&quot;:&quot;code&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showNotes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;offline&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    try { const u = new URLSearchParams(window.location.search);
+      if (!u.get("shop") && !u.get("name")) window.location.replace("agent.dc.html?check=1"); } catch (e) {}
+  }
+  // Field set, labels, option lists and error copy are lifted verbatim from
+  // lib/i18n/translations.ts (t.form, t.checkin, t.preSurveyCheck,
+  // t.duplicate) and the card structure from app/new/NewOutletClient.tsx.
+  state = { order: "code", step: 2, notes: false, offline: false, competitor: false, stewardOpen: true, waSame: true, fields: {},
+    checked: false };
+
+  shop() {
+    const D = window.ZEITCO;
+    if (!D) return null;
+    try {
+      const id = new URLSearchParams(window.location.search).get("shop");
+      return id ? D.byId(id) : null;
+    } catch (e) { return null; }
+  }
+
+  // The only four things the record already knows: what it is called, where it
+  // is, who to ask for, and the number that was rung. Everything else on this
+  // form is what the call is for, so it starts empty.
+  seed() {
+    const s = this.shop();
+    const en = (v) => (v && typeof v === "object" ? (v.en || "") : (v || ""));
+    const ar = (v) => (v && typeof v === "object" ? (v.ar || "") : "");
+    const sv = (s && s.survey) || {};
+    const contact = en(s && s.contact).trim();
+    const cut = contact.indexOf(" ");
+    const rep = en(sv.rep).trim();
+    const rcut = rep.indexOf(" ");
+    return {
+      outletName: en(s && s.name),
+      outletNameAr: ar(s && s.name),
+      outletType: sv.outletType || "",
+      contactFirst: cut < 0 ? contact : contact.slice(0, cut),
+      contactLast: cut < 0 ? "" : contact.slice(cut + 1),
+      contactAr: ar(s && s.contact),
+      contactFirstAr: (() => { const a = ar(s && s.contact).trim(), c = a.indexOf(" "); return c < 0 ? a : a.slice(0, c); })(),
+      contactLastAr: (() => { const a = ar(s && s.contact).trim(), c = a.indexOf(" "); return c < 0 ? "" : a.slice(c + 1); })(),
+      mobile: (s && s.phone) || "",
+      outletPhone: sv.outletPhone || "",
+      city: en(sv.city),
+      area: en(s && s.area),
+      street: en(sv.street),
+      address: en(sv.address),
+      oilType: sv.oilType || "",
+      volume: s && s.volume ? String(s.volume) : "",
+      sellingTo: sv.sellingTo || "",
+      willingness: sv.willingness || "",
+      competitor: sv.competitor || "",
+      contractLength: en(sv.contractLength),
+      askedPrice: (s && s.askedAtDoor) || "",
+      stewardFirst: rcut < 0 ? rep : rep.slice(0, rcut),
+      stewardLast: rcut < 0 ? "" : rep.slice(rcut + 1),
+      stewardPhone: sv.repPhone || "",
+      agreedPrice: "",
+      collectionDay: "",
+      meetName: rep || contact,
+      meetPhone: sv.repPhone || (s && s.phone) || "",
+      orderKg: s && s.volume ? String(s.volume) : "",
+      orderDue: "",
+    };
+  }
+
+  // Required by the form: outlet name, contact person, mobile, address details.
+  // A field name for "still missing" lists, in the screen's language.
+  fw(en) { const A = window.SURVEY_AR || {}; return this.lang === "ar" ? (A[en] || en) : en; }
+
+  missing(f) {
+    const out = [];
+    if (!String(f("outletName")).trim()) out.push(this.fw("outlet name"));
+    if (!String(f("contactFirst")).trim()) out.push(this.fw("contact person"));
+    if (!String(f("mobile")).trim()) out.push(this.fw("mobile"));
+    if (!String(f("address")).trim()) out.push(this.fw("address details"));
+    // A shop with no record yet has no zone on it, and the zone is what sends a surveyor.
+    if (!this.shop() && !String(f("area")).trim()) out.push(this.fw("zone"));
+    return out;
+  }
+
+  // The least a pre-survey can be saved with: a name, a number to ring, and a
+  // zone to route it by. Everything else the surveyor completes.
+  preMissing(f) {
+    const out = [];
+    if (!String(f("outletName")).trim()) out.push(this.fw("outlet name"));
+    if (!String(f("mobile")).trim()) out.push(this.fw("mobile"));
+    if (!this.shop() && !String(f("area")).trim()) out.push(this.fw("zone"));
+    return out;
+  }
+
+  // Writes what this call decided into the session journal, so the agent
+  // screen shows the same outlet at its new stage. Returns the id of a shop
+  // this call created, if it created one.
+  record(step, x) {
+    const D = window.ZEITCO;
+    if (!D || !D.journal) return "";
+    const f = x.f, AG = { en: "H. Fawzy", ar: "ه. فوزي" };
+    const n = new Date(), at = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+    const same = (v) => ({ en: String(v || ""), ar: String(v || "") });
+    const contact = (String(f("contactFirst") || "") + " " + String(f("contactLast") || "")).trim();
+    const base = {};
+    if (String(f("outletName") || "").trim()) base.name = same(f("outletName"));
+    if (contact) base.contact = same(contact);
+    if (String(f("mobile") || "").trim()) base.phone = String(f("mobile")).trim();
+    if (String(f("area") || "").trim()) base.area = same(f("area"));
+    if (String(f("askedPrice") || "").trim()) base.askedPrice = String(f("askedPrice")).trim();
+    let id = x.theShop ? x.theShop.id : (this._madeId || "");
+    const call = (outcome) => {
+      D.journal.add({ op: "patch", shop: id, fields: { tries: 0, lastCall: { when: D.asDate(window.ZEITCO.today.en + " " + at), by: AG, result: D.callOutcome[outcome] } } });
+      D.journal.add({ op: "call", call: { shop: id, at, outcome } });
+    };
+    if (step === "form" || step === "pre") {
+      const lead = step === "form" && !x.atShop;
+      const fields = Object.assign({}, base, x.atShop ? {
+        stage: "survey", data: "unconfirmed", activity: "not_started", price: base.askedPrice ? "in_negotiation" : "not_discussed",
+        surveyor: (x.theShop && x.theShop.surveyWith) || D.autoSurveyor(base.area || (x.theShop && x.theShop.area)),
+        surveyedOn: D.asDate(window.ZEITCO.today.en + " " + at), gps: "±6 m", complete: 100, surveyWith: null, surveyDue: null,
+      } : lead ? {
+        stage: "lead", data: "confirmed", activity: "not_started",
+        price: base.askedPrice ? "in_negotiation" : "not_discussed", agent: AG,
+      } : { stage: window.ZRULES.stageAfterAnswer(false), data: "unconfirmed", activity: "not_started", price: "not_discussed", agent: AG });
+      // The answers go into the same survey block a surveyor's visit fills,
+      // marked by phone. A verification call keeps the surveyor's mark.
+      const sv = Object.assign({}, (x.theShop && x.theShop.survey) || {});
+      if (x.atShop) { sv.by = "surveyor"; sv.coords = "30.0561, 31.3301"; delete sv.phoneBy; delete sv.phoneOn; }
+      else if (!x.verifying) { sv.by = "phone"; sv.phoneBy = AG; sv.phoneOn = D.asDate(window.ZEITCO.today.en); }
+      const put = (k, v, text) => { v = String(v == null ? "" : v).trim(); if (v) sv[k] = text ? same(v) : v; };
+      put("city", f("city"), true); put("street", f("street"), true); put("address", f("address"), true);
+      put("outletPhone", f("outletPhone")); put("outletType", f("outletType")); put("oilType", f("oilType"));
+      put("sellingTo", f("sellingTo")); if (f("sellingTo") === "competitor") put("competitor", f("competitor")); else delete sv.competitor; put("contractLength", f("contractLength"), true);
+      put("willingness", f("willingness"));
+      const rep = (String(f("stewardFirst") || "") + " " + String(f("stewardLast") || "")).trim();
+      put("rep", rep, true); put("repPhone", f("stewardPhone"));
+      fields.survey = sv;
+      if (String(f("volume") || "").trim()) fields.volume = parseInt(f("volume"), 10) || 0;
+      if (lead && x.verifying) fields.verifiedOn = D.asDate(window.ZEITCO.today.en);
+      if (lead && !x.verifying) { fields.phoneSurveyOn = D.asDate(window.ZEITCO.today.en); fields.locationDue = D.asDate(window.ZEITCO.dayLabel(3));
+        fields.locationWith = { en: "the zone's surveyor", ar: "مساح المنطقة" }; }
+      if (!id) {
+        id = (lead ? "LD-" : "SV-") + String(9000 + D.journal.size()).padStart(4, "0");
+        this._madeId = id;
+        D.journal.add({ op: "shop", shop: Object.assign({ id, name: same("New shop"), area: same(""), type: same(""),
+          contact: same(""), phone: "", addedBy: { en: "H. Fawzy, agent", ar: "ه. فوزي، موظف" }, addedOn: D.asDate(window.ZEITCO.today.en) }, fields) });
+      } else D.journal.add({ op: "patch", shop: id, fields });
+      // A surveyor's visit is not a call, so it is not logged as one.
+      if (!x.atShop) call(lead ? (x.verifying ? "verified" : "phone_survey") : "pre_saved");
+    } else if (step === "negotiate" && id) {
+      if (x.agreed) D.journal.add({ op: "patch", shop: id, fields: { askedPrice: x.agreed, price: "in_negotiation" } });
+      call("price_talk");
+    } else if (step === "collect" && id) {
+      const cd = String(f("collectionDay") || "").trim();
+      D.journal.add({ op: "patch", shop: id, fields: { stage: "supplier", price: "agreed", activity: "new",
+        agreedPrice: x.agreed || f("agreedPrice") || "", agreedOn: D.asDate(window.ZEITCO.today.en),
+        collectionDay: cd ? same(cd) : null, rep: f("meetName") ? same(f("meetName")) : null, repPhone: f("meetPhone") || null, payment: "cash" } });
+      call("agreed");
+    } else if (step === "order" && id) {
+      const due = String(f("orderDue") || "").trim();
+      const m = due.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      const dueTxt = m ? parseInt(m[3], 10) + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(m[2], 10) - 1] : due;
+      D.journal.add({ op: "order", order: { id: "OR-" + (1000 + D.orders.length), shop: id, raised: D.today,
+        due: D.asDate(dueTxt || "—"), expect: parseInt(f("orderKg"), 10) || 0, state: "with_operations" } });
+      call("ordered");
+    }
+    return id;
+  }
+
+// The bottom bar, the same on every screen: white while working, amber for
+  // "Are you sure?", green once saved. The next step is always in one place.
+  barOf(kind, title, line, main, second, third, dir) {
+    const K = { work: ["#fff", "#E4DFD4", "#10231C", "#55655D"], sure: ["#FDF4F2", "#E8B4AE", "#B3261E", "#B3261E"],
+      bad: ["#FDF4F2", "#E8B4AE", "#B3261E", "#B3261E"], done: ["#EEF6F2", "#BFD8C9", "#1F5240", "#3A4A43"] }[kind];
+    const btn = (b, tone) => b ? Object.assign({ off: false, why: "" }, b, {
+      bg: b.off ? "#D5DCD7" : tone, ink: b.off ? "#63736A" : "#fff", cursor: b.off ? "default" : "pointer",
+      go: b.off ? () => {} : b.go }) : null;
+    return { bg: K[0], edge: K[1], ink: K[2], sub: K[3], title, line, dir: dir || "ltr",
+      main: btn(main, kind === "sure" ? "#B3261E" : kind === "bad" ? "#B3261E" : "#1F5240"),
+      second: second ? Object.assign({ edge: "#1F5240", ink: "#1F5240" }, second) : null,
+      third: third || null };
+  }
+
+  setField(k, v) {
+    this.setState((s) => ({ fields: Object.assign({}, s.fields, { [k]: v }) }));
+  }
+
+  get lang() { return this.state.lang || (window.ZSHELL ? window.ZSHELL.lang() : "en"); }
+  setLang(l) { if (window.ZSHELL) window.ZSHELL.setLang(l); this.setState({ lang: l }); }
+
+  // Arabic: the template reads T; everything the logic hands the template is
+  // run through the same dictionary — whole strings first, then the phrases
+  // that sentences are built from, longest first.
+  arText(v) {
+    const A = window.SURVEY_AR || {};
+    if (A[v]) return A[v];
+    if (!/[A-Za-z]{2,}/.test(v)) return v;
+    if (!this._phr) this._phr = Object.keys(A).filter((k) => k.length > 2 && /[\s,.:;·—←→]/.test(k)).sort((a, b) => b.length - a.length)
+      .map((k) => [new RegExp((/^\w/.test(k) ? "\\b" : "") + k.replace(/[.*+?^${}()|[\]\\]/g, (c) => "\\" + c) + (/\w$/.test(k) ? "\\b" : ""), "g"), A[k]]);
+    let out = v;
+    this._phr.forEach(([re, ar]) => { out = out.replace(re, ar); });
+    return out;
+  }
+  arWalk(x, key) {
+    const SKIP = /^(href|backHref|backTopHref|id|shopId|key|dir|face|src)$|colou?r|Colou?r|bg|Bg|border|Border|ink|Ink|edge|cursor|Cols|cols|font|style|align/;
+    if (key && SKIP.test(key)) return x;
+    if (typeof x === "string") return this.arText(x);
+    // Drop-down options: the value is a stored key and never translated; the
+    // label is a name (zone, street) or already Arabic, so whole matches only.
+    if (Array.isArray(x) && (/options$|^zones$|^sins$/i.test(key || "") || (x.length && x.every((y) => y && typeof y === "object" && "value" in y && "label" in y && Object.keys(y).length === 2)))) {
+      const A = window.SURVEY_AR || {};
+      return x.map((y) => (y && typeof y === "object" ? Object.assign({}, y, { label: A[y.label] || y.label }) : y));
+    }
+    if (Array.isArray(x)) return x.map((y) => this.arWalk(y));
+    if (x && typeof x === "object" && !x.$typeof && Object.getPrototypeOf(x) === Object.prototype) {
+      const o = {};
+      Object.keys(x).forEach((k) => { o[k] = this.arWalk(x[k], k); });
+      return o;
+    }
+    return x;
+  }
+
+  renderVals() {
+    let o = this.baseVals();
+    if (!o || !o.pageTitle) return o;
+    const isAr = this.lang === "ar";
+    const TPL = window.SURVEY_TPL || {}, A = window.SURVEY_AR || {};
+    const T = {};
+    Object.keys(TPL).forEach((k) => { T[k] = isAr ? (A[TPL[k]] || TPL[k]) : TPL[k]; });
+    const extra = { T, dir: isAr ? "rtl" : "ltr", face: isAr ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      setEn: () => this.setLang("en"), setAr: () => this.setLang("ar"),
+      enBg: isAr ? "#fff" : "#1F5240", enInk: isAr ? "#55655D" : "#fff", arBg: isAr ? "#1F5240" : "#fff", arInk: isAr ? "#fff" : "#55655D" };
+    const name = o.endTitle ? o.endTitle.replace(/^Logged — /, "") : "";
+    if (o.sureOpen) o.bar = this.barOf("sure", o.sureTitle, o.sureWarn, { label: o.sureYes, go: o.sureGo }, { label: o.sureNo, go: o.sureBack, edge: "#8A9188", ink: "#3A4A43" });
+    else if (o.ended) o.bar = this.barOf("done", o.endTitle, "Saved. Everything this call wrote is listed above.", { label: o.backList, go: () => { window.location.href = o.backHref; } });
+    else if (o.onNegotiate) o.bar = this.barOf("work", "The Price" + (name ? " · " + name : ""), o.priceVerdict,
+      o.priceCanContinue ? { label: o.priceContinueLabel, go: o.askNegotiateGo } : { label: o.priceStopLabel, go: o.askNegotiateStop },
+      o.priceCanContinue ? { label: o.priceStopLabel, go: o.askNegotiateStop } : null);
+    else if (o.onCollect) o.bar = this.barOf("work", "The Collection" + (name ? " · " + name : ""), o.collectReady ? "Ready." : o.collectMiss,
+      { label: o.collectContinueLabel, go: o.askCollectGo, off: !o.collectReady, why: o.collectReady ? "" : "Fill in the collection first" },
+      o.collectReady ? { label: o.collectStopLabel, go: o.askCollectStop } : null);
+    else if (o.onOrder) o.bar = this.barOf("work", "The First Collection Order" + (name ? " · " + name : ""), o.orderReady ? "Ready." : o.orderMiss,
+      { label: o.orderStopLabel, go: o.askOrder, off: !o.orderReady, why: o.orderReady ? "" : "Weight and due date first" });
+    else if (o.onForm) {
+      const cancel = { label: "Cancel", go: () => { window.location.href = o.backTopHref || "agent.dc.html"; } };
+      if (o.preReady || o.preBlocked) o.bar = this.barOf("work", o.pageTitle + (name ? " · " + name : ""), o.footNote, { label: "Save as a survey — surveyor completes it", go: o.tryPre }, null, cancel);
+      else if (o.canFinish) o.bar = this.barOf("work", o.pageTitle, o.footNote, { label: o.formConfirmLabel, go: o.tryFormStop },
+        o.canContinue ? { label: o.formContinueLabel, go: o.tryFormGo } : null, cancel);
+      else o.bar = this.barOf("work", o.pageTitle, o.footNote, { label: o.formConfirmLabel, go: () => {}, off: true, why: "Check in first" }, null, cancel);
+    }
+    if (isAr) o = this.arWalk(o);
+    if (o.bar) o.bar.dir = extra.dir;
+    const isoOf = (dt) => dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
+    return Object.assign(o, extra, { minToday: window.ZEITCO ? isoOf(window.ZEITCO.dateIn(0)) : "", minTomorrow: window.ZEITCO ? isoOf(window.ZEITCO.dateIn(1)) : "" });
+  }
+
+  baseVals() {
+    const SH = window.ZSHELL;
+    const theShop = this.shop();
+    const newShop = !theShop;
+    const tr = (v) => (v && typeof v === "object" ? ((this.lang === "ar" ? v.ar : v.en) || v.en || "") : v);
+    const navTabs = SH ? SH.tabs("agent").map((tb) => ({ label: tr(tb.label), href: "agent.dc.html?tab=" + tb.key })) : [];
+
+    const stepped = this.state.order === "stepped";
+    const step = this.state.step;
+    const on = (n) => !stepped || step === n;
+
+    const sd = this.seed();
+    // Arriving from the negotiation tool: the agreed price and collection terms
+    // come along in the address, so they are not asked for twice.
+    const url = (() => { try { return new URLSearchParams(window.location.search); } catch (e) { return new URLSearchParams(""); } })();
+    const fromUrl = {};
+    if (url.get("price")) fromUrl.agreedPrice = url.get("price");
+    if (url.get("name")) fromUrl.outletName = url.get("name");
+    if (url.get("city") && !url.get("shop")) { fromUrl.city = url.get("city"); fromUrl.area = ""; }
+    if (url.get("freq")) fromUrl.collFreq = url.get("freq");
+    if (url.get("day1")) fromUrl.collDay1 = url.get("day1");
+    if (url.get("day2")) fromUrl.collDay2 = url.get("day2");
+    if (fromUrl.collFreq && fromUrl.collDay1) {
+      const fw = { weekly: "weekly", twice_week: "twice a week", fortnightly: "every two weeks", monthly: "monthly" }[fromUrl.collFreq];
+      if (fw && (fromUrl.collFreq !== "twice_week" || fromUrl.collDay2))
+        fromUrl.collectionDay = (fromUrl.collFreq === "twice_week" ? fromUrl.collDay1 + " and " + fromUrl.collDay2 : fromUrl.collDay1) + ", " + fw;
+    }
+    const f = (k) => (this.state.fields[k] !== undefined ? this.state.fields[k] : fromUrl[k] !== undefined ? fromUrl[k] : sd[k]);
+    const miss = this.missing(f);
+    const D = window.ZEITCO, RU = window.ZRULES;
+    const ceiling = (RU && RU.ceiling) || 6.2;
+    // A shop from a pre-survey already has its zone. A brand-new one is placed by
+    // hand: the city first, then only the zones inside that city.
+    const areas = newShop
+      ? (D && D.zonesIn ? D.zonesIn(f("city") || "") : [])
+      : (D ? D.shops.map((s) => tr(s.area)) : []);
+    const areaOptions = areas.filter((a, i) => a && areas.indexOf(a) === i).sort();
+    const streetShops = D ? D.shops.filter((s) => !newShop || !f("area") || tr(s.area) === f("area")) : [];
+    const streets = streetShops.map((s) => tr(s.survey && s.survey.street));
+    const streetOptions = streets.filter((a, i) => a && streets.indexOf(a) === i).sort();
+    const cityOptions = D && D.cities ? D.cities.map((c) => ({ value: c.k, label: this.lang === "ar" ? (c.ar || c.en) : c.en })) : [{ value: "Cairo", label: "Cairo" }];
+    const FORM = (D && D.form) || {};
+    const opts = (list) => (FORM[list] || []).map((o) => ({ value: o.k, label: this.lang === "ar" ? (o.ar || o.en) : o.en }));
+    const labelOf = (list, key) => {
+      const hit = (FORM[list] || []).filter((o) => o.k === key)[0];
+      return hit ? (this.lang === "ar" ? (hit.ar || hit.en) : hit.en) : "";
+    };
+    // How often and which day(s). Twice a week needs two days; the rest one.
+    // Stored as one line the rest of the system reads: "Sunday, weekly".
+    const FREQ = [["weekly", "Weekly"], ["twice_week", "Twice a week"], ["fortnightly", "Every two weeks"], ["monthly", "Monthly"]];
+    const WEEKDAYS = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
+    const DAYS = WEEKDAYS.map((d) => ({ value: d, label: d }));
+    const freqWord = { weekly: "weekly", twice_week: "twice a week", fortnightly: "every two weeks", monthly: "monthly" };
+    const collLine = (fr, d1, d2) => (!fr || !d1 || (fr === "twice_week" && !d2)) ? ""
+      : (fr === "twice_week" ? d1 + " and " + d2 : d1) + ", " + freqWord[fr];
+    const setColl = (k) => (e) => {
+      const val = e.target.value;
+      this.setState((s) => {
+        const nf = Object.assign({}, s.fields, { [k]: val });
+        const g = (x) => (nf[x] !== undefined ? nf[x] : "");
+        if (k === "collFreq" && val !== "twice_week") nf.collDay2 = "";
+        nf.collectionDay = collLine(g("collFreq"), g("collDay1"), g("collDay2"));
+        return { fields: nf };
+      });
+    };
+
+    // Where the call has got to. Each step confirms on its own, because each
+    // writes something different (rule: nothing commits on one click).
+    // Fixed when the page opens: saving a survey must not turn this call into a verifying one.
+    if (this._startStage === undefined) this._startStage = theShop ? theShop.stage : "";
+    // One survey form. A surveyor fills it at the shop (by=surveyor); an agent
+    // fills it by phone; or an agent reads a surveyor's answers back to verify.
+    const atShop = url.get("by") === "surveyor";
+    const verifying = !atShop && this._startStage === "survey";
+    // A phone survey always starts with the name check, whether the shop is new
+    // or comes from a pre-survey. Verifying a surveyor's record does not.
+    const needsCheck = newShop || !verifying;
+    // "form" arrives from the agent screen's name check, which has already been done.
+    const urlPhase = ["form", "collect", "order"].indexOf(url.get("phase")) > -1 ? url.get("phase") : null;
+    // The name check lives on the agent screen, where the shop is opened — never here.
+    const phase = this.state.phase || (urlPhase && urlPhase !== "start" ? urlPhase : "form");
+    const done = phase !== "form";
+    const sure = this.state.sure || null;
+
+    // What the agent can do with what is on the form. Complete, it is a Lead. If
+    // something a Lead needs is missing, the only way out is a pre-survey, which
+    // a surveyor completes. Verifying a surveyor's record is unchanged.
+    const preMiss = this.preMissing(f);
+    const preMode = !verifying && !atShop && miss.length > 0;
+
+    // The check that comes first for a shop nobody has surveyed. No GPS, so it
+    // searches the whole city, not one zone.
+    const startCity = this.state.startCity || (theShop && D && D.cityOf ? D.cityOf(theShop) : "") || "Cairo";
+    const startName = this.state.startName !== undefined ? this.state.startName : (theShop ? tr(theShop.name) : "");
+    const checked = !!this.state.checked;
+    const norm = (v) => String(v || "").toLowerCase().replace(new RegExp("[^a-z0-9" + String.fromCharCode(0x600) + "-" + String.fromCharCode(0x6ff) + " ]+", "g"), " ").replace(/\s+/g, " ").trim();
+    const toks = (v) => norm(v).split(" ").filter((t) => t.length > 2);
+    const asked = norm(startName);
+    const askedToks = toks(startName);
+    // Two words are the same word if they differ by at most one letter (Nour and
+    // Noor). A shop is similar when more than half of its words are matched, so a
+    // shared "grill" or "shawarma" alone is not enough.
+    const near = (a, b) => {
+      if (a === b) return true;
+      if (Math.abs(a.length - b.length) > 1 || Math.min(a.length, b.length) < 4) return false;
+      let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++;
+      const x = a.slice(i + 1), y = b.slice(i + 1);
+      return a.slice(i) === b.slice(i + 1) || a.slice(i + 1) === b.slice(i) || x === y;
+    };
+    const overlap = (p, q) => {
+      if (!p.length || !q.length) return 0;
+      const hit = p.filter((t) => q.some((u) => near(t, u))).length;
+      return hit / Math.max(p.length, q.length);
+    };
+    const stageWord = (sh) => (D && D.label && D.label.stage[sh.stage] ? (this.lang === "ar" ? D.label.stage[sh.stage].ar : D.label.stage[sh.stage].en) : sh.stage);
+    const found = !checked || !D || !asked ? [] : D.shops
+      .filter((sh) => (!theShop || sh.id !== theShop.id) && (D.cityOf ? D.cityOf(sh) : "Cairo") === startCity)
+      .map((sh) => {
+        const names = [norm(sh.name && sh.name.en), norm(sh.name && sh.name.ar)].filter(Boolean);
+        const exact = names.indexOf(asked) >= 0;
+        const close = names.some((nm) => nm.indexOf(asked) >= 0 || asked.indexOf(nm) >= 0 || overlap(toks(nm), askedToks) >= 0.6);
+        return { sh, exact, similar: !exact && close };
+      })
+      .filter((m) => m.exact || m.similar);
+    const exactHits = found.filter((m) => m.exact);
+    const similarHits = found.filter((m) => m.similar);
+    const hits = (exactHits.length ? exactHits : similarHits).slice(0, 4).map((m) => ({
+      name: tr(m.sh.name),
+      meta: tr(m.sh.area) + " · " + m.sh.id + " · " + stageWord(m.sh),
+      href: "shop.dc.html?shop=" + m.sh.id,
+    }));
+    const agreed = String(f("agreedPrice") || "").trim();
+    const over = (parseFloat(agreed) || 0) > ceiling + 0.0001;
+    const collectMiss = []
+      .concat(String(f("collectionDay")).trim() ? [] : ["when to collect"])
+      .concat(String(f("meetName")).trim() ? [] : ["who to meet at the shop"]);
+    const money = (v, tail) => (String(v).trim() ? String(v).trim() + (tail || "") : "—");
+
+    // The confirmation opens below the buttons that asked for it; bring it into view.
+    const toTop = () => setTimeout(() => { try { const el = document.getElementById("sure-panel");
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: "smooth" }); } catch (e) {} }, 60);
+
+    const SURE = {
+      form: atShop ? {
+        title: "Submit the survey?",
+        next: "ended",
+        lines: [
+          { label: "Outlet", value: [f("outletName"), f("area")].filter(Boolean).join(" · ") || "—" },
+          { label: "Location", value: "Proved — checked in at the shop, 30.0561, 31.3301 · ±6 m." },
+          { label: "Stage", value: "Pre-Survey → Survey. It goes back to the outlet's agent, who verifies it by phone before it becomes a Lead." },
+        ],
+        logged: [
+          { label: "Survey submitted", value: "It is a Survey, waiting for the agent's verification call." },
+          { label: "Location", value: "Proved by the visit." },
+        ],
+      } : {
+        title: verifying ? "Pass verification?" : "Finish the survey?",
+        next: "negotiate",
+        lines: [
+          { label: "Written", value: [f("outletName"), (f("contactFirst") + " " + f("contactLast")).trim(),
+            f("mobile"), newShop ? f("city") : "", f("area"), f("address")].filter(Boolean).join(" · ") },
+          { label: "The form", value: [labelOf("outletTypes", f("outletType")), labelOf("oilTypes", f("oilType")),
+            money(f("volume"), " kg a month"), labelOf("sellingTo", f("sellingTo")),
+            f("askedPrice") ? "they asked " + f("askedPrice") : ""].filter(Boolean).join(" · ") || "—" },
+          { label: "Stage", value: verifying
+            ? "Survey → Lead. Verified by you, today. From here the record is read-only to you."
+            : "Pre-Survey → Lead. No verification call follows — you filled this in with them on the line." },
+          { label: "Location", value: verifying
+            ? "The surveyor's coordinates stand. You were not there, so they are not yours to change."
+            : "Unproved. A job goes to the zone's surveyor, due in three days or before the first collection, whichever is sooner. Late, it shows red on the record, in your list and to operations. It blocks nothing." },
+          { label: "Price", value: "Theirs, not ours. Nothing is agreed by this." },
+        ],
+        logged: [
+          { label: verifying ? "Verified" : "Phone survey finished",
+            value: verifying ? "You passed it. It is a Lead." : "It is a Lead — no verification call needed." },
+          { label: "Location", value: verifying ? "Proved by the surveyor." : "Unproved — with the zone's surveyor, due in three days." },
+        ],
+      },
+      pre: {
+        title: "Save it as a survey for the surveyor?",
+        next: "ended",
+        lines: [
+          { label: "Written", value: [f("outletName"), (f("contactFirst") + " " + f("contactLast")).trim(),
+            f("mobile"), newShop ? f("city") : "", f("area"), f("address")].filter(Boolean).join(" · ") },
+          { label: "Still missing", value: miss.join(", ") + "." },
+          { label: "Stage", value: "Survey. They answered, so it is no longer a pre-survey. It becomes a Lead once the surveyor fills in the rest." },
+          { label: "Goes to", value: "The surveyor covering " + (f("area") || "the zone") + ", automatically. Where nobody covers the zone, whoever has fewest surveys waiting." },
+          { label: "Then", value: "The surveyor visits, fills in the rest and confirms the location. It comes back to you as a survey to verify by phone." },
+          { label: "If the shop is not there", value: "It returns to you, because you can ring them and find out why." },
+        ],
+        logged: [
+          { label: "Saved as a survey", value: "Missing: " + miss.join(", ") + "." },
+          { label: "Surveyor", value: "Assigned by zone" + (f("area") ? " — " + f("area") : "") + ". You did not pick one." },
+        ],
+      },
+      negotiate: {
+        title: agreed && !over ? "Agree " + agreed + " EGP a Kg?" : over ? "Send it up?" : "Log the round?",
+        next: "collect",
+        lines: agreed && !over
+          ? [
+            { label: "Agreed", value: agreed + " EGP a Kg, inside my " + ceiling.toFixed(2) + " ceiling" },
+            { label: "Stage", value: "Lead → Supplier, once the collection details are taken." },
+            { label: "After this", value: "The negotiation closes and becomes read-only. Only the shop reopens it, and reopening needs the financial or Senior Manager." },
+          ]
+          : over
+            ? [
+              { label: "They want", value: agreed + " EGP a Kg, over my " + ceiling.toFixed(2) + " ceiling" },
+              { label: "Goes to", value: "The financial or Senior Manager, whoever sees it first." },
+              { label: "I say", value: "Nothing back to the shop until the answer comes." },
+              { label: "Stage", value: "Stays a Lead." },
+            ]
+            : [
+              { label: "Logged", value: "A negotiation round, nothing agreed." },
+              { label: "Stage", value: "Stays a Lead, still in negotiation." },
+            ],
+        logged: (agreed && !over
+          ? [{ label: "Price agreed", value: agreed + " EGP a Kg, inside the ceiling." }]
+          : over
+            ? [{ label: "Sent up", value: agreed + " EGP a Kg — with the financial or Senior Manager." }]
+            : [{ label: "Round logged", value: "Still negotiating." }])
+          .concat((this.state.rounds || []).length ? [{ label: "Rounds", value: (this.state.rounds || []).map((r) => (r.side === "us" ? "I offered " : "they asked ") + (parseFloat(r.price) || 0).toFixed(2)).join(" → ") + "." }] : []),
+      },
+      collect: {
+        title: "Set the collection up?",
+        next: "order",
+        lines: [
+          { label: "When", value: f("collectionDay") || "—" },
+          { label: "Who to meet", value: (f("meetName") || "—") + (f("meetPhone") ? " · " + f("meetPhone") : "") },
+          { label: "Stage", value: "Lead → Supplier. They have agreed but have not delivered anything yet." },
+          { label: "Becoming active", value: "The first collection being weighed and paid is what does that. Not this." },
+        ],
+        logged: [
+          { label: "Supplier", value: (f("collectionDay") || "—") + " · meet " + (f("meetName") || "—") },
+        ],
+      },
+      order: {
+        title: "Raise the collection order?",
+        next: "ended",
+        lines: [
+          { label: "Expecting", value: money(f("orderKg"), " kg") },
+          { label: "Due", value: f("orderDue") || "—" },
+          { label: "Goes to", value: "Operations, who put it on a truck. You do not schedule it." },
+          { label: "At the agreed price", value: agreed ? agreed + " EGP a Kg" : "—" },
+        ],
+        logged: [
+          { label: "Order raised", value: money(f("orderKg"), " kg") + " due " + (f("orderDue") || "—") + " · with operations." },
+        ],
+      },
+    };
+
+    return {
+      tabs: navTabs,
+      backLabel: /^surveyor\.dc\.html/.test(url.get("back") || "") ? "← Back to my surveys" : /^agent\.dc\.html/.test(url.get("back") || "") ? "← Back to my list" : "← Back to my day",
+      backTopHref: /^(agent|surveyor)\.dc\.html/.test(url.get("back") || "") ? url.get("back") : "agent.dc.html",
+      notesLabel: this.state.notes ? "Hide build notes" : "Show build notes",
+      gpsBody: newShop
+        ? "I am at a desk, so I pick the city and zone myself — nobody has stood at this shop. Finishing this makes them a Lead all the same. The location follows, and until it is proved it stops nothing."
+        : "I am at a desk, so the only coordinates I could capture are my own. Finishing this makes them a Lead all the same — the location follows, and until it is proved it stops nothing.",
+
+      // ---- starting a survey for a shop that is not on any list -----------
+      onStart: phase === "start",
+      startIntro: newShop
+        ? "A shop nobody has surveyed yet. I have no GPS to narrow it down, so the search covers every zone in the city, not one."
+        : "Before I survey this pre-survey by phone, check it is not already on file under another record. No GPS, so the search covers every zone in the city.",
+      isNewShop: newShop,
+      cityOptions,
+      startCity,
+      startName,
+      cantCheck: checked && !asked,
+      resNone: checked && !!asked && found.length === 0,
+      resSimilar: checked && exactHits.length === 0 && similarHits.length > 0,
+      resExact: checked && exactHits.length > 0,
+      hits,
+      setStartCity: (e) => this.setState({ startCity: e.target.value, checked: false }),
+      setStartName: (e) => this.setState({ startName: e.target.value, checked: false }),
+      runCheck: () => this.setState({ checked: true }),
+      startAgain: () => this.setState({ checked: false, startName: "" }),
+      startGo: () => this.setState((st) => ({
+        phase: "form",
+        fields: Object.assign({}, st.fields, newShop ? { outletName: startName, city: startCity, area: "" } : { outletName: startName }),
+        saidDifferent: similarHits.length > 0,
+      })),
+      city: f("city"),
+      setCity: (e) => this.setState((st) => ({ fields: Object.assign({}, st.fields, { city: e.target.value, area: "" }) })),
+      areaLabel: newShop ? "Zone" : "Area",
+      areaPlaceholder: newShop ? (f("city") ? "Select zone" : "Select city first") : "Select area",
+
+      // ---- the footer: complete is a Lead, incomplete is a pre-survey -------
+      canFinish: !preMode && (!atShop || !!this.state.checkedIn),
+      preReady: preMode && preMiss.length === 0,
+      preBlocked: preMode && preMiss.length > 0,
+      askPre: () => { this.setState({ preTried: false, sure: { step: "pre", go: false } }); toTop(); },
+      tryPre: () => this.setState({ preTried: true }),
+      preAlert: !!this.state.preTried && preMode,
+      preCanSave: preMiss.length === 0,
+      preAlertTitle: preMiss.length ? "Not saved: fill in the required fields first" : "Some required fields are empty",
+      preMissText: miss.join(", "),
+      errOutletName: !!this.state.preTried && preMode && miss.indexOf("outlet name") >= 0,
+      errMobile: !!this.state.preTried && preMode && miss.indexOf("mobile") >= 0,
+      errArea: !!this.state.preTried && preMode && miss.indexOf("zone") >= 0,
+      errContact: !!this.state.preTried && preMode && miss.indexOf(this.fw("contact person")) >= 0,
+      errAddress: !!this.state.preTried && preMode && miss.indexOf(this.fw("address details")) >= 0,
+      footNote: atShop
+        ? (this.state.checkedIn ? "Checked in. Submitting sends it to the agent to verify by phone." : "Check in at the shop first — the survey cannot be submitted without it.")
+        : preMode
+        ? (preMiss.length
+          ? "To save this as a survey I still need: " + preMiss.join(", ") + "."
+          : "Not enough for a Lead yet: " + miss.join(", ") + ". Save what you have and a surveyor completes it.")
+        : (verifying
+          ? "Blanks the surveyor left do not stop this. Only outlet name, contact, mobile and address do."
+          : "No verification call follows this one — you spoke to them yourself.") +
+          " Confirm ends the call and goes back to the list. Confirm and continue keeps them on the line.",
+      shopLine: theShop
+        ? tr(theShop.name) + " · " + theShop.id + " · " + tr(theShop.area) + " · " + (theShop.phone || "")
+        : "A new shop — not on any list yet.",
+
+      outletName: f("outletName"),
+      outletNameAr: sd.outletNameAr,
+      contactFirst: f("contactFirst"),
+      contactLast: f("contactLast"),
+      contactAr: sd.contactAr,
+      contactFirstAr: sd.contactFirstAr,
+      contactLastAr: sd.contactLastAr,
+      mobile: f("mobile"),
+      area: f("area"),
+      areaOptions,
+      setOutletName: (e) => this.setField("outletName", e.target.value),
+      setContactFirst: (e) => this.setField("contactFirst", e.target.value),
+      setContactLast: (e) => this.setField("contactLast", e.target.value),
+      setMobile: (e) => this.setField("mobile", e.target.value),
+      setArea: (e) => this.setField("area", e.target.value),
+      address: f("address"),
+      setAddress: (e) => this.setField("address", e.target.value),
+
+      outletType: f("outletType"),
+      setOutletType: (e) => this.setField("outletType", e.target.value),
+      outletTypeOptions: opts("outletTypes"),
+      outletPhone: f("outletPhone"),
+      setOutletPhone: (e) => this.setField("outletPhone", e.target.value),
+      street: f("street"),
+      setStreet: (e) => this.setField("street", e.target.value),
+      streetOptions: streetOptions,
+      oilType: f("oilType"),
+      setOilType: (e) => this.setField("oilType", e.target.value),
+      oilTypeOptions: opts("oilTypes"),
+      volume: f("volume"),
+      setVolume: (e) => this.setField("volume", String(e.target.value).replace(/[^0-9]/g, "").slice(0, 5)),
+      sellingTo: f("sellingTo"),
+      setSellingTo: (e) => this.setField("sellingTo", e.target.value),
+      sellingToOptions: opts("sellingTo"),
+      willingness: f("willingness"),
+      setWillingness: (e) => this.setField("willingness", e.target.value),
+      willingnessOptions: opts("willingness"),
+      competitorName: f("competitor"),
+      setCompetitorName: (e) => this.setField("competitor", e.target.value),
+      competitorOptions: opts("competitors"),
+      contractLength: f("contractLength"),
+      setContractLength: (e) => this.setField("contractLength", e.target.value),
+      askedPrice: f("askedPrice"),
+      setAskedPrice: (e) => this.setField("askedPrice", e.target.value),
+      stewardFirst: f("stewardFirst"),
+      setStewardFirst: (e) => this.setField("stewardFirst", e.target.value),
+      stewardLast: f("stewardLast"),
+      setStewardLast: (e) => this.setField("stewardLast", e.target.value),
+      stewardPhone: f("stewardPhone"),
+      setStewardPhone: (e) => this.setField("stewardPhone", e.target.value),
+
+      pageTitle: verifying ? "Survey · Verify By Phone" : atShop ? "Survey · At The Shop" : "Survey · By Phone",
+      pageKind: atShop
+        ? "The same survey form the call center uses by phone. You are at the shop, so you check in and the location is proved. Submitting it sends it back to the outlet's agent to verify."
+        : verifying
+        ? "A surveyor filled this in. Read it back to them line by line — this is the one call where you may correct it."
+        : "You are filling this in while they are on the phone. Complete, it makes them a Lead. If something is missing, it goes to the zone's surveyor as a survey.",
+
+      // ---- the call, one step at a time -------------------------------
+      onForm: phase === "form",
+      onNegotiate: phase === "negotiate",
+      onCollect: phase === "collect",
+      onOrder: phase === "order",
+      ended: phase === "ended",
+
+      saveError: this.state.save === "error",
+      missText: miss.length
+        ? "Still needed before this can be confirmed: " + miss.join(", ") + "."
+        : "",
+      formConfirmLabel: atShop ? "Submit the survey" : verifying ? "Verification passes — make it a Lead" : "Finish — this becomes a Lead",
+      canContinue: !atShop,
+      formContinueLabel: "Confirm and continue to the negotiation tool",
+      formNote: verifying
+        ? "Blanks the surveyor left do not stop this. Only outlet name, contact, mobile and address do."
+        : "No verification call follows this one — you spoke to them yourself.",
+      tryForm: (go) => this.setState({ save: this.missing(f).length ? "error" : null, sure: this.missing(f).length ? null : { step: "form", go } }),
+      tryFormStop: () => { this.setState({ save: this.missing(f).length ? "error" : null, sure: this.missing(f).length ? null : { step: "form", go: false } }); toTop(); },
+      tryFormGo: () => { this.setState({ save: this.missing(f).length ? "error" : null, sure: this.missing(f).length ? null : { step: "form", go: true } }); toTop(); },
+
+      recorded: [
+        { label: "Outlet", value: [f("outletName"), sd.outletNameAr].filter(Boolean).join(" · ") || "—" },
+        { label: "Contact", value: [(f("contactFirst") + " " + f("contactLast")).trim(), f("mobile")].filter(Boolean).join(" · ") || "—" },
+        { label: "Where", value: [f("area"), f("street"), f("address")].filter(Boolean).join(" · ") || "—" },
+        { label: "Outlet Food Category", value: labelOf("outletTypes", f("outletType")) || "—" },
+        { label: "Oil type", value: labelOf("oilTypes", f("oilType")) || "—" },
+        { label: "Monthly volume", value: money(f("volume"), " kg") },
+        { label: "Selling to now", value: labelOf("sellingTo", f("sellingTo")) || f("competitor") || "—" },
+        { label: "They asked on survey", value: money(f("askedPrice"), " EGP a Kg") },
+        { label: "My ceiling", value: ceiling.toFixed(2) + " EGP a Kg" },
+      ],
+      rounds: (this.state.rounds || []).map((r) => {
+        const p = parseFloat(r.price) || 0, hi = p > ceiling + 0.0001;
+        return {
+          who: r.side === "us" ? "I offered" : "They asked",
+          colour: r.side === "us" ? "#1F5240" : "#B3261E",
+          price: p.toFixed(2),
+          priceColour: hi ? "#B3261E" : "#10231C",
+          note: [hi ? "over my ceiling" : "", r.note].filter(Boolean).join(" · "),
+          use: () => this.setField("agreedPrice", p.toFixed(2)),
+        };
+      }),
+      noRounds: !(this.state.rounds || []).length,
+      themBg: (this.state.roundSide || "them") === "them" ? "#10231C" : "#fff",
+      themInk: (this.state.roundSide || "them") === "them" ? "#fff" : "#3A4A43",
+      usBg: this.state.roundSide === "us" ? "#10231C" : "#fff",
+      usInk: this.state.roundSide === "us" ? "#fff" : "#3A4A43",
+      sideThem: () => this.setState({ roundSide: "them" }),
+      sideUs: () => this.setState({ roundSide: "us" }),
+      roundPrice: this.state.roundPrice || "",
+      setRoundPrice: (e) => {
+        let v = String(e.target.value).replace(/[^0-9.]/g, "");
+        const d = v.indexOf(".");
+        if (d >= 0) v = v.slice(0, d + 1) + v.slice(d + 1).replace(/\./g, "").slice(0, 2);
+        this.setState({ roundPrice: v.slice(0, 6), roundErr: false });
+      },
+      roundNote: this.state.roundNote || "",
+      setRoundNote: (e) => this.setState({ roundNote: e.target.value }),
+      logRound: () => {
+        const p = parseFloat(this.state.roundPrice);
+        if (!(p > 0)) { this.setState({ roundErr: true }); return; }
+        this.setState((st) => ({
+          rounds: (st.rounds || []).concat([{ side: st.roundSide || "them", price: p, note: (st.roundNote || "").trim() }]),
+          roundPrice: "", roundNote: "", roundErr: false,
+          roundSide: (st.roundSide || "them") === "them" ? "us" : "them",
+        }));
+      },
+      roundHint: this.state.roundErr
+        ? "Type the figure first, in EGP a Kg."
+        : (this.state.roundSide === "us" && (parseFloat(this.state.roundPrice) || 0) > ceiling + 0.0001)
+          ? "That is over my " + ceiling.toFixed(2) + " ceiling. I cannot offer it."
+          : "Each round is saved with the call. \"Agree this\" puts that figure in the agreed price below.",
+      roundHintColour: this.state.roundErr || (this.state.roundSide === "us" && (parseFloat(this.state.roundPrice) || 0) > ceiling + 0.0001) ? "#B3261E" : "#8A9188",
+      theirFigure: f("askedPrice") ? "They asked " + f("askedPrice") + " EGP a Kg on the survey." : "They have not named a figure.",
+      ceilingLine: "My ceiling is " + ceiling.toFixed(2) + " EGP a Kg.",
+      agreedPriceValue: agreed,
+      setAgreedPrice: (e) => this.setField("agreedPrice", e.target.value),
+      priceVerdict: !agreed
+        ? "Leave it empty if nothing was agreed — the round is logged and they stay a Lead."
+        : over
+          ? "Over my ceiling. I cannot give this. It goes up to the financial or Senior Manager, whoever sees it first, and I say nothing back until it comes."
+          : "Inside my ceiling, so it is mine to give. A Lead cannot hold an agreed price — the collection details are what make them a Supplier, so this carries on.",
+      priceVerdictColour: !agreed ? "#63736A" : over ? "#B3261E" : "#1F5240",
+      priceCanContinue: !!agreed && !over,
+      priceStopLabel: over ? "Confirm — send it up for a decision" : "Confirm — still negotiating",
+      priceContinueLabel: "Confirm and continue to the collection",
+      askNegotiateStop: () => this.setState({ sure: { step: "negotiate", go: false } }),
+      askNegotiateGo: () => this.setState({ sure: { step: "negotiate", go: true } }),
+
+      collectionDay: f("collectionDay"),
+      collFreq: f("collFreq") || "", setCollFreq: setColl("collFreq"),
+      collDay1: f("collDay1") || "", setCollDay1: setColl("collDay1"),
+      collDay2: f("collDay2") || "", setCollDay2: setColl("collDay2"),
+      twoDays: f("collFreq") === "twice_week",
+      freqOptions: FREQ.map(([value, label]) => ({ value, label })),
+      dayOptions: DAYS,
+      dayOptions2: DAYS.filter((d) => d.value !== f("collDay1")),
+      meetName: f("meetName"),
+      setMeetName: (e) => this.setField("meetName", e.target.value),
+      meetPhone: f("meetPhone"),
+      setMeetPhone: (e) => this.setField("meetPhone", e.target.value),
+      collectMiss: collectMiss.length
+        ? "Still needed: " + collectMiss.join(" and ") + "."
+        : "",
+      collectReady: collectMiss.length === 0,
+      collectStopLabel: "Confirm — they are a Supplier",
+      collectContinueLabel: "Confirm and continue to the order",
+      askCollectStop: () => this.setState({ sure: { step: "collect", go: false } }),
+      askCollectGo: () => this.setState({ sure: { step: "collect", go: true } }),
+
+      orderKg: f("orderKg"),
+      setOrderKg: (e) => this.setField("orderKg", String(e.target.value).replace(/[^0-9]/g, "").slice(0, 5)),
+      orderDue: f("orderDue"),
+      setOrderDue: (e) => this.setField("orderDue", e.target.value),
+      ...(() => {
+        const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const txt = (n) => { const d = window.ZEITCO.dateIn(n); return d.getDate() + " " + MON[d.getMonth()]; };
+        const q = this.state.dueQuick || "";
+        const chip = (on) => ({ bg: on ? "#1F5240" : "#fff", colour: on ? "#fff" : "#10231C", border: on ? "#1F5240" : "#8A9188" });
+        return {
+          dueDays: [{ k: "tomorrow", n: 1, l: "Tomorrow" }, { k: "two", n: 2, l: "In 2 days" }, { k: "three", n: 3, l: "In 3 days" }, { k: "week", n: 7, l: "Next week" }]
+            .map((d) => Object.assign({ label: d.l + " · " + txt(d.n), pick: () => { this.setState({ dueQuick: d.k }); this.setField("orderDue", txt(d.n)); } }, chip(q === d.k))),
+          duePickChip: chip(q === "pick"),
+          duePick: () => { this.setState({ dueQuick: "pick" }); this.setField("orderDue", ""); },
+          dueCalendar: q === "pick",
+          setOrderDueIso: (e) => { const m = String(e.target.value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            this.setField("orderDue", m ? parseInt(m[3], 10) + " " + MON[parseInt(m[2], 10) - 1] : ""); },
+        };
+      })(),
+      orderReady: !!String(f("orderKg")).trim() && !!String(f("orderDue")).trim(),
+      orderMiss: !String(f("orderKg")).trim() || !String(f("orderDue")).trim()
+        ? "An order needs an expected weight and a date operations can plan against."
+        : "",
+      orderStopLabel: "Confirm — raise the collection order",
+      askOrder: () => this.setState({ sure: { step: "order", go: false } }),
+
+      sureOpen: !!sure,
+      barOpen: !sure && (phase === "form"),
+      railOn: phase === "form",
+      sureTitle: sure ? SURE[sure.step].title : "",
+      sureLines: sure ? SURE[sure.step].lines : [],
+      sureWarn: sure
+        ? "This cannot be undone. Correcting it afterwards needs the financial or Senior Manager, whoever sees it first."
+        : "",
+      sureYes: sure ? (sure.go ? "Yes — log it and carry on" : "Yes, log it") : "",
+      sureNo: "Go back",
+      sureGo: () => {
+        if (!sure) return;
+        const s2 = SURE[sure.step];
+        const madeId = this.record(sure.step, { f, theShop, verifying, atShop, agreed, over, newShop });
+        if (sure.step === "form" && sure.go) {
+          // A shop that is not in the book yet travels by name, so the
+          // negotiation still knows who is on the phone.
+          const id = theShop ? theShop.id : (madeId || "");
+          let back = ""; try { back = url.get("back") || ""; } catch (e) {}
+          window.location.href = "negotiation-tool.dc.html?from=survey"
+            + (id ? "&shop=" + encodeURIComponent(id) : "&name=" + encodeURIComponent(f("outletName") || "New shop"))
+            + (f("askedPrice") ? "&ask=" + encodeURIComponent(f("askedPrice")) : "")
+            + (back ? "&back=" + encodeURIComponent(back) : "");
+          return;
+        }
+        this.setState({
+          sure: null,
+          log: (this.state.log || []).concat(s2.logged),
+          phase: sure.go ? s2.next : "ended",
+          lastStep: sure.step,
+        });
+      },
+      sureBack: () => this.setState({ sure: null }),
+
+      endTitle: "Logged — " + (theShop ? tr(theShop.name) : (f("outletName") || "new shop")),
+      endLines: this.state.log || [],
+      // Back to the list this call now belongs in, not the one it started from.
+      backHref: (() => {
+        let back = "";
+        try { back = new URLSearchParams(window.location.search).get("back") || ""; } catch (e) {}
+        const line = (this.state.log || []).length ? (this.state.log[this.state.log.length - 1].label || "Saved") + "." : "Survey saved.";
+        const nm = theShop ? tr(theShop.name) : (f("outletName") || "new shop");
+        const tail = "&banner=" + encodeURIComponent(line) + "&bshop=" + encodeURIComponent(nm);
+        if (/^surveyor\.dc\.html/.test(back)) return back;
+        return (/^agent\.dc\.html/.test(back) ? back : "agent.dc.html?tab=" + ({ pre: "survey", form: verifying ? "survey" : "lead", negotiate: "lead", collect: "supplier&only=undelivered", order: "orders" }[this.state.lastStep] || "day")) + tail;
+      })(),
+      backList: atShop ? "Back to my surveys" : "Back to " + ({ pre: "Surveys", form: verifying ? "Surveys" : "Leads", negotiate: "Leads", collect: "Pre-Suppliers", order: "Orders" }[this.state.lastStep] || "my day"),
+
+      stepped,
+      notes: this.state.notes,
+      offline: this.state.offline,
+      competitor: f("sellingTo") === "competitor",
+      stewardOpen: this.state.stewardOpen,
+      waSame: this.state.waSame,
+      waDifferent: !this.state.waSame,
+      stewardBtn: this.state.stewardOpen ? "Hide" : "+ Add",
+
+      offlineLabel: this.state.offline ? "Back online" : "Show offline",
+      shellCols: "minmax(0,1fr)" + (phase === "form" ? " 300px" : "") + (this.state.notes ? " 268px" : ""),
+      cardCols: stepped ? "minmax(0,1fr)" : "repeat(2,minmax(0,1fr))",
+      codeBg: stepped ? "#fff" : "#1F5240",
+      codeColor: stepped ? "#55655D" : "#fff",
+      stepBg: stepped ? "#1F5240" : "#fff",
+      stepColor: stepped ? "#fff" : "#55655D",
+      pickCode: () => this.setState({ order: "code" }),
+      pickStepped: () => this.setState({ order: "stepped", step: 2 }),
+      toggleNotes: () => this.setState((s) => ({ notes: !s.notes })),
+      toggleOffline: () => this.setState((s) => ({ offline: !s.offline })),
+      toggleSteward: () => this.setState((s) => ({ stewardOpen: !s.stewardOpen })),
+      toggleWa: () => this.setState((s) => ({ waSame: !s.waSame })),
+      pickSelling: (e) => this.setState({ competitor: e.target.value === "Selling to a Competitor" }),
+      showGps: !verifying && !atShop && !done,
+      showCheckin: atShop && !done,
+      checkedIn: !!this.state.checkedIn,
+      notCheckedIn: !this.state.checkedIn,
+      checkIn: () => this.setState({ checkedIn: true }),
+      showSurveyor: verifying && !done,
+      surveyorLine: theShop && theShop.surveyor
+        ? tr(theShop.surveyor) + " stood at the shop on " + tr(theShop.surveyedOn)
+        : "",
+      surveyorProof: theShop
+        ? (theShop.survey && theShop.survey.coords ? theShop.survey.coords : "") +
+          (theShop.gps ? "  " + theShop.gps : "") +
+          (theShop.complete ? "  ·  " + theShop.complete + "% of the form filled" : "")
+        : "",
+      showOutlet: on(2) && !done,
+      showLocation: on(3) && !done,
+      showOil: on(4) && !done,
+      showSteward: on(5) && !done,
+      readOnly: newShop
+        ? [
+          { label: "Country", value: "Egypt", font: "inherit" },
+          { label: "GPS", value: "none — nobody has stood at this shop", font: "'IBM Plex Mono',monospace" },
+        ]
+        : [
+        { label: "Country", value: "Egypt", font: "inherit" },
+        { label: "City", value: (theShop && tr(theShop.survey && theShop.survey.city)) || "—", font: "inherit" },
+        { label: "Zone", value: (theShop && tr(theShop.area)) || "—", font: "inherit" },
+        { label: "GPS", value: verifying
+            ? ((theShop.survey && theShop.survey.coords) || "—") + (theShop.gps ? " · " + theShop.gps : "")
+            : "none — nobody has stood at this shop",
+          font: "'IBM Plex Mono',monospace" }
+      ],
+      record: [
+        { label: "Filled in by", value: atShop
+            ? tr((theShop && theShop.surveyWith) || (window.ZEITCO && window.ZEITCO.autoSurveyor(f("area")))) + ", at the shop, now"
+            : verifying
+            ? (theShop && tr(theShop.surveyor)) + ", at the shop"
+            : "H. Fawzy, by phone, now", color: "#3A4A43", style: "normal" },
+        { label: "Reference", value: theShop ? theShop.id : "assigned on save",
+          color: theShop ? "#3A4A43" : "#63736A", style: theShop ? "normal" : "italic" },
+        { label: "Stage on confirm", value: preMode ? "Survey" : "Lead", color: "#3A4A43", style: "normal" },
+        { label: "Held by", value: preMode
+            ? "The zone's surveyor, then me"
+            : "H. Fawzy — until the financial or Senior Manager reassigns it", color: "#3A4A43", style: "normal" },
+        ...(needsCheck ? [{ label: "Name check", value: this.state.saidDifferent
+            ? "Similar on file — said different"
+            : "Nothing similar found", color: "#3A4A43", style: "normal" }] : []),
+        { label: "Location", value: atShop ? (this.state.checkedIn ? "Proved — checked in" : "Check in first") : verifying ? "Proved by the surveyor" : "Unproved — with the zone's surveyor",
+          color: verifying || (atShop && this.state.checkedIn) ? "#3A4A43" : "#B3261E", style: "normal" },
+        { label: "Price", value: "Theirs only. Nothing agreed by this form.", color: "#63736A", style: "italic" }
+      ],
+      noteList: [
+        { n: "1", title: "Two Ways In", body: "From a pre-survey (the link names the shop and fills in what we already know) or as a new shop with no link. A new shop starts with the check, then the form." },
+        { n: "2", title: "The Check Covers The City", body: "There is no GPS, so it searches every zone in the city. An exact name stops the survey. A similar one lets the agent carry on, and that is recorded on the shop." },
+        { n: "3", title: "City And Zone Are Typed", body: "Nobody has stood at the shop, so the agent picks the city, then a zone inside it. The zone is required because it is what sends a surveyor." },
+        { n: "4", title: "Complete Means Lead", body: "Outlet name, contact person, mobile, address details and a zone. No verification call follows. A surveyor confirms the location only, due three days after the survey or before the first collection, whichever is sooner." },
+        { n: "5", title: "Incomplete Means Survey", body: "If any of those is missing the only action is Save as a survey, which needs at least a name, a mobile and a zone. It goes to the zone's surveyor automatically, and back to the agent if the shop is not there." },
+        { n: "6", title: "Oil Collection Representative Is Optional", body: "Nothing here is required. The dashed row says so, and Hide closes it. The collection step asks who to meet and starts with the contact person." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

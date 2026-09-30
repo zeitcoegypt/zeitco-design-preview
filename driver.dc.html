@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; height:100%; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; -webkit-text-size-adjust:100%; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+  input, select, button, textarea { font-family:inherit; }
+  /* Sentences that merely contain a number: isolate only, so the Arabic
+     phrase keeps its own order. */
+  .num { unicode-bidi:isolate; }
+  /* Numeric-only values — counters, amounts, number+unit: isolate AND force
+     LTR, otherwise two digit groups joined by a neutral (2 / 7) reverse. */
+  .numltr { unicode-bidi:isolate; direction:ltr; }
+</style>
+<script src="data.js"></script>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#10231C"></rect><path d="M50 28C50 28 34 44 34 55a16 16 0 0 0 32 0c0-11-16-27-16-27Z" fill="#7CC79A"></path></svg></template>
+</helmet>
+<div dir="{{ dir }}" style="font-family:{{ fontStack }};min-height:100vh;display:flex;flex-direction:column;background:#FAF6EE;max-width:560px;margin:0 auto">
+
+  <div style="position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #E4DFD4">
+    <div style="display:flex;align-items:center;gap:9px;padding:10px 14px 9px">
+      <sc-if value="{{ canGoBack }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ goBack }}" aria-label="Back to Today" style="flex-shrink:0;width:34px;height:34px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#1F5240;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+        </button>
+      </sc-if>
+      <sc-if value="{{ atHome }}" hint-placeholder-val="{{ true }}">
+        <img src="brand/zeitco-drop.svg" alt="" height="20" style="display:block;width:auto;flex-shrink:0">
+      </sc-if>
+      <span style="flex:1;min-width:0;font-size:15px;font-weight:700;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ title }}</span>
+      <div style="display:flex;align-items:center;gap:11px;flex-shrink:0">
+        <button type="button" onClick="{{ openAlerts }}" style="position:relative;border:0;background:transparent;padding:2px;color:#10231C;cursor:pointer;display:flex;align-items:center">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-1.5 2h15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
+          <sc-if value="{{ alertCount }}" hint-placeholder-val="{{ true }}">
+            <span class="numltr" style="position:absolute;top:-3px;inset-inline-end:-4px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#B3261E;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:0 4px">{{ alertCount }}</span>
+          </sc-if>
+        </button>
+        <div style="text-align:end">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ t_cashOnHand }}</div>
+          <div class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#10231C;line-height:1.1">{{ cashOnHand }}</div>
+        </div>
+
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 14px;background:#F1F6F3;border-top:1px solid #EFEBE1">
+      <span style="font-size:12px;font-weight:600;color:#1F5240">{{ meWho }}</span>
+      <span style="font-size:11px;color:#55655D">{{ meRole }}</span>
+    </div>
+    <div style="display:flex;align-items:stretch;gap:2px;padding:0 10px;border-top:1px solid #EFEBE1;overflow-x:auto">
+      <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="4">
+        <button type="button" onClick="{{ tab.go }}" style="flex:1;min-width:0;border:0;background:transparent;padding:9px 6px 7px;border-bottom:2.5px solid {{ tab.edge }};color:{{ tab.color }};font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer">{{ tab.label }}</button>
+      </sc-for>
+    </div>
+    <sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:8px;background:#FBE9E7;border-top:1px solid #B3261E;padding:6px 14px">
+        <span style="width:7px;height:7px;border-radius:999px;background:#B3261E;flex-shrink:0"></span>
+        <span style="flex:1;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_offlineStrip }}</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="flex:1;padding:11px 12px 14px;display:flex;flex-direction:column;gap:10px">
+
+    <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+      <div style="border:1px solid #E8B4AE;background:#FDF4F2;border-radius:11px;padding:10px 12px 11px">
+        <p style="margin:0 0 8px;font-size:12px;color:#B3261E;text-wrap:pretty">{{ lockNote }}</p>
+        <button type="button" onClick="{{ cancelRoute }}" style="width:100%;height:38px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#B3261E;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ t_cancelRoute }}</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ acceptCard }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#E8EEF4;border:1px solid #2C5578;border-radius:11px;padding:11px 13px 12px">
+        <h2 style="margin:0;font-size:15px;font-weight:700;color:#2C5578">{{ acceptCard.title }}</h2>
+        <p style="margin:4px 0 10px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ acceptCard.note }}</p>
+        <button type="button" onClick="{{ acceptCard.go }}" style="width:100%;height:46px;border:0;border-radius:11px;background:#2C5578;color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ acceptCard.label }}</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isToday }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:11px 13px 12px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+          <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ t_yourCash }}</h2>
+          <span class="num" style="font-size:12px;color:#63736A">{{ t_vehicleLine }}</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:7px">
+          <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:#10231C;line-height:1">{{ cashOnHand }}</span>
+          <span class="num" style="font-size:12px;color:#55655D">{{ t_handLine }}</span>
+        </div>
+        <p style="margin:6px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_floatNote }}</p>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0 0;margin-top:8px;border-top:1px solid #EFEBE1;font-size:13px">
+          <span style="color:#55655D">{{ t_cashFloat }}</span>
+          <span class="{{ egpCls }}" style="font-family:{{ egpFont }};font-weight:600;color:#55655D">{{ floatIssued }} {{ t_egp }}</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showStops }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid #EFEBE1">
+          <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ stopsHeading }}</h2>
+          <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#10231C">{{ stopsCount }}</span>
+        </div>
+        <sc-if value="{{ stopsEmpty }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0;padding:16px 13px;font-size:14px;color:#55655D;text-wrap:pretty">{{ stopsEmptyNote }}</p>
+        </sc-if>
+        <sc-for list="{{ stops }}" as="s" hint-placeholder-count="7">
+          <button type="button" onClick="{{ s.go }}" style="display:flex;align-items:center;gap:11px;width:100%;text-align:start;border:0;border-bottom:1px solid #EFEBE1;border-inline-start:3px solid {{ s.edge }};background:{{ s.bg }};padding:10px 13px;font-family:inherit;cursor:pointer">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:15px;font-weight:600;color:{{ s.nameColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.name }}</div>
+              <div style="font-size:12px;color:#55655D;margin-top:1px;font-family:{{ s.altFont }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.nameAlt }}</div>
+              <div class="num" style="font-size:12px;color:#63736A;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.meta }}</div>
+            </div>
+            <span class="num" style="flex-shrink:0;font-size:11px;font-weight:600;border-radius:999px;padding:3px 9px;color:{{ s.pillColor }};background:{{ s.pillBg }};white-space:nowrap">{{ s.pill }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ isToday }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px">
+          <a href="Start.dc.html" style="display:flex;align-items:center;justify-content:center;height:42px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:#55655D;font-size:14px;font-weight:600">{{ t_logout }}</a>
+        </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:11px 13px 12px">
+        <h2 style="margin:0 0 3px;font-size:15px;font-weight:700;color:#10231C">{{ t_board }}</h2>
+        <p style="margin:0 0 11px;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_boardNote }}</p>
+        <sc-for list="{{ boardRows }}" as="b" hint-placeholder-count="6">
+          <div style="border:1px solid {{ b.rowBorder }};background:{{ b.rowBg }};border-radius:10px;padding:9px 11px 10px;margin-bottom:8px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+              <span style="min-width:0">
+                <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#10231C">{{ b.ref }}</span>
+                <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8A9188;margin-inline-start:7px">{{ b.capLabel }}</span>
+              </span>
+              <span style="display:flex;align-items:baseline;gap:5px;flex-shrink:0">
+                <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#10231C">{{ b.kg }}</span>
+                <span style="font-size:12px;color:#63736A">{{ t_egp_kg }}</span>
+              </span>
+            </div>
+            <div style="font-size:13px;color:#55655D;margin-top:3px;text-wrap:pretty">{{ b.shops }}</div>
+            <div style="display:flex;align-items:center;gap:9px;margin-top:8px">
+              <span style="flex:1;min-width:0;height:7px;border-radius:999px;background:#EFEBE1;overflow:hidden">
+                <span style="display:block;height:100%;width:{{ b.full }};background:{{ b.fullColor }}"></span>
+              </span>
+              <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#63736A;flex-shrink:0">{{ b.full }}</span>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:9px 0 0;border-top:1px solid #EFEBE1">
+          <span style="font-size:13px;font-weight:700;color:#10231C">{{ boardTotalLabel }}</span>
+          <span style="display:flex;align-items:baseline;gap:5px">
+            <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#10231C">{{ boardTotal }}</span>
+            <span style="font-size:12px;color:#63736A">{{ t_egp_kg }}</span>
+          </span>
+        </div>
+        <p style="margin:5px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ boardTotalNote }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStop }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:11px 13px 12px">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="flex:1;min-width:0">
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ stopName }}</h2>
+            <div style="font-size:15px;color:#55655D;margin-top:2px;font-family:{{ stopAltFont }}">{{ stopNameAlt }}</div>
+            <p style="margin:3px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ stopAddress }}</p>
+            <p style="margin:4px 0 0;font-size:12px;font-weight:600;color:#1F5240;text-wrap:pretty">{{ priceSource }}</p>
+            <sc-if value="{{ hasRevised }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #BFD8C9;background:#EEF6F2;border-radius:10px;padding:8px 11px 9px;margin-top:8px">
+                <div style="font-size:13px;font-weight:700;color:#1F5240;text-wrap:pretty">{{ t_revisedTitle }}</div>
+                <div style="font-size:12px;color:#3A4A43;margin-top:2px;text-wrap:pretty">{{ t_revisedBody }}</div>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ hasPhone }}" hint-placeholder-val="{{ true }}">
+          <a href="{{ callHref }}" style="flex-shrink:0;height:38px;padding:0 13px;border:1px solid #8A9188;border-radius:10px;display:flex;align-items:center;font-size:13px;font-weight:600;color:#1F5240;white-space:nowrap">{{ t_callAction }}</a>
+          </sc-if>
+        </div>
+        <div style="display:flex;gap:7px;margin-top:10px">
+          <a href="{{ mapHref }}" target="_blank" rel="noopener" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:40px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#1F5240;font-size:13px;font-weight:600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"></path><path d="M14.5 10a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"></path></svg>
+            {{ t_openMap }}
+          </a>
+          <sc-if value="{{ notOnRoute }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ startRoute }}" style="flex:1;height:40px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ t_onRoute }}</button>
+          </sc-if>
+          <sc-if value="{{ onRoute }}" hint-placeholder-val="{{ false }}">
+            <span style="flex:1;display:flex;align-items:center;justify-content:center;height:40px;border:1px solid #BFD8C9;border-radius:10px;background:#EEF6F2;color:#1F5240;font-size:13px;font-weight:600">{{ t_onRouteSince }}</span>
+          </sc-if>
+          <sc-if value="{{ hereAlready }}" hint-placeholder-val="{{ false }}">
+            <span style="flex:1;display:flex;align-items:center;justify-content:center;height:40px;border:1px solid #BFD8C9;border-radius:10px;background:#EEF6F2;color:#1F5240;font-size:13px;font-weight:600">{{ t_hereSince }}</span>
+          </sc-if>
+        </div>
+
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:1px;background:#EFEBE1;border:1px solid #EFEBE1;border-radius:9px;overflow:hidden;margin-top:11px">
+          <sc-for list="{{ stopFacts }}" as="f" hint-placeholder-count="3">
+            <div style="background:{{ f.bg }};padding:8px 10px;min-width:0">
+              <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+              <div class="{{ f.cls }}" style="font-family:{{ f.font }};font-size:15px;font-weight:600;color:{{ f.color }};margin-top:3px;text-decoration:{{ f.deco }}">{{ f.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ notArrived }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#EEF6F2;border:1px solid #1F5240;border-radius:11px;padding:12px 13px 13px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#1F5240">{{ t_startStop }}</h2>
+          <p style="margin:4px 0 9px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_startNote }}</p>
+          <p style="margin:7px 0 0;font-size:12px;color:{{ hereNoteColor }};text-wrap:pretty">{{ hereNote }}</p>
+        </div>
+        <div style="background:#fff;border:1px dashed #8A9188;border-radius:11px;padding:12px 13px;text-align:center">
+          <div style="font-size:13px;font-weight:600;color:#63736A">{{ t_locked }}</div>
+          <p style="margin:4px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_lockedNote }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ arrived }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:9px 12px">
+          <span style="width:20px;height:20px;border-radius:999px;background:#1F5240;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">✓</span>
+          <span class="num" style="flex:1;min-width:0;font-size:13px;color:#1F5240;text-wrap:pretty">{{ t_startedAt }}</span>
+          <span class="{{ elapsedCls }}" style="font-family:{{ elapsedFont }};font-size:13px;font-weight:600;color:#1F5240;flex-shrink:0">{{ elapsed }}</span>
+        </div>
+
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:11px 13px 13px">
+        <h2 style="margin:0 0 3px;font-size:15px;font-weight:600;color:#63736A">{{ t_weight }}</h2>
+        <p style="margin:0 0 9px;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_weightNote }}</p>
+        <div style="display:flex;align-items:center;gap:9px">
+          <input type="text" dir="ltr" value="{{ weight }}" onChange="{{ setWeight }}" style="flex:1;min-width:0;height:52px;text-align:start;box-sizing:border-box;border:1px solid #1F5240;border-radius:11px;background:#fff;padding:0 13px;font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:#10231C;box-shadow:0 0 0 3px #EEF6F2">
+          <span style="font-size:15px;color:#55655D;flex-shrink:0">{{ t_kg }}</span>
+        </div>
+        <p style="margin:7px 0 0;font-size:13px;font-weight:600;color:{{ weightRemarkColor }};text-wrap:pretty">{{ weightRemark }}</p>
+        <div style="display:flex;gap:7px;margin-top:9px">
+          <sc-for list="{{ quickWeights }}" as="q" hint-placeholder-count="1">
+            <button type="button" onClick="{{ q.pick }}" class="num" style="flex:1;height:38px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-size:13px;font-weight:600">{{ q.label }}</button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ showBarrels }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:1px solid #EFEBE1;margin-top:12px;padding-top:11px">
+          <h3 style="margin:0 0 2px;font-size:14px;font-weight:700;color:#10231C">{{ t_whichBarrel }}</h3>
+          <p style="margin:0 0 9px;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_whichBarrelNote }}</p>
+          <sc-if value="{{ canPickBarrel }}" hint-placeholder-val="{{ true }}">
+            <select value="" onChange="{{ addBarrel }}" style="width:100%;box-sizing:border-box;height:38px;border:1px solid #8A9188;border-radius:10px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;font-weight:600;color:#3A4A43">
+              <sc-for list="{{ barrelOptions }}" as="o" hint-placeholder-count="6">
+                <option value="{{ o.value }}" disabled="{{ o.disabled }}">{{ o.label }}</option>
+              </sc-for>
+            </select>
+          </sc-if>
+          <sc-if value="{{ barrelsEnough }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_barrelsEnough }}</p>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+            <sc-for list="{{ pickedBarrelRows }}" as="b" hint-placeholder-count="1">
+              <div style="display:flex;align-items:center;gap:9px;border:1px solid #BFD8C9;background:#EEF6F2;border-radius:10px;padding:7px 11px">
+                <span class="num" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#1F5240">{{ b.ref }}</span>
+                <span class="num" style="flex:1;min-width:0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#3A4A43">{{ b.cap }}</span>
+                <button type="button" onClick="{{ b.remove }}" style="min-height:28px;padding:4px 10px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#B3261E;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ b.removeLabel }}</button>
+              </div>
+            </sc-for>
+          </div>
+          <p style="margin:8px 0 0;font-size:13px;font-weight:600;color:{{ barrelTallyColor }};text-wrap:pretty">{{ barrelTally }}</p>
+        </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:center;gap:10px;background:{{ outcomeBg }};border:1px solid {{ outcomeBorder }};border-radius:10px;padding:9px 11px;margin-top:11px">
+          <span style="width:8px;height:8px;border-radius:999px;background:{{ outcomeBorder }};flex-shrink:0"></span>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:{{ outcomeColor }}">{{ outcomeLabel }}</div>
+            <div class="num" style="font-size:12px;color:#3A4A43;margin-top:1px;text-wrap:pretty">{{ outcomeNote }}</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:11px;padding-top:10px;border-top:1px solid #EFEBE1">
+          <span style="font-size:13px;color:#55655D">{{ amountLabel }}</span>
+          <span class="{{ amountCls }}" style="font-family:{{ amountFont }};font-size:19px;font-weight:600;color:#10231C">{{ amountToPay }}</span>
+        </div>
+        <sc-if value="{{ owedLine }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:baseline;justify-content:flex-end;gap:10px;margin-top:3px">
+            <span class="{{ owedCls }}" style="font-family:{{ owedFont }};font-size:12px;color:#B3261E">{{ owedLine }}</span>
+          </div>
+        </sc-if>
+        <p style="margin:5px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ payNote }}</p>
+
+        <label style="display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding-top:11px;border-top:1px solid #EFEBE1;cursor:pointer">
+          <input type="checkbox" checked="{{ demands }}" onChange="{{ toggleDemands }}" style="width:20px;height:20px;accent-color:#B3261E;flex-shrink:0;margin-top:1px">
+          <span style="font-size:13px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ t_demands }}</span>
+        </label>
+
+
+        <sc-if value="{{ demands }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FBEAE9;border:1px solid #B3261E;border-radius:10px;padding:10px 12px;margin-top:9px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#B3261E;margin-bottom:5px">{{ t_demandPrice }}</span>
+            <div style="display:flex;align-items:center;gap:9px">
+              <input type="text" inputMode="decimal" dir="ltr" value="{{ demandPrice }}" onChange="{{ setDemandPrice }}" placeholder="6.40" style="width:104px;height:44px;text-align:start;box-sizing:border-box;border:1px solid #B3261E;border-radius:10px;background:#fff;padding:0 11px;font-family:'IBM Plex Mono',monospace;font-size:17px;color:#10231C">
+              <span style="font-size:13px;color:#3A4A43">{{ t_perKg }}</span>
+            </div>
+            <sc-if value="{{ demandPriceMissing }}" hint-placeholder-val="{{ true }}">
+              <p style="margin:7px 0 0;font-size:12px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ t_demandEmpty }}</p>
+            </sc-if>
+            <sc-if value="{{ demandEcho }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #B3261E;background:#FBEAE9;border-radius:10px;padding:9px 11px 10px;margin-top:9px">
+                <p style="margin:0;font-size:13px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ demandEcho }}</p>
+                <div style="display:flex;gap:7px;margin-top:10px">
+                  <button type="button" onClick="{{ confirmPrice }}" style="flex:1;height:42px;border:0;border-radius:10px;background:{{ priceYesBg }};color:{{ priceYesColor }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ priceYesLabel }}</button>
+                  <button type="button" onClick="{{ clearPrice }}" style="flex:1;height:42px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ t_askNo }}</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ demandEchoWarn }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:4px 0 0;font-size:12px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ demandEchoWarn }}</p>
+            </sc-if>
+            <p style="margin:8px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_demandNote }}</p>
+            <sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:7px 0 0;font-size:12px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ t_demandOffline }}</p>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showQuality }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #EFEBE1;border-radius:10px;padding:10px 12px;margin-top:9px">
+            <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:6px">{{ t_reason }}</span>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ qualityReasons }}" as="r" hint-placeholder-count="3">
+                <label style="display:flex;align-items:center;gap:9px;cursor:pointer">
+                  <input type="radio" name="quality" checked="{{ r.checked }}" onChange="{{ r.pick }}" style="width:18px;height:18px;accent-color:#1F5240">
+                  <span style="font-size:13px;color:#3A4A43">{{ r.label }}</span>
+                </label>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px">
+          <sc-if value="{{ barrelsShort }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;font-size:12px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ t_barrelsShortWhy }}</p>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;gap:7px;flex-wrap:wrap">
+              <sc-for list="{{ otherOutcomes }}" as="o" hint-placeholder-count="3">
+                <button type="button" onClick="{{ o.pick }}" style="flex:1;min-width:calc(50% - 4px);height:42px;border:1px solid {{ o.border }};border-radius:10px;background:{{ o.bg }};color:{{ o.color }};font-size:13px;font-weight:600;padding:0 6px">{{ o.label }}</button>
+              </sc-for>
+            </div>
+            <p style="margin:0;font-size:12px;color:#63736A;text-wrap:pretty">{{ mustDecide }}</p>
+            <p style="margin:0;font-size:12px;color:#55655D;text-wrap:pretty">{{ paymentNote }}</p>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isWaiting }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #B3261E;border-radius:11px;padding:13px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="width:10px;height:10px;border-radius:999px;background:#B3261E;flex-shrink:0"></span>
+          <h2 style="margin:0;flex:1;font-size:15px;font-weight:700;color:#10231C">{{ t_waitingTitle }}</h2>
+          <span class="{{ waitingForCls }}" style="font-family:{{ waitingForFont }};font-size:13px;color:#B3261E">{{ t_waitingFor }}</span>
+        </div>
+        <p class="num" style="margin:8px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_waitingBody }}</p>
+        <div style="background:#FCFAF5;border:1px solid #EFEBE1;border-radius:10px;padding:9px 11px;margin-top:11px">
+          <sc-for list="{{ waitingThread }}" as="w" hint-placeholder-count="3">
+            <div style="display:flex;gap:10px;padding:5px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+              <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#63736A;width:52px;flex-shrink:0">{{ w.when }}</span>
+              <span style="flex:1;min-width:0;color:#3A4A43;text-wrap:pretty">{{ w.what }}</span>
+              <span class="numltr" style="font-family:'IBM Plex Mono',monospace;color:{{ w.color }};flex-shrink:0">{{ w.amount }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#EEF6F2;border:1px solid #1F5240;border-radius:10px;padding:10px 12px;margin-top:10px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+            <div class="num" style="font-size:13px;font-weight:600;color:#1F5240">{{ t_counterTitle }}</div>
+            <span style="font-size:11px;font-weight:600;color:{{ roundLabelColor }};white-space:nowrap">{{ roundLabel }}</span>
+          </div>
+          <p style="margin:4px 0 9px;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_counterNote }}</p>
+          <a href="approvals.dc.html" style="display:inline-block;font-size:12px;font-weight:600;color:#1F5240">{{ t_toApprovals }}</a>
+          <div style="display:none">
+            <button type="button" onClick="{{ acceptPrice }}" style="flex:1;height:44px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-size:15px;font-weight:600">{{ t_accepts }}</button>
+            <button type="button" onClick="{{ refusePrice }}" style="flex:1;height:44px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#B3261E;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;line-height:1.25">{{ t_refusesRound }}</button>
+          </div>
+        </div>
+        <button type="button" onClick="{{ goToday }}" style="width:100%;height:42px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-size:13px;font-weight:600;margin-top:9px">{{ t_meanwhile }}</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isReceipt }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+        <div style="background:#EEF6F2;border-bottom:1px solid #1F5240;padding:11px 13px;display:flex;align-items:center;gap:10px">
+          <span style="width:22px;height:22px;border-radius:999px;background:#1F5240;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">✓</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:#1F5240">{{ t_collectedPaid }}</div>
+            <div style="font-size:12px;color:#3A4A43">{{ t_showOwner }}</div>
+          </div>
+        </div>
+        <div style="padding:13px">
+          <div style="text-align:center;padding-bottom:10px;border-bottom:1px dashed #8A9188">
+            <div style="font-size:15px;font-weight:700;color:#10231C">{{ t_company }}</div>
+            <div class="num" style="font-size:12px;color:#63736A;margin-top:2px">{{ t_receiptLine }}</div>
+          </div>
+          <sc-for list="{{ receipt }}" as="r" hint-placeholder-count="7">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+              <span style="color:#55655D;flex-shrink:0">{{ r.label }}</span>
+              <span class="{{ r.cls }}" style="font-family:{{ r.font }};font-weight:{{ r.weight }};color:{{ r.color }};text-align:end;min-width:0">{{ r.value }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:13px">
+            <button type="button" style="width:100%;height:46px;border:0;border-radius:11px;background:#1F5240;color:#fff;font-size:15px;font-weight:600">{{ t_print }}</button>
+            <div style="display:flex;gap:7px">
+              <button type="button" style="flex:1;height:42px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-size:13px;font-weight:600">{{ t_sendCopy }}</button>
+              <button type="button" onClick="{{ goNext }}" style="flex:1;height:42px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#1F5240;font-size:13px;font-weight:600">{{ t_nextStop }}</button>
+            </div>
+            <p class="num" style="margin:2px 0 0;font-size:12px;color:#63736A;text-align:center;text-wrap:pretty">{{ t_printerNote }}</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCash }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:12px 13px 13px">
+        <h2 style="margin:0 0 9px;font-size:15px;font-weight:600;color:#63736A">{{ t_todaysCash }}</h2>
+        <sc-for list="{{ cashRows }}" as="c" hint-placeholder-count="4">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+            <span style="color:{{ c.labelColor }};min-width:0;text-wrap:pretty">{{ c.label }}</span>
+            <span class="{{ c.cls }}" style="font-family:{{ c.font }};font-weight:600;color:{{ c.color }};flex-shrink:0">{{ c.value }}</span>
+          </div>
+        </sc-for>
+        <p style="margin:9px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_cashNote }}</p>
+      </div>
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+        <div style="padding:10px 13px;border-bottom:1px solid #EFEBE1">
+          <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ t_paidPerStop }}</h2>
+        </div>
+        <sc-for list="{{ paidPerStop }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 13px;border-bottom:1px solid #EFEBE1">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</div>
+              <div class="num" style="font-size:12px;color:#63736A;margin-top:1px">{{ p.detail }}</div>
+            </div>
+            <span class="numltr" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:{{ p.color }};flex-shrink:0">{{ p.amount }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEnd }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:12px 13px 13px">
+        <h2 style="margin:0 0 3px;font-size:15px;font-weight:700;color:#10231C">{{ t_endDay }}</h2>
+        <p style="margin:0 0 11px;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_endNote }}</p>
+        <label style="display:block">
+          <span style="display:block;font-size:12px;font-weight:600;color:#55655D;margin-bottom:4px">{{ t_reconcileWeight }}</span>
+          <div style="display:flex;align-items:center;gap:9px">
+            <input type="text" dir="ltr" value="{{ weighed }}" onChange="{{ setWeighed }}" readOnly="{{ dayClosed }}" style="flex:1;min-width:0;height:48px;text-align:start;box-sizing:border-box;border:1px solid {{ weighedBorder }};border-radius:11px;background:{{ weighedBg }};padding:0 13px;font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:{{ weighedColor }}">
+            <span style="font-size:15px;color:#55655D;flex-shrink:0">{{ t_kg }}</span>
+          </div>
+        </label>
+        <sc-if value="{{ dayOpen }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ useBarrelWeights }}" style="width:100%;height:42px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#1F5240;font-family:inherit;font-size:13px;font-weight:600;margin-top:8px;cursor:pointer">{{ t_useBatch }}</button>
+        </sc-if>
+
+        <div style="margin-top:12px">
+          <sc-for list="{{ reconcileRows }}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+              <span style="color:#55655D;min-width:0">{{ r.label }}</span>
+              <span class="{{ r.cls }}" style="font-family:{{ r.font }};font-weight:600;color:{{ r.color }};flex-shrink:0">{{ r.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background:{{ diffBg }};border:1px solid {{ diffBorder }};border-radius:10px;padding:10px 12px;margin-top:11px">
+          <div class="num" style="font-size:13px;font-weight:600;color:{{ diffColor }}">{{ diffTitle }}</div>
+          <p class="num" style="margin:4px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ diffBody }}</p>
+          <sc-if value="{{ hasShortfall }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.08)">
+              <sc-for list="{{ shortfallRows }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:4px 0;font-size:13px">
+                  <span class="num" style="color:#3A4A43;min-width:0;text-wrap:pretty">{{ s.label }}</span>
+                  <span class="{{ s.cls }}" style="font-family:{{ s.font }};font-weight:600;color:{{ s.color }};flex-shrink:0">{{ s.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ closingDay }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #B3261E;background:#FBEAE9;border-radius:11px;padding:11px 12px 12px;margin-top:12px">
+            <h3 style="margin:0;font-size:14px;font-weight:700;color:#B3261E">{{ t_closeAskTitle }}</h3>
+            <p style="margin:4px 0 10px;font-size:12px;color:#B3261E;text-wrap:pretty">{{ t_closeAskBody }}</p>
+            <div style="display:flex;gap:7px">
+              <button type="button" onClick="{{ confirmClose }}" style="flex:1;height:46px;border:0;border-radius:11px;background:#B3261E;color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ t_confirmWord }}</button>
+              <button type="button" onClick="{{ cancelClose }}" style="flex:1;height:46px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:#3A4A43;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer">{{ t_cancelWord }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ dayClosed }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #1F5240;background:#EEF6F2;border-radius:11px;padding:11px 12px 12px;margin-top:12px">
+            <h3 style="margin:0;font-size:14px;font-weight:700;color:#1F5240">{{ t_dayClosedTitle }}</h3>
+            <p style="margin:4px 0 0;font-size:12px;color:#3A4A43;text-wrap:pretty">{{ t_dayClosedBody }}</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ dayOpen }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ askClose }}" style="width:100%;height:50px;border:0;border-radius:12px;background:#1F5240;color:#fff;font-family:inherit;font-size:17px;font-weight:600;margin-top:12px;cursor:pointer">{{ t_reconcile }}</button>
+        </sc-if>
+        <p style="margin:7px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_reconcileNote }}</p>
+        <a href="Start.dc.html" style="display:flex;align-items:center;justify-content:center;height:42px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:#55655D;font-size:14px;font-weight:600;margin-top:10px">{{ t_logout }}</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAlerts }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid #EFEBE1">
+          <h2 style="margin:0;font-size:15px;font-weight:600;color:#63736A">{{ t_needsYou }}</h2>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#63736A">{{ alertCount }}</span>
+        </div>
+        <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="4">
+          <button type="button" onClick="{{ a.go }}" style="display:flex;align-items:flex-start;gap:11px;width:100%;text-align:start;border:0;border-bottom:1px solid #EFEBE1;border-inline-start:3px solid {{ a.edge }};background:{{ a.bg }};padding:11px 13px;font-family:inherit;cursor:pointer">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:#10231C;text-wrap:pretty">{{ a.title }}</div>
+              <div class="num" style="font-size:12px;color:#63736A;margin-top:2px;text-wrap:pretty">{{ a.body }}</div>
+            </div>
+            <span class="{{ a.whenCls }}" style="flex-shrink:0;font-family:{{ a.whenFont }};font-size:11px;color:{{ a.whenColor }}">{{ a.when }}</span>
+          </button>
+        </sc-for>
+        <p style="margin:0;padding:10px 13px;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_alertsNote }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:12px 13px 13px">
+        <h2 style="margin:0 0 3px;font-size:15px;font-weight:600;color:#63736A">{{ t_language }}</h2>
+        <p style="margin:0 0 10px;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_languageNote }}</p>
+        <div style="display:flex;gap:7px">
+          <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+            <button type="button" onClick="{{ l.pick }}" style="flex:1;height:48px;border:1px solid {{ l.border }};border-radius:11px;background:{{ l.bg }};color:{{ l.color }};font-family:{{ l.font }};font-size:17px;font-weight:600">{{ l.label }}</button>
+          </sc-for>
+        </div>
+        <p style="margin:9px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ t_langCaveat }}</p>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E4DFD4;border-radius:11px;padding:12px 13px 13px">
+        <h2 style="margin:0 0 9px;font-size:15px;font-weight:600;color:#63736A">{{ t_me }}</h2>
+        <sc-for list="{{ meRows }}" as="m" hint-placeholder-count="4">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+            <span style="color:#55655D;min-width:0;text-wrap:pretty">{{ m.label }}</span>
+            <span class="{{ m.cls }}" style="font-family:{{ m.font }};font-weight:600;color:{{ m.color }};flex-shrink:0">{{ m.value }}</span>
+          </div>
+        </sc-for>
+        <button type="button" onClick="{{ goEnd }}" style="width:100%;height:46px;border:0;border-radius:11px;background:{{ endBg }};color:{{ endColor }};font-size:15px;font-weight:600;margin-top:12px;cursor:{{ endCursor }}">{{ endLabel }}</button>
+        <sc-if value="{{ endGateNote }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:6px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ endGateNote }}</p>
+        </sc-if>
+        <a href="Start.dc.html" style="display:flex;align-items:center;justify-content:center;height:42px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:#55655D;font-size:14px;font-weight:600;margin-top:8px">{{ t_logout }}</a>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;gap:8px;margin-top:2px">
+      <sc-for list="{{ jump }}" as="j" hint-placeholder-count="3">
+        <button type="button" onClick="{{ j.go }}" style="flex:1;height:40px;border:1px solid {{ j.border }};border-radius:10px;background:{{ j.bg }};color:{{ j.color }};font-size:13px;font-weight:600;padding:0 6px">{{ j.label }}</button>
+      </sc-for>
+    </div>
+    <button type="button" onClick="{{ toggleOffline }}" style="height:34px;border:1px solid #8A9188;border-radius:9px;background:#fff;color:#55655D;font-size:12px;font-weight:600">{{ offlineLabel }}</button>
+
+  </div>
+
+  <div style="height:120px"></div>
+  <sc-if value="{{ bar }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;justify-content:center;pointer-events:none">
+      <div style="width:100%;max-width:560px;box-sizing:border-box;padding:0 12px 12px">
+        <div style="background:{{ bar.bg }};border:1px solid {{ bar.edge }};border-radius:12px;padding:11px 13px;box-shadow:0 -4px 18px rgba(16,35,28,.10);pointer-events:auto;display:flex;flex-direction:column;gap:9px">
+          <div>
+            <div class="num" style="font-size:14px;font-weight:700;color:{{ bar.ink }};text-wrap:pretty">{{ bar.title }}</div>
+            <div class="num" style="font-size:12px;color:#3A4A43;text-wrap:pretty">{{ bar.line }}</div>
+          </div>
+          <div style="display:flex;gap:7px">
+            <sc-if value="{{ bar.second }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ bar.second.go }}" disabled="{{ bar.second.off }}" style="flex:1;min-height:46px;border:1px solid #8A9188;border-radius:11px;background:#fff;color:{{ bar.second.ink }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;line-height:1.25;padding:4px 8px">{{ bar.second.label }}</button>
+            </sc-if>
+            <button type="button" onClick="{{ bar.main.go }}" disabled="{{ bar.main.off }}" style="flex:2;min-height:46px;border:0;border-radius:11px;background:{{ bar.main.bg }};color:{{ bar.main.ink }};font-family:inherit;font-size:15px;font-weight:600;cursor:{{ bar.main.cursor }};line-height:1.25;padding:4px 8px">{{ bar.main.label }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:900},&quot;offline&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;},&quot;atWarehouse&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;},&quot;atShop&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
+class Component extends DCLogic {
+  // Grounded in app/DriverTodayClient.tsx (cash on hand = float issued −
+  // Σ amountPaid; stop states incl. pending price decision and unapproved
+  // same-day additions), lib/collections.ts's STOP_OUTCOMES and quality
+  // reason codes, lib/cashFloat.ts (one float per manifest, suggested from
+  // expected × agreed price), lib/reconciliation.ts (warehouse weight is
+  // authoritative; a surplus is flagged and never credited; a shortfall is
+  // recovered from remaining cash, the rest carried forward) and
+  // t.manifests for wording.
+  state = { screen: "today", stop: 3, weight: "", demands: false, offline: false, quality: "water", forced: null, weighed: "660", arrivals: {}, tick: 0, lang: "ar" };
+
+  // The language is the user's, not the screen's: keep it so moving between
+  // tabs and screens doesn't silently drop them back into English.
+  setLang(l) {
+    try { localStorage.setItem("zeitco-lang", l); } catch (e) {}
+    this.setState({ lang: l, touched: true });
+  }
+
+  watchLang() {
+    this.__langSync = (e) => {
+      if (e.key !== "zeitco-lang") return;
+      if (e.newValue === "ar" || e.newValue === "en") this.setState({ lang: e.newValue, touched: true });
+    };
+    window.addEventListener("storage", this.__langSync);
+  }
+
+  unwatchLang() {
+    if (this.__langSync) window.removeEventListener("storage", this.__langSync);
+  }
+
+  restoreLang() {
+    try {
+      const saved = localStorage.getItem("zeitco-lang");
+      if (saved === "ar" || saved === "en") this.setState({ lang: saved, touched: true });
+    } catch (e) {}
+  }
+
+  // Added: which driver this phone belongs to. Testing: ?truck=t2 (t1–t6).
+  truckId() {
+    try { return new URLSearchParams(window.location.search).get("truck") || sessionStorage.getItem("zeitco-driver") || "t1"; } catch (e) { return "t1"; }
+  }
+
+  componentDidMount() {
+    this.restoreLang();
+    this.watchLang();
+    // Added: the next stop is selected on opening.
+    const Z = window.ZEITCO;
+    if (Z) {
+      const run = Z.orders.filter((o) => o.truck === this.truckId() && o.due && o.due.en === window.ZEITCO.today.en).sort((x, y) => (x.seq || 0) - (y.seq || 0));
+      const i = run.findIndex((o) => o.state === "on_a_truck" && !o.wrong);
+      this.setState({ stop: i > -1 ? i : 0 });
+    }
+    const saved = localStorage.getItem("zeitco-driver-screen");
+    if (saved) this.setState({ screen: saved });
+    this.clock = setInterval(() => this.setState((p) => ({ tick: p.tick + 1 })), 30000);
+  }
+
+  componentWillUnmount() {
+    this.unwatchLang(); clearInterval(this.clock); }
+
+  goTo(screen) {
+    localStorage.setItem("zeitco-driver-screen", screen);
+    this.setState({ screen });
+    window.scrollTo(0, 0);
+  }
+
+  renderVals() {
+    const o = this.baseVals();
+    const s = this.state, ar = o.dir === "rtl", Z = window.ZEITCO;
+    const btn = (label, go, off, tone) => ({ label, go: off ? () => {} : go, off: !!off,
+      bg: off ? "#D5DCD7" : tone || "#1F5240", ink: off ? "#63736A" : "#fff", cursor: off ? "default" : "pointer" });
+    const sec = (label, go, off, ink) => ({ label, go: off ? () => {} : go, off: !!off, ink: ink || "#3A4A43" });
+    const W = { bg: "#fff", edge: "#E4DFD4", ink: "#10231C" }, SURE = { bg: "#FDF4F2", edge: "#E8B4AE", ink: "#B3261E" };
+    let bar = null;
+    // "Are you sure?" first, whichever step asked it.
+    if (o.confirming) bar = Object.assign({}, SURE, { title: o.t_confirmTitle, line: o.t_confirmBody, main: btn(o.t_collectNow, o.doCollect, false, "#B3261E"), second: sec(o.t_cancelWord, o.cancelCollect) });
+    else if (o.askDemands) bar = Object.assign({}, SURE, { title: o.t_askTitle, line: o.t_askBody, main: btn(o.t_askYes, o.confirmDemands, false, "#B3261E"), second: sec(o.t_askNo, o.cancelDemands) });
+    else if (o.isStop && o.askingArrive) bar = Object.assign({}, SURE, { title: o.t_arriveAskTitle, line: o.t_arriveAskBody, main: btn(o.t_confirmWord, o.confirmArrive, false, "#B3261E"), second: sec(o.t_cancelWord, o.cancelArrive) });
+    else if (o.isStop && o.askingRoute) bar = Object.assign({}, SURE, { title: o.t_routeAskTitle, line: o.t_routeAskBody, main: btn(o.t_confirmWord, o.confirmRoute, false, "#B3261E"), second: sec(o.t_cancelWord, o.cancelAskRoute) });
+    else if (o.isToday && o.askingEnd) bar = Object.assign({}, SURE, { title: o.t_endAskTitle, line: o.t_endAskBody, main: btn(o.t_confirmWord, o.confirmEnd, false, "#B3261E"), second: sec(o.t_cancelWord, o.cancelEnd) });
+    else if (o.isStop && !o.stopAccepted) bar = Object.assign({}, W, { title: o.stopName, line: ar ? "اقبل توقفات اليوم أولاً من شاشة اليوم." : "Accept today's stops first, on Today.", main: btn(ar ? "اقبل التوقفات" : "Accept the stops", o.acceptStops) });
+    else if (o.isStop && o.notArrived) bar = Object.assign({}, W, { title: o.stopName, line: o.hereNote, main: btn(o.hereLabel, o.arrive, o.notNearShop) });
+    else if (o.isStop && o.arrived) bar = Object.assign({}, W, { title: o.stopName, line: o.barrelsShort ? o.t_barrelsShortWhy : o.outcomeLabel + " · " + o.amountLabel + " " + o.amountToPay, main: btn(o.saveLabel, o.saveStop, o.demandPriceMissing) });
+    else if (o.isWaiting) bar = Object.assign({}, W, { title: o.t_counterTitle, line: o.t_counterNote, main: btn(o.t_accepts, o.acceptPrice, !o.priceAnswered), second: sec(o.t_refusesRound, o.refusePrice, !o.priceAnswered, "#B3261E") });
+    else if (o.isToday) bar = Object.assign({}, W, { title: o.todayLeft, line: o.endGateNote, main: btn(o.endLabel, o.goEnd, o.notAtYard) });
+    return Object.assign(o, { bar });
+  }
+
+  baseVals() {
+    const s = this.state;
+    // From the truck's reported position, the same source the operations
+    // manager's urgent-shop picker reads. Inside 120 m counts as at the yard.
+    const metresAway = this.props.atWarehouse === false ? 2600 : 40; // testing: at the yard unless set off
+    const atYard = metresAway <= 120;
+    // Same idea at a shop: he can only mark himself there when the truck is
+    // actually within 200 m of it, so a stop cannot be logged from the road.
+    const shopMetres = this.props.atShop === false ? 1400 : 35; // testing: at the shop unless set off
+    const nearShop = shopMetres <= 200;
+
+    // How many times this has been back to the call center. Each round they can
+    // come back with a better number; the third is their last word.
+
+
+    const lockedToStop = !!(this.state.routes && this.state.routes[this.state.stop])
+      && !(this.state.arrivals && this.state.arrivals[this.state.stop]);
+
+    // One reading of the weight field, shared by the remark and its colour.
+    const remarkFor = (typed, exp) => {
+      if (typed === null || isNaN(typed)) return { text: "", color: "#63736A" };
+      if (typed === 0) {
+        return { text: ar ? "لا زيت من هذا المحل اليوم." : "No oil from this shop today.", color: "#B3261E" };
+      }
+      const diff = typed - exp;
+      if (Math.abs(diff) <= exp * 0.02) {
+        return {
+          text: ar ? "كما هو متوقع · المتوقع " + exp + " كجم" : "As expected · " + exp + " Kg expected",
+          color: "#1F5240",
+        };
+      }
+      if (diff < 0) {
+        return {
+          text: ar
+            ? "أقل من المتوقع بـ" + Math.round(-diff) + " كجم · المتوقع " + exp
+            : Math.round(-diff) + " Kg less than expected · " + exp + " Kg expected",
+          color: "#B3261E",
+        };
+      }
+      return {
+        text: ar
+          ? "أكثر من المتوقع بـ" + Math.round(diff) + " كجم · المتوقع " + exp
+          : Math.round(diff) + " Kg more than expected · " + exp + " Kg expected",
+        color: "#2C5578",
+      };
+    };
+    // Arabic strings are the app's own (lib/i18n/translations.ts): myDay,
+    // stopsToday, logTitle, weight, amountToCollect, receiptTitle,
+    // cashOnHand, reconcileWeight. Anything without a verified Arabic
+    // string stays in English rather than being invented here.
+    const ar = s.lang === "ar";
+    const fontStackValue = ar ? "'Noto Kufi Arabic',sans-serif" : "'IBM Plex Sans',sans-serif";
+    const MONO_F = "'IBM Plex Mono',monospace";
+    const vc = (v) => (/[\u0600-\u06FF]/.test(String(v == null ? "" : v)) ? "num" : "numltr");
+    const vfont = (v) => (/[\u0600-\u06FF]/.test(String(v == null ? "" : v)) ? fontStackValue : MONO_F);
+    const withVal = (rows) => rows.map((r) => ({
+      ...r, cls: vc(r.value), font: r.font === "inherit" ? r.font : vfont(r.value),
+      // A superseded figure stays visible but struck through; the one that
+      // replaced it is the green one.
+      deco: r.strike ? "line-through" : "none",
+      color: r.strike ? "#8A9188" : r.good ? "#1F5240" : "#10231C",
+      bg: r.good ? "#EEF6F2" : "#FCFAF5",
+    }));
+    const T = {
+      today: ar ? "\u0627\u0644\u064a\u0648\u0645" : "Today",
+      stopsToday: ar ? "\u0645\u062d\u0637\u0627\u062a \u0627\u0644\u064a\u0648\u0645" : "Stops Today",
+      logTitle: ar ? "\u062a\u0633\u062c\u064a\u0644 \u0647\u0630\u0647 \u0627\u0644\u0645\u062d\u0637\u0629" : "Log this stop",
+      weight: ar ? "\u0627\u0644\u0648\u0632\u0646 \u0627\u0644\u0645\u0642\u0628\u0648\u0644 (\u0643\u062c\u0645)" : "Weight Accepted",
+      amount: ar ? "\u0627\u0644\u0645\u0628\u0644\u063a \u0627\u0644\u0645\u0633\u062a\u062d\u0642 \u0627\u0644\u062a\u062d\u0635\u064a\u0644" : "Amount to pay",
+      receipt: ar ? "\u0625\u064a\u0635\u0627\u0644" : "Receipt",
+      cashOnHand: ar ? "\u0627\u0644\u0646\u0642\u062f\u064a\u0629 \u0627\u0644\u0645\u062a\u0648\u0641\u0631\u0629" : "Cash On Hand",
+      reconcileWeight: ar ? "\u0627\u0644\u0648\u0632\u0646 \u0627\u0644\u0625\u062c\u0645\u0627\u0644\u064a \u062d\u0633\u0628 \u0627\u0644\u0645\u062e\u0632\u0646 (\u0643\u062c\u0645)" : "Warehouse-weighed total"
+    };
+    // One row per stop; the stop screen reads whichever row was tapped.
+    // Added: the stops are the live orders on this driver's truck today.
+    const Z = window.ZEITCO;
+    const truckId = this.truckId();
+    const STOPS = !Z ? [] : Z.orders.filter((o) => o.truck === truckId && o.due && o.due.en === window.ZEITCO.today.en)
+      .sort((x, y) => (x.seq || 0) - (y.seq || 0)).map((o) => {
+        const sh = Z.byId(o.shop) || { name: { en: o.shop, ar: o.shop } };
+        const en = (v) => (v && typeof v === "object" ? v.en : v) || "";
+        const arr = (v) => (v && typeof v === "object" ? v.ar : v) || "";
+        const price = parseFloat(sh.agreedPrice) || 0;
+        const col = o.state === "collected", back = !!o.wrong || o.state === "missed";
+        const lastC = (sh.collections || []).filter((c) => !(o.due && en(c.when) === en(o.due)))[0];
+        const who = sh.rep || sh.contact;
+        return {
+          order: o.id, back, shopId: sh.id, accepted: Z.isAccepted(o), payment: sh.payment === "postpaid" ? "postpaid" : undefined,
+          atDoor: !!o.atDoor && !col && !back,
+          name: en(sh.name), nameAr: arr(sh.name),
+          address: en(sh.survey && sh.survey.address) || en(sh.area), addressAr: arr(sh.survey && sh.survey.address) || arr(sh.area),
+          contact: en(who) || "Not recorded", contactAr: arr(who) || "غير مسجل", phone: sh.repPhone || sh.phone || "",
+          expected: o.expect || 0, price, last: lastC ? en(lastC.when) : "—",
+          state: col || back ? "done" : "todo", logged: col,
+          took: col ? o.got : back ? 0 : (o.expect || 0), owed: col && sh.payment === "postpaid" ? Math.round((o.got || 0) * price) - (o.paid || 0) : 0, ref: o.id, at: window.ZEITCO.today.en + " " + window.ZEITCO.todayDate().getFullYear() + (o.doneAt ? " · " + o.doneAt : ""),
+          tone: col ? "good" : back ? "attend" : "dormant", screen: col ? "receipt" : "stop",
+          pill: col ? "Collected " + o.got + " Kg" : back ? "Came back" : (o.expect || 0) + " Kg expected",
+          pillAr: col ? "تم تحميل " + o.got + " كجم" : back ? "عاد من الطريق" : (o.expect || 0) + " كجم متوقع",
+          meta: (o.expect || 0) + " Kg expected · " + price.toFixed(2) + " EGP/kg",
+          metaAr: (o.expect || 0) + " كجم متوقع · " + price.toFixed(2) + " جنيه/كجم",
+          detail: col ? o.got + " Kg at " + price.toFixed(2) : back ? en(o.whyWrong || o.whyMissed) : "Not logged yet",
+          detailAr: col ? o.got + " كجم بسعر " + price.toFixed(2) : back ? arr(o.whyWrong || o.whyMissed) : "لم تُسجل بعد",
+        };
+      });
+    STOPS.forEach((x) => {
+      if (x.atDoor) Object.assign(x, { state: "waiting", tone: "attend", pill: "Waiting on a price", pillAr: "بانتظار السعر" });
+      else if (x.state === "todo" && !x.accepted) Object.assign(x, { pill: "Not accepted yet", pillAr: "لم تُقبل بعد" });
+    });
+    const nextIdx = STOPS.findIndex((x) => x.state === "todo" && x.accepted);
+    if (nextIdx > -1) Object.assign(STOPS[nextIdx], { state: "next", tone: "progress", pill: "Next", pillAr: "التالية" });
+
+    // Everything money-related comes from this one array, rounded once.
+    const round = (n) => Math.round(n);
+    // A stop he confirmed this session becomes a collected stop, with the weight,
+    // the price and the barrels he actually recorded. One derivation, so Today,
+    // Collected, On board and the cash all move together when he confirms.
+    const DONE = s.done || {};
+    STOPS.forEach((st, i) => {
+      const d = DONE[i];
+      if (!d) return;
+      st.logged = true;
+      st.state = "done";
+      st.took = d.took;
+      st.price = d.price;
+      st.owed = d.owed;
+      st.barrels = d.barrels;
+      st.tone = "good";
+      st.screen = "receipt";
+      st.pill = "Collected " + d.took + " Kg";
+      st.pillAr = "تم تحميل " + d.took + " كجم";
+      st.detail = d.took + " Kg at " + d.price.toFixed(2);
+      st.detailAr = d.took + " كجم بسعر " + d.price.toFixed(2);
+    });
+    const dueFor = (st) => round(st.took * st.price);
+    const loggedStops = STOPS.filter((st) => st.logged);
+    const paidOut = loggedStops.reduce((sum, st) => sum + (dueFor(st) - st.owed), 0);
+    const floatIssued = 8500; // lib/cashFloat.ts: suggested is Σ expected × agreed price (8,371), rounded up when issued
+    const cashInHand = floatIssued - paidOut;
+    const loggedTotal = loggedStops.reduce((sum, st) => sum + st.took, 0);
+    const totalDue = loggedStops.reduce((sum, st) => sum + dueFor(st), 0);
+    const avgPrice = loggedTotal > 0 ? totalDue / loggedTotal : 0;
+    const stopsDone = loggedStops.length;
+    // The barrels issued to his car this morning, from the warehouse's barrel
+    // registry: twenty of them, 60 to 200 Kg, because the sizes really do vary.
+    const BARREL_CAPS = [200, 200, 200, 200, 180, 180, 180, 160, 160, 150, 150, 120, 120, 120, 100, 100, 80, 80, 60, 60];
+    const BARREL_REG = BARREL_CAPS.map((cap, i) => ({
+      ref: "B-" + String(i + 1).padStart(3, "0"), cap,
+    }));
+    // Barrels are filled from the stops he has logged, so what is on the car can
+    // never disagree with what he collected. A shop keeps a barrel to itself
+    // while the quantity allows; a big collection spans several.
+    const BARRELS = (() => {
+      const out = BARREL_REG.map((b) => ({ ...b, stops: [], kg: 0 }));
+      loggedStops.forEach((st) => {
+        // Barrels he picked himself are honoured; the seeded stops had none, so
+        // those fall back to filling empties.
+        if (st.barrels && st.barrels.length) {
+          let left = st.took;
+          st.barrels.forEach((ref) => {
+            const b = out.find((x) => x.ref === ref);
+            if (!b) return;
+            const put = Math.min(left, b.cap);
+            b.stops.push(st);
+            b.kg = put;
+            left -= put;
+          });
+          return;
+        }
+        let left = st.took;
+        while (left > 0) {
+          // Largest barrel that is still empty — one shop a barrel where it fits.
+          const b = out.find((x) => x.kg === 0);
+          if (!b) break;
+          const put = Math.min(left, b.cap);
+          b.stops.push(st);
+          b.kg = put;
+          left -= put;
+        }
+      });
+      return out;
+    })();
+    const barrelsUsed = BARRELS.filter((b) => b.kg > 0);
+    // Which barrels he has said this collection went into.
+    const pickedBarrels = (s.stopBarrels || {})[s.stop] || [];
+    const pickedCap = pickedBarrels.reduce((a, r) => a + (BARREL_REG.find((b) => b.ref === r) || {}).cap, 0);
+    // Every barrel already claimed by another stop, logged or not — so a barrel
+    // cannot be given to two shops and then weighed off against both.
+    const claimedBy = {};
+    Object.keys(s.stopBarrels || {}).forEach((idx) => {
+      if (String(idx) === String(s.stop)) return;
+      ((s.stopBarrels || {})[idx] || []).forEach((ref) => { claimedBy[ref] = STOPS[idx]; });
+    });
+    BARRELS.forEach((b) => { if (b.kg > 0 && b.stops.length) claimedBy[b.ref] = b.stops[0]; });
+    // A stop that took nothing holds no barrel, so a barrel claimed and then
+    // zeroed goes back into the pool instead of being lost for the day.
+    Object.keys(s.stopBarrels || {}).forEach((idx) => {
+      if ((s.stopZeroed || {})[idx]) {
+        ((s.stopBarrels || {})[idx] || []).forEach((ref) => { delete claimedBy[ref]; });
+      }
+    });
+
+    // The negotiation belongs to a stop, not to the screen. Find that stop and
+    // key everything off it, so accepting or walking away lands on the shop the
+    // price question is actually about — not whichever stop was last selected.
+    const priceIdx = (() => {
+      const i = STOPS.findIndex((x) => x.state === "waiting");
+      return i < 0 ? s.stop : i;
+    })();
+    const priceStop = STOPS[priceIdx];
+    const roundNo = (s.priceRounds || {})[priceIdx] || 1;
+    const priceAsked = (s.demandPrices || {})[priceIdx] || "6.40";
+    // What the call center has come back with this round — one figure, read by
+    // the heading, the note and what the stop is actually priced at on accept.
+    // Added: the answer comes from the managers' Approvals, read live. Refused
+    // means the price that stands is the answer.
+    const priceShop = priceStop && priceStop.shopId && Z ? Z.byId(priceStop.shopId) : null;
+    const liveCounter = !priceShop ? null : priceShop.price === "counter_offered" ? parseFloat(priceShop.counterPrice)
+      : priceShop.price === "refused" ? parseFloat(priceShop.agreedPrice) : null;
+    const answered = liveCounter != null && priceStop && priceStop.atDoor;
+    const counterPrice = answered ? liveCounter : (priceStop ? priceStop.price : 0);
+    const stop = STOPS[s.stop] || STOPS[nextIdx] || STOPS[0] || { name: "—", nameAr: "—", expected: 0, price: 0, took: 0, owed: 0, state: "todo", contact: "", contactAr: "", address: "", addressAr: "", meta: "", metaAr: "", detail: "", detailAr: "", pill: "", pillAr: "", tone: "dormant" };
+    const arrival = s.arrivals[s.stop] || null;
+    const expected = stop.expected;
+    // A price agreed through the call center replaces the manifest rate for this
+    // stop, so the payable, the receipt and the day's cash all follow it — one
+    // rate, derived once, rather than the new price living only in a message.
+    const revisedPrice = (s.agreedPrices || {})[s.stop];
+    const price = revisedPrice != null ? revisedPrice : stop.price;
+    const kg = s.weight === "" ? expected : (parseFloat(s.weight) || 0);
+    // A demanded price counts only when it is a number above the agreed one —
+    // the same condition the warning shows, so the two cannot disagree.
+    // Both are kept per stop, like arrivals and routes — so a price confirmed at
+    // one shop cannot follow him into the next one.
+    const askedPrice = (s.demandPrices || {})[s.stop] || "";
+    const confirmedFor = (s.demandConfirms || {})[s.stop];
+    const demandTyped = parseFloat(askedPrice);
+    const demandOk = !!askedPrice.trim() && !isNaN(demandTyped) && demandTyped > price;
+    const demandReady = demandOk && confirmedFor === askedPrice;
+    const forced = s.forced;
+
+    // Outcome is derived from the weight, exactly as the API does.
+    let outcome;
+    if (forced) outcome = forced;
+    else if (kg === 0) outcome = "no_oil";
+    else if (kg < expected * 0.95) outcome = "less_oil";
+    else if (kg > expected * 1.05) outcome = "more_oil";
+    else outcome = "collected";
+
+    const OUTCOMES = {
+      collected: ["Collected", "Matches what was scheduled.", "#1F5240", "#EEF6F2"],
+      less_oil: ["Less oil than scheduled", `${Math.round(expected - kg)} Kg short of the ${expected} Kg expected — worked out from the weight, not chosen.`, "#2C5578", "#E8EEF4"],
+      more_oil: ["More oil than scheduled", `${Math.round(kg - expected)} Kg more than the ${expected} Kg expected.`, "#2C5578", "#E8EEF4"],
+      no_oil: ["No oil", "The shop had none saved since the last visit. Nothing collected, nothing to pay — and the call center sees the reason.", "#B3261E", "#FBE9E7"],
+      price_refused: ["Shop refused the price", "He turned down the price the call center gave. Nothing collected, nothing to pay — they will call him.", "#B3261E", "#FBEAE9"],
+      quality_rejected: ["Rejected on quality", "You took nothing. Pick the reason below.", "#B3261E", "#FBEAE9"],
+      quality_reduced: ["Reduced on quality", "You took less because of quality. Pick the reason below.", "#B3261E", "#FBE9E7"],
+      sold_to_competitor: ["Already sold to a competitor", "The oil was gone. This counts towards the shop's streak.", "#B3261E", "#FBEAE9"],
+      shut: ["Shutters down", "The shop was closed. Nothing collected, nothing to pay — the call center calls them.", "#B3261E", "#FBE9E7"],
+      wrong_address: ["Wrong address", "The shop was not where the address says. The call center checks it and sends the surveyor.", "#B3261E", "#FBE9E7"],
+      contact_absent: ["Nobody signed for it", "The oil was collected, but nobody was there to sign or take payment. It stays owed.", "#B3261E", "#FBE9E7"]
+    };
+    const OUTCOMES_AR = {
+      collected: ["تم التحميل", "مطابق للكمية المقررة."],
+      less_oil: ["أقل من المقرر", `ناقص ${Math.round(expected - kg)} كجم عن ${expected} كجم المتوقعة — محسوب من الوزن، لا يُختار.`],
+      more_oil: ["أكثر من المقرر", `زيادة ${Math.round(kg - expected)} كجم عن ${expected} كجم المتوقعة.`],
+      no_oil: ["لا زيت", "المحل لم يجمع شيئاً منذ الزيارة الماضية. لا كمية ولا مبلغ — ومركز الاتصال يرى السبب."],
+      price_refused: ["المحل رفض السعر", "رفض السعر الذي أعطاه مركز الاتصال. لا كمية ولا مبلغ — وسيتصلون به."],
+      quality_rejected: ["مرفوض للجودة", "لم تأخذ شيئاً. اختر السبب أدناه."],
+      quality_reduced: ["مخفّض للجودة", "أخذت كمية أقل بسبب الجودة. اختر السبب أدناه."],
+      sold_to_competitor: ["بيع لمنافس", "الزيت لم يكن موجوداً. يُحسب ضمن تكرار البيع للغير."],
+      shut: ["المحل مغلق", "المحل كان مغلقاً. لا كمية ولا مبلغ — ومركز الاتصال يتصل بهم."],
+      wrong_address: ["العنوان خطأ", "المحل ليس حيث يقول العنوان. مركز الاتصال يتحقق ويرسل المساح."],
+      contact_absent: ["لا أحد وقّع الاستلام", "تم تحميل الزيت، لكن لا أحد كان موجوداً للتوقيع أو الدفع. يبقى مستحقاً."]
+    };
+    const [outcomeLabel, outcomeNote] = ar ? OUTCOMES_AR[outcome] : [OUTCOMES[outcome][0], OUTCOMES[outcome][1]];
+    const outcomeColor = OUTCOMES[outcome][2];
+    const outcomeBg = OUTCOMES[outcome][3];
+
+    const postpaid = stop.payment === "postpaid";
+    // Due, paid and owed are three different numbers: a post-paid vendor is
+    // invoiced (paid 0, all owed), and a collection nobody signs for is
+    // still a collection — the oil left the shop.
+    const collectedOutcome = ["collected", "less_oil", "more_oil", "quality_reduced", "contact_absent"].includes(outcome);
+    // A collection needs barrels that can hold it. Nothing picked, or not enough
+    // picked, and the oil would reach the yard with nothing tying it to a shop.
+    // Declared here because it reads the outcome and the weight above it.
+    const barrelsShort = collectedOutcome && kg > 0 && pickedCap < kg;
+    // No oil, or oil refused, means no barrel applies — the picker goes away
+    // rather than asking him to assign a barrel to a collection that never was.
+    const showBarrels = collectedOutcome && kg > 0;
+    const due = collectedOutcome ? round(kg * price) : 0;
+    const paidNow = collectedOutcome && !postpaid && outcome !== "contact_absent" ? due : 0;
+    const owedNow = due - paidNow;
+    const money = (n) => `${n.toLocaleString("en-US", { maximumFractionDigits: 0 })} ${ar ? "\u062c\u0646\u064a\u0647" : "EGP"}`;
+    const KG = ar ? "\u0643\u062c\u0645" : "Kg";
+
+    // End-of-day figures, computed from the typed warehouse weight the way
+    // lib/reconciliation.ts does: surplus flagged and never credited, a
+    // shortfall charged at the day's average price and recovered from the
+    // cash still in hand before anything carries forward.
+    const loggedTotalKg = loggedTotal;
+    const weighedKg = Math.round(parseFloat(String(s.weighed).replace(/,/g, "")) || 0);
+    const diffKg = weighedKg - loggedTotalKg;
+    const shortfallAmount = diffKg < 0 ? -diffKg * avgPrice : 0;
+    const recovered = Math.min(shortfallAmount, cashInHand);
+    const carried = shortfallAmount - recovered;
+
+    const pill = (label, tone) => {
+      const tones = { good: ["#1F5240", "#EEF6F2"], progress: ["#2C5578", "#E8EEF4"], attend: ["#B3261E", "#FBE9E7"], dormant: ["#3A3E40", "#EDEDEA"] };
+      const [pillColor, pillBg] = tones[tone];
+      return { pill: label, pillColor, pillBg };
+    };
+
+    // A cash vendor is paid at the door, so "nobody to pay" isn't a real
+    // outcome there — it only exists for post-paid vendors, where somebody
+    // still has to sign for the oil.
+    const OTHER_OUTCOMES = [
+      { label: ar ? "مرفوض للجودة" : "Rejected on quality", border: "#8A9188", bg: "#fff", color: "#B3261E", pick: () => this.setState({ forced: "quality_rejected", weight: "0" }) },
+      { label: ar ? "بيع لمنافس" : "Sold to a competitor", border: "#8A9188", bg: "#fff", color: "#B3261E", pick: () => this.setState({ forced: "sold_to_competitor", weight: "0" }) }
+    ];
+    OTHER_OUTCOMES.push(
+      { label: ar ? "المحل مغلق" : "Shutters down", border: "#8A9188", bg: "#fff", color: "#B3261E", pick: () => this.setState({ forced: "shut", weight: "0" }) },
+      { label: ar ? "العنوان خطأ" : "Wrong address", border: "#8A9188", bg: "#fff", color: "#B3261E", pick: () => this.setState({ forced: "wrong_address", weight: "0" }) });
+    if (stop.payment === "postpaid") {
+      OTHER_OUTCOMES.push({ label: ar ? "لا أحد ليستلم ويوقّع" : "Nobody to sign for it", border: "#8A9188", bg: "#fff", color: "#B3261E", pick: () => this.setState({ forced: "contact_absent" }) });
+    }
+
+
+    return {
+      dir: ar ? "rtl" : "ltr",      fontStack: fontStackValue,
+
+      t_offlineStrip: ar
+        ? "لا توجد شبكة — تم حفظ محطتين على الهاتف، وستُرسل عند عودة الشبكة."
+        : "No signal — 2 stops saved on this phone, will send when you're back online.",
+      t_needsYou: ar ? "يحتاج إجراءً الآن" : "Needs You Now",
+      t_alertsNote: ar
+        ? "لا يظهر هنا إلا ما يتطلب تصرفك — والرقم على الجرس هو نفس العدد."
+        : "Only things you have to act on land here — the count on the bell is the same number.",
+      // A stop with nothing in it is still recorded, but it is not a collection
+      // and there is nothing to show the owner.
+      t_collectedPaid: kg === 0
+        ? (ar ? "سُجِّلت المحطة · لا زيت" : "Stop recorded · no oil")
+        : owedNow > 0
+          ? (ar ? "تم التحميل · مبلغ متبقٍ" : "Collected · amount still owed")
+          : (ar ? "تم التحميل والدفع" : "Collected and paid"),
+      t_showOwner: kg === 0
+        ? (ar ? "لا مبلغ للدفع. مركز الاتصال يرى السبب." : "Nothing to pay. The call center sees the reason.")
+        : (ar ? "اعرض هذا على المالك" : "Show this to the owner"),
+      t_company: ar ? "زيتكو مصر" : "Zeitco Egypt",
+      t_receiptLine: ar ? `إيصال تحصيل · ${stop.ref}` : `Collection receipt · ${stop.ref}`,
+      t_print: ar ? "اطبع للمحل" : "Print for the shop",
+      t_sendCopy: ar ? "أرسل نسخة" : "Send a copy",
+      // A stop already collected is being looked back at, not worked — so the
+      // way out is back to Collected, not on to the next shop.
+      t_nextStop: stop.state === "done"
+        ? (ar ? "العودة إلى المُحصَّل" : "Back to Collected")
+        : (ar ? "المحطة التالية" : "Next stop"),
+      goNext: () => this.goTo(stop.state === "done" ? "collected" : "today"),
+      t_printerNote: ar
+        ? "الطابعة متصلة · TRK-04. عرض الإيصال على الشاشة مقبول أيضاً — نسخة المحل هي ما يقبله."
+        : "Printer paired · TRK-04. Showing it on screen counts too — the shop's copy is whichever they'll accept.",
+      // A real dial-out to THIS shop. No number on file means no button — never
+      // a fallback, or he rings one shop while standing in another.
+      hasPhone: !!stop.phone,
+      callHref: stop.phone ? "tel:" + stop.phone.replace(/\s/g, "") : "",
+      t_startStop: ar ? "ابدأ هذه المحطة" : "Start this stop",
+      t_startNote: ar
+        ? "اضغط عند وصولك للمحل. هذا يبدأ حساب الوقت، فتُسجَّل المدة الفعلية لكل تحصيل — ويفتح خانة الوزن."
+        : "Tap when you arrive at the shop. That starts the clock, so how long each collection really takes is on record — and it unlocks the weight.",
+      t_imHere: ar ? "وصلت — ابدأ" : "I'm here — start",
+      t_locked: ar ? "الوزن والدفع مقفلان" : "Weight and payment are locked",
+      t_lockedNote: ar
+        ? "لا يمكن إدخال أي شيء لهذا المحل قبل بدء المحطة."
+        : "Nothing can be entered for this shop until you've started the stop.",
+      t_startedAt: ar ? `بدأت ${arrival ? arrival.at : ""}` : `Started at ${arrival ? arrival.at : ""}`,
+      t_weightNote: ar
+        ? "اكتب الوزن الذي أخذته فعلاً. كل شيء آخر يُحسب منه."
+        : "Type what you actually took. Everything else is worked out from it.",
+      t_kg: ar ? "كجم" : "Kg",
+      t_perKg: ar ? "جنيه لكل كجم" : "EGP per kg",
+      t_demands: ar ? "المحل يطلب سعراً أعلى" : "The shop is demanding a higher price",
+      t_demandPrice: ar ? "السعر الذي يطلبه المحل" : "Price the shop is demanding",
+      t_demandNote: ar
+        ? "لا يمكنك الموافقة على هذا بنفسك. انتظر في المحل — العمليات سترد، ويكتمل التحصيل بالسعر الذي توافق عليه."
+        : "You cannot agree this yourself. Wait at the shop — operations will answer, and the collection completes at whatever price they approve.",
+      t_demandOffline: ar
+        ? "لا توجد شبكة — لا يمكن الرد على طلب السعر بدون اتصال. تابع وارجع لاحقاً، أو ادفع سعر الكشف إذا وافق المحل."
+        : "No signal — a price request can't be answered offline. Move on and come back, or pay the manifest rate if the shop agrees.",
+      t_reason: ar ? "السبب" : "Reason",
+      t_todaysCash: ar ? "نقدية اليوم" : "Today's Cash",
+      t_cashNote: ar
+        ? "المدفوع في كل محطة يُحسب من الوزن — لا تعدّله إلا إذا لم تستطع دفعه كاملاً."
+        : "Paid at each stop is worked out from the weight — change it only if you couldn't pay it all.",
+      t_paidPerStop: ar ? "المدفوع لكل محطة" : "Paid Per Stop",
+      t_endNote: ar
+        ? "المخزن يزن كل ما أعدته. هذا الوزن هو المعتمد."
+        : "The warehouse weighs everything you brought back. That weight is the one that counts.",
+      // Barrels, not batches — the warehouse weighs each barrel off on its own.
+      t_useBatch: ar ? "استخدم وزن المخزن لكل برميل" : "Use the warehouse's barrel-by-barrel weighing",
+      useBarrelWeights: () => this.setState({ weighed: "654" }),
+      // The most consequential press in the app: it charges any shortfall
+      // against his cash and closes the day. Two steps, naming the figure.
+      askClose: () => this.setState({ closing: true }),
+      closingDay: !!s.closing,
+      cancelClose: () => this.setState({ closing: false }),
+      confirmClose: () => this.setState({ closing: false, dayClosed: true }),
+      dayClosed: !!s.dayClosed,
+      dayOpen: !s.dayClosed,
+      // Once the day is closed the weight that drove the reconciliation is a
+      // settled figure, not an editable one.
+      weighedBorder: s.dayClosed ? "#E4DFD4" : "#1F5240",
+      weighedBg: s.dayClosed ? "#F7F4EE" : "#fff",
+      weighedColor: s.dayClosed ? "#63736A" : "#10231C",
+      setWeighed: (e) => (s.dayClosed ? null : this.setState({ weighed: e.target.value })),
+      t_closeAskTitle: (() => {
+        const short = Math.round(shortfallAmount);
+        return short > 0
+          ? (ar ? "إقفال اليوم وخصم " + money(short) + "؟" : "Close the day and charge " + money(short) + "?")
+          : (ar ? "إقفال اليوم؟" : "Close the day?");
+      })(),
+      t_closeAskBody: (() => {
+        const short = Math.round(shortfallAmount);
+        return short > 0
+          ? (ar ? "وزن المخزن أقل من المسجَّل بـ" + Math.abs(diffKg) + " كجم، و" + money(short) + " تُخصم من نقديتك الليلة. لا يمكن إعادة فتح اليوم."
+               : "The warehouse weighed " + Math.abs(diffKg) + " Kg less than you logged, so " + money(short) + " comes off your cash tonight. The day cannot be reopened.")
+          : (ar ? "وزن المخزن يطابق المسجَّل. لا خصم عليك. ولا يمكن إعادة فتح اليوم."
+               : "The warehouse weight matches what you logged, so nothing is charged to you. The day cannot be reopened.");
+      })(),
+      t_dayClosedTitle: ar ? "أُقفل اليوم" : "Day closed",
+      t_dayClosedBody: ar
+        ? "تم تسليم النقدية وتسوية الحساب. ولا تستطيع تعديل محطة بعد الآن."
+        : "Cash handed over and the day reconciled. You cannot change a stop now.",
+      t_reconcile: ar ? "سوِّ الحساب وأقفل اليوم" : "Reconcile and close the day",
+      t_reconcileNote: ar
+        ? "يجب تسجيل كل محطة أولاً — محطة واحدة لا تزال بانتظار قرار السعر، فأرقامها غير نهائية."
+        : "Every stop must be logged first — one stop is still waiting on a price decision, so its numbers aren't final.",
+      t_waitingTitle: ar ? "بانتظار السعر" : "Waiting on a price",
+      t_meanwhile: ar ? "انتقل للمحطة التالية في الأثناء" : "Move to the next stop meanwhile",
+      t_waitingFor: ar ? "9 دقائق" : "9 min",
+      // Read from the negotiation's own stop, so the screen and the data cannot
+      // drift apart the way a hardcoded shop name let them.
+      t_waitingBody: ar
+        ? priceStop.nameAr + " · طلبت " + priceAsked + " وسعر الكشف " + priceStop.price.toFixed(2) + ". لا يُطبع إيصال قبل الرد."
+        : priceStop.name + " · you asked for " + priceAsked + ", manifest rate is " + priceStop.price.toFixed(2) + ". No receipt prints until this is answered.",
+      t_toApprovals: ar ? "افتح الموافقات كمدير (للاختبار) ←" : "Open Approvals as a manager (testing) →",
+      t_counterTitle: (() => {
+        if (!answered) return ar ? "بانتظار رد المدير" : "Waiting on the manager's answer";
+        const p = counterPrice.toFixed(2);
+        return ar ? "العمليات عرضت " + p : "Operations countered at " + p;
+      })(),
+      t_counterNote: (() => {
+        if (!answered) return ar ? "الطلب عند المدير العام أو المالي. انتقل للمحطة التالية في الأثناء، ويظهر الرد هنا." : "It is with the Senior or Financial Manager. Move to the next stop meanwhile; the answer shows here.";
+        const p = counterPrice.toFixed(2);
+        if (roundNo >= 3) {
+          return ar
+            ? "هذا آخر سعر عندهم. إذا وافق المحل، حمّل بـ" + p + ". وإذا رفض، انصرف وسيتصلون به."
+            : "That is their last price. If the shop accepts, collect at " + p + ". If he refuses, walk away and they will call him.";
+        }
+        return ar
+          ? "أبلِغ المالك. إذا وافق، حمّل بسعر " + p + ". وإذا رفض، أعد الطلب للأعلى."
+          : "Tell the owner. If he accepts, collect at " + p + ". If he refuses, send it back up.";
+      })(),
+      t_refusesRound: roundNo >= 3
+        ? (ar ? "المحل يرفض — انصرف" : "Shop Refuses — Walk Away")
+        : (ar ? "المحل يرفض — أعده للأعلى" : "Shop Refuses — Send It Back Up"),
+      t_accepts: ar
+        ? "المحل يوافق بـ" + counterPrice.toFixed(2) + " — حمّل"
+        : "Shop Accepts at " + counterPrice.toFixed(2) + " — Collect",
+      // Shown on the stop once a price has been agreed, so he can see he is
+      // collecting at the new rate and not the one on the manifest.
+      hasRevised: revisedPrice != null,
+      t_revisedTitle: revisedPrice != null
+        ? (ar ? "سعر جديد متفق عليه: " + revisedPrice.toFixed(2) + " جنيه/كجم"
+             : "New price agreed: " + revisedPrice.toFixed(2) + " EGP a Kg")
+        : "",
+      t_revisedBody: revisedPrice != null
+        ? (ar ? "بدلاً من " + stop.price.toFixed(2) + " في الكشف. الوزن والمبلغ والإيصال كلها بالسعر الجديد."
+             : "Instead of the " + stop.price.toFixed(2) + " on the manifest. The amount due, the cash and the receipt all use the new price.")
+        : "",
+      t_refuses: ar ? "المحل يرفض" : "Shop Refuses",
+      // Refusing ends the stop: nothing is taken and the reason is recorded, so
+      // the call center knows the shop turned the counter-price down.
+      // Refusing also needs the arrival on record, or he lands on a screen
+      // telling him to start a stop he is already standing at.
+      // Refusing sends it back up, exactly as the note says. The call center can
+      // counter again — until they say a price is final, and then the only
+      // choices left are take it or walk away.
+      refusePrice: () => {
+        if (!answered) return;
+        const Z2 = window.ZEITCO;
+        if (Z2 && priceStop && roundNo < 3) Z2.journal.add({ op: "patch", shop: priceStop.shopId, fields: { price: "increase_requested", askedOn: Z2.asDate(window.ZEITCO.today.en), counterPrice: null, counterOn: null, decision: null,
+          withApprover: { en: "Senior or Financial Manager", ar: "المدير العام أو المالي" } } });
+        if (Z2 && priceStop && roundNo >= 3) {
+          Z2.journal.add({ op: "orderPatch", order: priceStop.order, fields: { atDoor: false } });
+          Z2.journal.add({ op: "patch", shop: priceStop.shopId, fields: { price: "agreed", askedPrice: null, askedOn: null, withApprover: null, counterPrice: null, counterOn: null, decision: null, askedAtDoor: null, atRisk: true } });
+        }
+        if (roundNo >= 3) {
+          const n = new Date();
+          const at = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+          this.setState((p) => ({
+            stop: priceIdx,
+            arrivals: { ...p.arrivals, [priceIdx]: p.arrivals[priceIdx] || { at, t: Date.now() } },
+            forced: "price_refused", weight: "0", demands: false, screen: "stop",
+          }));
+          return;
+        }
+        this.setState((p) => ({ priceRounds: { ...(p.priceRounds || {}), [priceIdx]: roundNo + 1 } }));
+      },
+      t_walkAway: ar ? "المحل يرفض — انصرف" : "Shop Refuses — Walk Away",
+      t_cashFloat: ar ? "\u0627\u0644\u0633\u0644\u0641\u0629 \u0627\u0644\u0645\u0635\u0631\u0648\u0641\u0629 \u0635\u0628\u0627\u062d\u0627\u064b" : "Float issued this morning",
+      t_vehicleLine: ar ? "TRK-04 \u00b7 \u0627\u0644\u0641\u0631\u064a\u0642 2" : "TRK-04 \u00b7 Team 2",
+      t_floatNote: ar
+        ? "\u0627\u0644\u0633\u0644\u0641\u0629 \u0646\u0627\u0642\u0635 \u0643\u0644 \u0645\u0627 \u062f\u0641\u0639\u062a\u0647\u060c \u0648\u062a\u064f\u0639\u064a\u062f\u0647\u0627 \u0641\u064a \u0646\u0647\u0627\u064a\u0629 \u0627\u0644\u064a\u0648\u0645."
+        : "This is what you return at the depot — the float you were given, minus everything you've paid out.",
+      // Cash on hand leads: it is what he carries and what he answers for at
+      // the depot. The float is where the day started.
+      t_yourCash: ar ? "\u0646\u0642\u062f\u064a\u062a\u0643 \u0627\u0644\u064a\u0648\u0645" : "Your cash today",
+      t_logout: ar ? "\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062e\u0631\u0648\u062c" : "Log out",
+      t_callAction: ar ? "\u0627\u062a\u0635\u0644 \u0628\u0627\u0644\u0645\u062d\u0644" : "Call the shop",
+      t_openMap: ar ? "الخرائط" : "Maps",
+      // On Route is his own declaration that he is heading there — it starts the
+      // clock the operations manager sees, and it is not gated on distance.
+      t_onRoute: ar ? "في الطريق" : "On Route",
+      t_onRouteSince: ar
+        ? "في الطريق · " + (s.routes && s.routes[s.stop] ? s.routes[s.stop] : "")
+        : "On route · " + (s.routes && s.routes[s.stop] ? s.routes[s.stop] : ""),
+      // Arriving supersedes being on route: once he is at the shop, the slot
+      // shows when he got there instead of offering to set off again.
+      onRoute: !!(s.routes && s.routes[s.stop]) && !(s.arrivals && s.arrivals[s.stop]),
+      notOnRoute: !(s.routes && s.routes[s.stop]) && !(s.arrivals && s.arrivals[s.stop]),
+      hereAlready: !!(s.arrivals && s.arrivals[s.stop]),
+      t_hereSince: ar
+        ? "وصلت " + ((s.arrivals && s.arrivals[s.stop] || {}).at || "")
+        : "Here since " + ((s.arrivals && s.arrivals[s.stop] || {}).at || ""),
+      // On route to a shop, he is committed to it: the tabs stop working until
+      // he arrives or cancels. Notifications stay reachable — a new order may
+      // be coming his way.
+      locked: lockedToStop,
+      lockNote: ar
+        ? "أنت في الطريق إلى " + (ar ? stop.nameAr : stop.name) + ". التبويبات مغلقة حتى تصل أو تلغي — والتنبيهات تظل مفتوحة في حال وصلك طلب جديد."
+        : "You are on route to " + stop.name + ". The tabs are closed until you arrive or cancel — notifications stay open in case a new order comes your way.",
+      t_cancelRoute: ar ? "إلغاء الطريق" : "Cancel the route",
+      cancelRoute: () => this.setState((p) => {
+        const next = { ...(p.routes || {}) };
+        delete next[p.stop];
+        return { routes: next };
+      }),
+      // Every committing action on the phone asks twice — only picking a shop
+      // off the list is a single press.
+      startRoute: () => this.setState((p) => ({ askRoutes: { ...(p.askRoutes || {}), [p.stop]: true } })),
+      askingRoute: !!(s.askRoutes || {})[s.stop],
+      t_routeAskTitle: ar ? "في الطريق إلى هذا المحل؟" : "On route to this shop?",
+      t_routeAskBody: ar
+        ? "هذا يغلق بقية التبويبات حتى تصل أو تلغي، ومدير العمليات يرى أنك في الطريق."
+        : "This closes the other tabs until you arrive or cancel, and the operations manager sees you are on your way.",
+      confirmRoute: () => {
+        const n = new Date();
+        const at = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+        this.setState((p) => ({
+          routes: { ...(p.routes || {}), [p.stop]: at },
+          askRoutes: { ...(p.askRoutes || {}), [p.stop]: false },
+        }));
+      },
+      cancelAskRoute: () => this.setState((p) => ({ askRoutes: { ...(p.askRoutes || {}), [p.stop]: false } })),
+      mapHref: "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(stop.address || stop.name),
+      hereLabel: nearShop
+        ? (ar ? "وصلت المحل" : "I'm here")
+        : (ar ? "يُفتح عند وصولك" : "Opens when you get there"),
+      hereBg: nearShop ? "#1F5240" : "#EFEBE1",
+      hereColor: nearShop ? "#fff" : "#8A9188",
+      hereCursor: nearShop ? "pointer" : "not-allowed",
+      hereNote: nearShop
+        ? (ar ? "السيارة على " + shopMetres + " متراً من المحل." : "The truck is " + shopMetres + " m from the shop.")
+        : (ar
+          ? "السيارة تبعد " + shopMetres.toLocaleString("en-US") + " متراً. يُفتح الزر داخل 200 متر من المحل."
+          : "The truck is " + shopMetres.toLocaleString("en-US") + " m away. The button opens within 200 m of the shop."),
+      hereNoteColor: nearShop ? "#1F5240" : "#63736A",
+      t_handLine: ar
+        ? `\u062c\u0646\u064a\u0647 \u0645\u0639\u0643 \u0627\u0644\u0622\u0646 \u00b7 \u062f\u0641\u0639\u062a ${paidOut.toLocaleString("en-US")}`
+        : `EGP with you now \u00b7 ${paidOut.toLocaleString("en-US")} paid out`,
+      t_egp: ar ? "\u062c\u0646\u064a\u0647" : "EGP",
+      t_cashOnHand: T.cashOnHand,
+      t_stopsToday: T.stopsToday,
+      t_weight: T.weight,
+      t_reconcileWeight: T.reconcileWeight,
+      isMe: s.screen === "me",
+      // Closing the day starts with weighing the barrels, so it unlocks on the
+      // truck's own position — never on the driver saying he has arrived.
+      // Ending the day is the last thing he does, so it asks before it goes —
+      // the same two-step as every other commit in the app.
+      goEnd: () => (atYard ? this.setState({ askingEnd: true }) : null),
+      askingEnd: !!s.askingEnd,
+      cancelEnd: () => this.setState({ askingEnd: false }),
+      confirmEnd: () => this.setState({ askingEnd: false, screen: "end" }),
+      t_endAskTitle: ar ? "إقفال اليوم؟" : "End your day?",
+      t_endAskBody: (() => {
+        const left = STOPS.filter((x) => x.state !== "done" && x.state !== "pending").length;
+        return left > 0
+          ? (ar ? "ما زالت " + left + " محطة غير مسجَّلة. الخطوة التالية وزن البراميل وتسليم النقدية."
+               : left + " stops are still unlogged. Next comes weighing the barrels and handing over your cash.")
+          : (ar ? "كل المحطات مسجَّلة. الخطوة التالية وزن البراميل وتسليم النقدية."
+               : "Every stop is logged. Next comes weighing the barrels and handing over your cash.");
+      })(),
+      notAtYard: !atYard,
+      endGateColor: atYard ? "#1F5240" : "#B3261E",
+      endBg: atYard ? "#1F5240" : "#EFEBE1",
+      endColor: atYard ? "#fff" : "#8A9188",
+      endCursor: atYard ? "pointer" : "not-allowed",
+      endLabel: atYard
+        ? (ar ? "إقفال اليوم" : "End of day")
+        : (ar ? "إقفال اليوم — يُفتح في المخزن" : "End of day — unlocks at the warehouse"),
+      endGateNote: atYard
+        ? (ar ? "السيارة في مخزن أكتوبر. يمكنك البدء." : "The truck is at the 6th October yard. You can start.")
+        : (ar
+          ? "السيارة تبعد " + metresAway.toLocaleString("en-US") + " متراً عن مخزن أكتوبر. يُفتح الزر عند الوصول — ولا يعتمد على تأكيدك."
+          : "The truck is " + metresAway.toLocaleString("en-US") + " m from the 6th October yard. The button opens on arrival — it does not take your word for it."),
+      t_language: ar ? "\u0627\u0644\u0644\u063a\u0629" : "Language",
+      t_languageNote: ar
+        ? "\u0627\u062e\u062a\u0631 \u0644\u063a\u0629 \u0627\u0644\u062a\u0637\u0628\u064a\u0642. \u0627\u0644\u0639\u0631\u0628\u064a\u0629 \u062a\u0639\u0631\u0636 \u0627\u0644\u0634\u0627\u0634\u0629 \u0645\u0646 \u0627\u0644\u064a\u0645\u064a\u0646 \u0625\u0644\u0649 \u0627\u0644\u064a\u0633\u0627\u0631."
+        : "Pick the language for this app. Arabic mirrors the whole screen right-to-left.",
+      t_langCaveat: ar
+        ? "\u0628\u0639\u0636 \u0627\u0644\u0646\u0635\u0648\u0635 \u0644\u0627 \u062a\u0648\u062c\u062f \u0644\u0647\u0627 \u062a\u0631\u062c\u0645\u0629 \u0641\u064a \u0627\u0644\u062a\u0637\u0628\u064a\u0642 \u0628\u0639\u062f\u060c \u0641\u062a\u0638\u0647\u0631 \u0628\u0627\u0644\u0625\u0646\u062c\u0644\u064a\u0632\u064a\u0629."
+        : "Labels the app already has in Arabic switch over; the rest still show in English until they're translated.",
+      langs: [
+        { label: "English", short: "EN", bg: ar ? "#fff" : "#1F5240", color: ar ? "#55655D" : "#fff", border: ar ? "#8A9188" : "#1F5240", font: "inherit", pick: () => this.setLang("en") },
+        { label: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", short: "\u0639", bg: ar ? "#1F5240" : "#fff", color: ar ? "#fff" : "#55655D", border: ar ? "#1F5240" : "#8A9188", font: "'Noto Kufi Arabic',sans-serif", pick: () => this.setLang("ar") }
+      ],
+      t_me: ar ? "\u062d\u0633\u0627\u0628\u064a" : "My Account",
+      t_endDay: ar ? "\u0625\u0642\u0641\u0627\u0644 \u0627\u0644\u064a\u0648\u0645" : "End of day",
+      meRows: withVal([
+        { label: ar ? "\u0627\u0644\u0633\u0627\u0626\u0642" : "Driver", value: "H. Saber", font: "inherit", color: "#10231C" },
+        { label: ar ? "\u0627\u0644\u0645\u0631\u0643\u0628\u0629" : "Vehicle", value: "TRK-04", font: "'IBM Plex Mono',monospace", color: "#10231C" },
+        { label: ar ? "\u0627\u0644\u0637\u0627\u0628\u0639\u0629" : "Printer", value: ar ? "\u0645\u062a\u0635\u0644\u0629" : "Paired", font: "inherit", color: "#1F5240" },
+        { label: ar ? "\u0631\u0635\u064a\u062f \u0645\u0633\u062a\u062d\u0642 \u0639\u0644\u064a\u0643" : "Carried against you", value: money(1200), font: "'IBM Plex Mono',monospace", color: "#B3261E" }
+      ]),
+      title: { board: ar ? "على السيارة" : "On board", today: T.today, stop: T.logTitle, waiting: ar ? "\u0628\u0627\u0646\u062a\u0637\u0627\u0631 \u0627\u0644\u0633\u0639\u0631" : "Waiting on a price", receipt: T.receipt, cash: ar ? "\u0627\u0644\u0646\u0642\u062f\u064a\u0629" : "Cash", end: ar ? "\u0625\u0642\u0641\u0627\u0644 \u0627\u0644\u064a\u0648\u0645" : "End of day", alerts: ar ? "\u064a\u062d\u062a\u0627\u062c \u0625\u062c\u0631\u0627\u0621\u064b" : "Needs you now", me: ar ? "\u062d\u0633\u0627\u0628\u064a" : "My Account" }[s.screen],
+      egpCls: vc(cashInHand.toLocaleString("en-US") + " " + (ar ? "\u062c\u0646\u064a\u0647" : "EGP")), egpFont: vfont(cashInHand.toLocaleString("en-US") + " " + (ar ? "\u062c\u0646\u064a\u0647" : "EGP")),
+      amountCls: vc(money(postpaid || outcome === "contact_absent" ? due : paidNow)), amountFont: vfont(money(postpaid || outcome === "contact_absent" ? due : paidNow)),
+      elapsedCls: vc(ar ? "\u062f\u0642\u064a\u0642\u0629" : "min"), elapsedFont: vfont(ar ? "\u062f\u0642\u064a\u0642\u0629" : "min"),
+      owedCls: vc(ar ? "\u0627\u0644\u0645\u062f\u0641\u0648\u0639" : "Paid now"), owedFont: vfont(ar ? "\u0627\u0644\u0645\u062f\u0641\u0648\u0639" : "Paid now"),
+      waitingForCls: vc(ar ? "9 \u062f\u0642\u0627\u0626\u0642" : "9 min"), waitingForFont: vfont(ar ? "9 \u062f\u0642\u0627\u0626\u0642" : "9 min"),
+      cashOnHand: cashInHand.toLocaleString("en-US"),
+      floatIssued: floatIssued.toLocaleString("en-US"),
+      paidOut: paidOut.toLocaleString("en-US"),
+      stopsDoneLabel: `${stopsDone} / ${STOPS.length}`,
+      offline: s.offline,
+      queuedCount: 2,
+      offlineLabel: ar
+        ? (s.offline ? "\u0639\u0627\u062f\u062a \u0627\u0644\u0634\u0628\u0643\u0629" : "\u0627\u0639\u0631\u0636 \u062d\u0627\u0644\u0629 \u0627\u0646\u0642\u0637\u0627\u0639 \u0627\u0644\u0634\u0628\u0643\u0629")
+        : (s.offline ? "Signal is back" : "Show what happens with no signal"),
+      toggleOffline: () => this.setState((p) => ({ offline: !p.offline })),
+      isToday: s.screen === "today",
+      meWho: (() => { const tk = window.ZEITCO && window.ZEITCO.truck(this.truckId()); return tk ? (ar ? tk.driver.ar : tk.driver.en) : ""; })(),
+      meRole: (() => { const Z = window.ZEITCO, tk = Z && Z.truck(this.truckId()), tm = tk && Z.teamOf(tk.team); return tk ? (ar ? "سائق · " : "Driver · ") + tk.plate + (tm ? " · " + (ar ? tm.name.ar : tm.name.en) : "") : ""; })(),
+      showStops: s.screen === "today" || s.screen === "collected",
+      isStop: s.screen === "stop",
+      isWaiting: s.screen === "waiting",
+      isReceipt: s.screen === "receipt",
+      isCash: s.screen === "cash",
+      isEnd: s.screen === "end",
+      isAlerts: s.screen === "alerts",
+      canGoBack: s.screen !== "today",
+      atHome: s.screen === "today",
+      // Backing out of a locked stop is leaving it, so it ends the route rather
+      // than stranding him on Today with dead tabs and no cancel in sight.
+      goBack: () => {
+        if (lockedToStop) {
+          this.setState((p) => {
+            const next = { ...(p.routes || {}) };
+            delete next[p.stop];
+            return { routes: next, screen: "today" };
+          });
+          return;
+        }
+        this.goTo("today");
+      },
+      openAlerts: () => this.goTo("alerts"),
+      alertCount: "3",
+      // Same idea as the bell in components/Header.tsx: what needs this
+      // person's action right now, not a feed of everything that happened.
+      alerts: [
+        {
+          title: ar ? "\u062a\u0645 \u0627\u0644\u0631\u062f \u0639\u0644\u0649 \u0627\u0644\u0633\u0639\u0631 \u2014 \u0627\u0644\u0646\u0648\u0631 \u062c\u0631\u064a\u0644" : "Price answered — Nada Grill House",
+          body: ar ? "\u0627\u0644\u0645\u062f\u064a\u0631 \u0639\u0631\u0636 6.00. \u0623\u0628\u0644\u0650\u063a \u0627\u0644\u0645\u0627\u0644\u0643 \u0648\u0623\u0643\u0645\u0644 \u0627\u0644\u0645\u062d\u0637\u0629." : "Manager countered at 6.00. Tell the owner and finish the stop.",
+          when: ar ? "\u0627\u0644\u0622\u0646" : "now", whenColor: "#B3261E", edge: "#B3261E", bg: "#FBEAE9", go: () => this.goTo("waiting")
+        },
+        {
+          title: ar ? "\u062a\u0645\u062a \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629 \u0639\u0644\u0649 \u0645\u062d\u0637\u0629 \u0625\u0636\u0627\u0641\u064a\u0629 \u0627\u0644\u064a\u0648\u0645" : "Same-day stop approved",
+          body: ar ? `\u0645\u062e\u0628\u0632 \u0627\u0644\u0632\u0645\u0627\u0644\u0643 \u0623\u064f\u0636\u064a\u0641 \u0644\u062e\u0637 \u0633\u064a\u0631\u0643 \u2014 120 ${KG}\u060c \u0627\u0644\u0632\u064a\u062a \u062c\u0627\u0647\u0632 \u0627\u0644\u064a\u0648\u0645.` : "Bakery, Zamalek added to your route — 120 Kg, oil ready today.",
+          when: ar ? "12 \u062f\u0642\u064a\u0642\u0629" : "12 min", whenColor: "#B3261E", edge: "#B3261E", bg: "#FBE9E7", go: () => this.goTo("today")
+        },
+        {
+          title: ar ? "\u0635\u064f\u0631\u0641\u062a \u0627\u0644\u0633\u0644\u0641\u0629 \u0627\u0644\u0646\u0642\u062f\u064a\u0629" : "Cash float issued",
+          body: ar ? `${money(8500)} \u0645\u0642\u0627\u0628\u0644 \u0628\u064a\u0627\u0646 \u0627\u0644\u064a\u0648\u0645 \u0628\u0648\u0627\u0633\u0637\u0629 \u0646. \u062d\u0644\u064a\u0645.` : "8,500 EGP issued against today's manifest by N. Halim.",
+          when: "07:10", whenColor: "#63736A", edge: "transparent", bg: "#fff", go: () => this.goTo("cash")
+        },
+        {
+          title: ar ? "\u0639\u062c\u0632 \u0627\u0644\u0623\u0645\u0633" : "Yesterday's shortfall",
+          body: ar ? `${money(1200)} \u0645\u0627 \u0632\u0627\u0644\u062a \u0645\u0631\u062d\u0651\u0644\u0629 \u0639\u0644\u064a\u0643 \u0645\u0646 4 \u0633\u0628\u062a\u0645\u0628\u0631.` : "1,200 EGP still carried against you from 4 Sep.",
+          when: ar ? "4 \u0633\u0628\u062a\u0645\u0628\u0631" : "4 Sep", whenColor: "#63736A", edge: "transparent", bg: "#fff", go: () => this.goTo("cash")
+        }
+      ].map((a) => ({ ...a, whenCls: vc(a.when), whenFont: vfont(a.when) })),
+      goToday: () => this.goTo("today"),
+      // His account lives in the header, so the bottom bar carries only the two
+      // places that stand on their own: the day, and his cash.
+      // What is physically aboard: the numbered barrels, the shops in each, and
+      // the declared weight the warehouse will weigh against.
+      isBoard: s.screen === "board",
+      t_board: ar ? "على السيارة" : "On the car",
+      t_boardNote: ar
+        ? "البراميل التي معك الآن وما في كل منها. والمخزن يزن كل برميل على حِدة عند وصولك، فما تُعلنه هنا هو ما يُقارن به."
+        : "The barrels with you now and what went into each. The warehouse weighs every barrel on its own when you arrive, so what you declare here is what it is checked against.",
+      t_barrelCol: ar ? "البرميل" : "Barrel",
+      t_inItCol: ar ? "ما فيه" : "What is in it",
+      t_declaredCol: ar ? "المُعلن" : "Declared",
+      // Built from the stops he has actually logged, so what is on the car can
+      // never disagree with what he collected. One shop a barrel while the
+      // quantity allows it — the same aim the warehouse works to.
+      boardRows: BARRELS.map((b) => ({
+        ref: b.ref,
+        capLabel: b.cap + (ar ? " كجم سعة" : " Kg barrel"),
+        shops: b.stops.length === 0
+          ? (ar ? "فارغ" : "empty")
+          : b.stops.length === 1
+            ? (ar ? (b.stops[0].nameAr + " وحده") : (b.stops[0].name + " only"))
+            : b.stops.map((x) => (ar ? x.nameAr : x.name)).join(" · "),
+        oneShop: b.stops.length === 1,
+        empty: b.kg === 0,
+        kg: b.kg ? b.kg.toLocaleString("en-US") : "—",
+        full: Math.round((b.kg / b.cap) * 100) + "%",
+        fullColor: b.kg / b.cap > 0.8 ? "#B3261E" : b.kg === 0 ? "#C6C0B2" : "#1F5240",
+        rowBg: b.kg === 0 ? "#FCFAF5" : "#fff",
+        rowBorder: b.kg === 0 ? "#EFEBE1" : "#BFD8C9",
+      })),
+      boardTotalLabel: ar ? "إجمالي ما على السيارة" : "Total on the car",
+      boardTotal: loggedTotal.toLocaleString("en-US"),
+      boardTotalNote: (() => {
+        const cap = BARREL_REG.reduce((a, b) => a + b.cap, 0).toLocaleString("en-US");
+        return ar
+          ? "من " + cap + " كجم سعة البراميل · " + barrelsUsed.length + " من " + BARREL_REG.length + " برميلاً مستخدمة · يطابق ما حصّلته"
+          : "of " + cap + " Kg of barrel capacity · " + barrelsUsed.length + " of " + BARREL_REG.length + " barrels in use · matches what you have collected";
+      })(),
+
+      // He says which barrels this collection went into, so the warehouse can
+      // weigh each barrel off against a shop rather than against the whole car.
+      t_whichBarrel: ar ? "في أي برميل حمّلته؟" : "Which barrels did you load it into?",
+      t_whichBarrelNote: ar
+        ? "المخزن يزن كل برميل على حِدة، فاختيارك هنا هو ما يربط الزيت بهذا المحل. واختر أكثر من برميل إن لزم."
+        : "The warehouse weighs each barrel on its own, so what you pick here is what ties this oil to this shop. Pick more than one if it took more than one.",
+      // A dropdown of what is free, since twenty barrels is too many to show as
+      // buttons on a phone. A barrel another shop holds is listed as taken and
+      // named, so he can see it is spoken for rather than wonder where it went.
+      t_pickBarrelPlaceholder: ar ? "اختر برميلاً…" : "Choose a barrel…",
+      barrelOptions: [{ value: "", label: ar ? "اختر برميلاً…" : "Choose a barrel…", disabled: false }].concat(
+        BARRELS.filter((b) => pickedBarrels.indexOf(b.ref) < 0).map((b) => {
+          const taken = claimedBy[b.ref];
+          return {
+            value: taken ? "" : b.ref,
+            disabled: !!taken,
+            label: taken
+              ? b.ref + " · " + (ar ? "مع " : "taken — ") + (ar ? (taken.nameAr || taken.name) : taken.name)
+              : b.ref + " · " + b.cap + (ar ? " كجم" : " Kg"),
+          };
+        })
+      ),
+      addBarrel: (e) => {
+        const ref = e.target.value;
+        if (!ref) return;
+        this.setState((p) => {
+          const cur = (p.stopBarrels || {})[p.stop] || [];
+          if (cur.indexOf(ref) >= 0) return {};
+          return { stopBarrels: { ...(p.stopBarrels || {}), [p.stop]: cur.concat([ref]) } };
+        });
+      },
+      // A second barrel is only offered when the first cannot hold the load —
+      // otherwise one shop would be spread across barrels for no reason.
+      showBarrels,
+      canPickBarrel: pickedCap < kg,
+      barrelsEnough: pickedBarrels.length > 0 && pickedCap >= kg && kg > 0,
+      t_barrelsEnough: (ar ? "هذا يكفي " + kg + " كجم. ولا تُضاف براميل إلا إذا لم تكفِ الكمية."
+                           : "That holds the " + kg + " Kg. Another barrel is only offered if one cannot take it all."),
+      pickedBarrelRows: pickedBarrels.map((ref) => {
+        const b = BARREL_REG.find((x) => x.ref === ref) || { cap: 0 };
+        return {
+          ref, cap: b.cap + (ar ? " كجم" : " Kg"),
+          removeLabel: ar ? "إزالة" : "Remove",
+          remove: () => this.setState((p) => ({
+            stopBarrels: {
+              ...(p.stopBarrels || {}),
+              [p.stop]: ((p.stopBarrels || {})[p.stop] || []).filter((x) => x !== ref),
+            },
+          })),
+        };
+      }),
+      barrelTally: (() => {
+        if (!pickedBarrels.length) {
+          return ar ? "لم تختر برميلاً بعد" : "No barrel picked yet";
+        }
+        const shortBy = kg - pickedCap;
+        if (shortBy > 0) {
+          return ar
+            ? pickedBarrels.length + " برميل · " + pickedCap + " كجم سعة · تبقى " + shortBy + " كجم بلا برميل"
+            : pickedBarrels.length + " picked · " + pickedCap + " Kg of capacity · " + shortBy + " Kg still needs a barrel";
+        }
+        return ar
+          ? pickedBarrels.length + " برميل · " + pickedCap + " كجم سعة · تكفي الكمية"
+          : pickedBarrels.length + " picked · " + pickedCap + " Kg of capacity · enough for " + kg + " Kg";
+      })(),
+      barrelTallyColor: !pickedBarrels.length ? "#B3261E" : kg - pickedCap > 0 ? "#B3261E" : "#1F5240",
+      t_egp_kg: ar ? "كجم" : "Kg",
+      t_oneShop: ar ? "محل واحد" : "one shop",
+      t_mixed: ar ? "مختلط" : "mixed",
+
+      // Today is what is left to do; Collected is its own tab after On board.
+      isCollected: s.screen === "collected",
+      stopsHeading: s.screen === "collected"
+        ? (ar ? "المُحصَّل اليوم" : "Collected Today")
+        : (ar ? "المتبقي" : "Still To Do"),
+      stopsCount: s.screen === "collected"
+        ? String(STOPS.filter((x) => x.state === "done").length)
+        : String(STOPS.filter((x) => x.state !== "done").length),
+      stopsEmpty: s.screen === "collected"
+        ? STOPS.filter((x) => x.state === "done").length === 0
+        : STOPS.filter((x) => x.state !== "done").length === 0,
+      stopsEmptyNote: s.screen === "collected"
+        ? (ar ? "لم تُحصَّل محطة بعد." : "Nothing collected yet.")
+        : (ar ? "لا محطات متبقية. يمكنك إقفال اليوم في المخزن." : "Nothing left. You can close the day at the warehouse."),
+
+      stops: STOPS.filter((st) => (s.screen === "collected" ? st.state === "done" : st.state !== "done")).map((st, i) => {
+        const tones = { good: ["#1F5240", "#EEF6F2"], progress: ["#2C5578", "#E8EEF4"], attend: ["#B3261E", "#fff"], dormant: ["#3A3E40", "#EDEDEA"] };
+        const [pillColor, pillBg] = tones[st.tone];
+        const here = st.state === "waiting";
+        return {
+          name: ar ? st.nameAr : st.name,
+          nameAlt: ar ? st.name : st.nameAr,
+          altFont: ar ? "inherit" : "'Noto Kufi Arabic',sans-serif",
+          meta: ar ? st.metaAr : st.meta,
+          pill: ar ? st.pillAr : st.pill, pillColor, pillBg,
+          edge: st.back ? "#B3261E" : st.state === "done" ? "#1F5240" : here ? "#B3261E" : st.state === "next" ? "#2C5578" : "transparent",
+          bg: here ? "#FBE9E7" : st.state === "pending" ? "#FCFAF5" : "#fff",
+          nameColor: st.state === "done" || st.state === "pending" ? "#63736A" : "#10231C",
+          // The filtered index is not the index into STOPS, so find it back.
+          // A stop already logged opens with its recorded weight, so the receipt
+          // reads back what was collected rather than what was expected.
+          go: () => {
+            this.setState({
+              stop: STOPS.indexOf(st),
+              weight: st.logged ? String(st.took) : "",
+              forced: null,
+              demands: false,
+            });
+            this.goTo(st.screen);
+          }
+        };
+      }),
+
+      stopName: ar ? stop.nameAr : stop.name,
+      stopNameAlt: ar ? stop.name : stop.nameAr,
+      stopAltFont: ar ? "inherit" : "'Noto Kufi Arabic',sans-serif",
+      priceSource: (() => {
+        const p = price.toFixed(2);
+        if (revisedPrice != null) {
+          return ar
+            ? `${p} جنيه/كجم · سعر جديد أقرّه مركز الاتصال`
+            : `${p} EGP/kg \u00b7 new price agreed through the call center`;
+        }
+        return ar
+          ? (stop.payment === "postpaid"
+              ? `السعر المتفق عليه ${p} جنيه/كجم · آجل، بفاتورة`
+              : `السعر المتفق عليه ${p} جنيه/كجم · سعر الكشف، نقداً عند الباب`)
+          : (stop.payment === "postpaid"
+              ? `Agreed ${p} EGP/kg \u00b7 post-paid, invoiced`
+              : `Agreed ${p} EGP/kg \u00b7 manifest rate, cash at the door`);
+      })(),
+      // Arrival is logged first: it timestamps the stop (so how long a
+      // collection really takes is on record) and unlocks the weight.
+      arrived: !!arrival,
+      notArrived: !arrival,
+      arrivedAt: arrival ? arrival.at : "",
+      elapsed: arrival ? (ar ? `${Math.max(1, Math.round((Date.now() - arrival.t) / 60000))} دقيقة هنا` : `${Math.max(1, Math.round((Date.now() - arrival.t) / 60000))} min here`) : "",
+      // Guarded in logic, not just styled — a greyed button with a live handler
+      // is not a gate.
+      arrive: () => {
+        if (!nearShop) return;
+        this.setState((p) => ({ askArrive: { ...(p.askArrive || {}), [p.stop]: true } }));
+      },
+      askingArrive: !!(s.askArrive || {})[s.stop],
+      t_arriveAskTitle: ar ? "وصلت المحل؟" : "You have reached the shop?",
+      t_arriveAskBody: ar
+        ? "هذا يبدأ المحطة ويفتح الوزن والدفع، ويُسجَّل وقت وصولك."
+        : "This starts the stop, unlocks the weight and payment, and records the time you arrived.",
+      confirmArrive: () => {
+        const now = new Date();
+        const at = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        this.setState((p) => ({
+          arrivals: { ...p.arrivals, [p.stop]: { at, t: Date.now() } },
+          askArrive: { ...(p.askArrive || {}), [p.stop]: false },
+        }));
+      },
+      cancelArrive: () => this.setState((p) => ({ askArrive: { ...(p.askArrive || {}), [p.stop]: false } })),
+      notNearShop: !nearShop,
+      stopAddress: ar ? `${stop.addressAr} · ${stop.contactAr}` : `${stop.address} · ${stop.contact}`,
+      stopFacts: withVal([
+        { label: ar ? "\u0627\u0644\u0645\u062a\u0648\u0642\u0639" : "Expected", value: `${expected} ${KG}` },
+        // Both prices stay on the record: what the manifest went out at, and
+        // what was agreed instead — so he can see which one he is collecting on.
+        { label: ar ? "سعر الكشف" : "Manifest price",
+          value: stop.price.toFixed(2),
+          strike: revisedPrice != null },
+        revisedPrice != null
+          ? { label: ar ? "السعر المُراجَع" : "Revised price", value: revisedPrice.toFixed(2), good: true }
+          : null,
+        { label: ar ? "آخر تحصيل" : "Last collected", value: stop.last }
+      ].filter(Boolean)),
+      weight: s.weight === "" ? String(expected) : s.weight,
+      // Typing a zero releases the barrels this stop had claimed — nothing was
+      // collected, so nothing should be holding a barrel.
+      setWeight: (e) => {
+        const v = e.target.value;
+        const zero = (parseFloat(v) || 0) === 0 && v.trim() !== "";
+        this.setState((p) => ({
+          weight: v, forced: null,
+          stopZeroed: { ...(p.stopZeroed || {}), [p.stop]: zero },
+          stopBarrels: zero
+            ? { ...(p.stopBarrels || {}), [p.stop]: [] }
+            : (p.stopBarrels || {}),
+        }));
+      },
+      // He types the weight. All and Half were guesses the scale disproves — the
+      // only shortcut worth having is the case where there is nothing to weigh.
+      quickWeights: [
+        { label: ar ? "لا زيت" : "No oil",
+          pick: () => this.setState((p) => ({
+            weight: "0", forced: "no_oil",
+            stopZeroed: { ...(p.stopZeroed || {}), [p.stop]: true },
+            stopBarrels: { ...(p.stopBarrels || {}), [p.stop]: [] },
+          })) },
+      ],
+      // The system, not the driver, says how it compares to what was expected.
+      // Read from the same value the field shows, so the two always agree.
+      // When an outcome has been chosen it already explains the zero, so the
+      // remark stays quiet rather than asserting a different reason.
+      weightRemark: forced ? "" : remarkFor(kg, expected).text,
+      weightRemarkColor: remarkFor(kg, expected).color,
+      outcomeLabel, outcomeNote, outcomeColor, outcomeBg,
+      outcomeBorder: outcomeColor,
+      amountLabel: postpaid ? (ar ? "\u0627\u0644\u0645\u0628\u0644\u063a \u0644\u0644\u0641\u0627\u062a\u0648\u0631\u0629" : "Amount to invoice") : (outcome === "contact_absent" ? (ar ? "\u0627\u0644\u0645\u0628\u0644\u063a \u0627\u0644\u0645\u0633\u062a\u062d\u0642" : "Amount owed") : T.amount),
+      amountToPay: money(postpaid || outcome === "contact_absent" ? due : paidNow),
+      owedLine: owedNow > 0 && due > 0
+        ? (ar
+            ? `\u0627\u0644\u0645\u062f\u0641\u0648\u0639 \u0627\u0644\u0622\u0646 ${money(paidNow)} \u00b7 \u0627\u0644\u0645\u062a\u0628\u0642\u064a ${money(owedNow)}`
+            : `Paid now ${money(paidNow)} \u00b7 still owed ${money(owedNow)}`)
+        : "",
+      payNote: ar
+        ? (postpaid
+            ? "لا يُدفع شيء عند الباب هنا — يُضاف على فاتورة العميل، والإيصال يسجل ما تم أخذه."
+            : (outcome === "contact_absent"
+                ? "تم تحميل الزيت لكن لا أحد وقّع الاستلام. يبقى المبلغ مستحقاً ويظهر في الإيصال."
+                : "محسوب من الوزن والسعر المتفق عليه. عدّله فقط إذا لم تستطع دفعه كاملاً."))
+        : postpaid
+        ? "Nothing is paid at the door here — this goes on the vendor's invoice, and the receipt records what was taken."
+        : (outcome === "contact_absent"
+            ? "The oil was collected but nobody signed for it. It stays owed and shows on the receipt."
+            : "Worked out from the weight and the agreed price. Edit only if you couldn't pay it all."),
+      demands: s.demands,
+      // Ticking this stops the collection and sends a price request, so an
+      // accidental tap is expensive — it asks first.
+      toggleDemands: () => this.setState((p) => (p.demands
+        ? { demands: false, askDemands: false }
+        : { askDemands: !p.askDemands })),
+      askDemands: !!s.askDemands && !s.demands,
+      t_askTitle: ar ? "هل المحل يطلب سعراً أعلى فعلاً؟" : "Is the shop really asking for more?",
+      t_askBody: ar
+        ? "هذا يوقف التحصيل ويرسل طلب سعر إلى مركز الاتصال، ولا تستطيع التحميل حتى يردّوا. اضغط فقط إن كان صاحب المحل قد رفض السعر المتفق عليه."
+        : "This stops the collection and sends a price request to the call center, and you cannot load until they answer. Only do this if the owner has actually refused the agreed price.",
+      t_askYes: ar ? "نعم، يطلب أكثر" : "Yes, he wants more",
+      t_askNo: ar ? "لا، أُلغي" : "No, cancel",
+      confirmDemands: () => this.setState({ demands: true, askDemands: false }),
+      cancelDemands: () => this.setState({ askDemands: false }),
+      t_demandEmpty: !askedPrice.trim()
+        ? (ar ? "اكتب السعر الذي يطلبه قبل الإرسال." : "Type the price he is asking before you send it.")
+        : "",
+      // A request is only sendable with a figure in it that is actually higher
+      // than what was agreed — the same condition the warning shows.
+      // Guarded in logic, not just styled: no barrel, no collection.
+      demandPriceMissing: (s.demands && !demandReady) || barrelsShort,
+      demandPrice: askedPrice,
+      // Digits only, at most two before the point and two after, and the point
+      // is typed by the field rather than by him.
+      setDemandPrice: (e) => {
+        // Cash-register fill: the last two digits are always the fraction, so
+        // 6-4-0 reads 6.40 in three keystrokes. Filling the other way makes the
+        // realistic price impossible to type.
+        const digits = String(e.target.value).replace(/[^\d]/g, "").replace(/^0+(?=\d\d\d)/, "").slice(0, 4);
+        if (!digits) { this.setState((p) => ({ demandPrices: { ...(p.demandPrices || {}), [p.stop]: "" } })); return; }
+        const padded = digits.padStart(3, "0");
+        const whole = String(parseInt(padded.slice(0, -2), 10));
+        this.setState((p) => ({ demandPrices: { ...(p.demandPrices || {}), [p.stop]: whole + "." + padded.slice(-2) } }));
+      },
+      // Read the figure back to him in words before it is sent, because the
+      // price is what the whole request is about.
+      // He must tick that this is the shop's figure before it can be sent — the
+      // whole request hangs on this one number being right.
+      demandEcho: demandOk
+        ? (ar
+          ? "هل " + demandTyped.toFixed(2) + " جنيه للكجم هو السعر الذي يطلبه المحل؟ المتفق عليه " + price.toFixed(2) + " — بزيادة " + (demandTyped - price).toFixed(2) + "."
+          : "Is " + demandTyped.toFixed(2) + " EGP a Kg the price the shop is asking for? The agreed price is " + price.toFixed(2) + " — " + (demandTyped - price).toFixed(2) + " more.")
+        : "",
+      demandEchoColor: "#B3261E",
+      // The tick belongs to one figure. Change the price and it re-opens, so a
+      // confirmation of 6.40 can never authorise sending 99.99.
+      demandConfirmed: demandReady,
+      priceYesLabel: demandReady
+        ? (ar ? "✓ مؤكَّد" : "✓ Confirmed")
+        : (ar ? "نعم، هذا سعره" : "Yes, that is his price"),
+      priceYesBg: demandReady ? "#1F5240" : "#B3261E",
+      priceYesColor: "#fff",
+      confirmPrice: () => this.setState((p) => ({
+        demandConfirms: { ...(p.demandConfirms || {}), [p.stop]: (p.demandPrices || {})[p.stop] || "" },
+      })),
+      // Cancel clears the figure so he starts again rather than being left with
+      // a number he has just said is wrong.
+      clearPrice: () => this.setState((p) => ({
+        demandPrices: { ...(p.demandPrices || {}), [p.stop]: "" },
+        demandConfirms: { ...(p.demandConfirms || {}), [p.stop]: null },
+      })),
+      demandEchoWarn: (() => {
+        const v = demandTyped;
+        if (!askedPrice.trim() || isNaN(v) || v > price) return "";
+        return ar
+          ? "هذا ليس أعلى من السعر المتفق عليه " + price.toFixed(2) + ". راجع الرقم."
+          : "That is not higher than the agreed " + price.toFixed(2) + ". Check the figure.";
+      })(),
+      showQuality: outcome === "quality_rejected" || outcome === "quality_reduced",
+      qualityReasons: [
+        ["water", ar ? "نسبة ماء" : "Water content"],
+        ["contamination", ar ? "تلوث" : "Contamination"],
+        ["wrong_oil_type", ar ? "نوع زيت غير صحيح" : "Wrong oil type"]
+      ].map(([key, label]) => ({ label, checked: s.quality === key, pick: () => this.setState({ quality: key }) })),
+      saveLabel: ar
+        ? (s.demands ? "أرسل طلب السعر وانتظر" : (s.offline ? "احفظ على الهاتف" : "تحصيل الزيت"))
+        : (s.demands ? "Send the price request and wait" : (s.offline ? "Save on this phone" : "Collect Oil")),
+      saveBg: (s.demands && !demandReady) || barrelsShort ? "#EFEBE1" : s.demands ? "#B3261E" : "#1F5240",
+      saveColor: (s.demands && !demandReady) || barrelsShort ? "#8A9188" : "#fff",
+      barrelsShort,
+      t_barrelsShortWhy: barrelsShort
+        ? (pickedCap === 0
+            ? (ar ? "اختر البرميل الذي حمّلت فيه أولاً — بدونه يصل الزيت للمخزن بلا محل." : "Pick the barrel you loaded into first — without it the oil reaches the yard with no shop against it.")
+            : (ar ? "البراميل المختارة تحمل " + pickedCap + " كجم فقط، و" + kg + " كجم لا تكفيها. اختر برميلاً آخر." : "The barrels you picked hold " + pickedCap + " Kg, which is not enough for " + kg + " Kg. Pick another."))
+        : "",
+      // Two steps: Confirm opens the summary, Collect commits it. A stop takes
+      // cash off him, so an accidental tap should not close it.
+      saveStop: () => {
+        if (s.demands && !demandReady) return;
+        if (s.demands) {
+          const Z2 = window.ZEITCO;
+          if (Z2 && stop.order) {
+            Z2.journal.add({ op: "orderPatch", order: stop.order, fields: { atDoor: true } });
+            Z2.journal.add({ op: "patch", shop: stop.shopId, fields: { price: "increase_requested", askedPrice: demandTyped.toFixed(2), askedOn: Z2.asDate(window.ZEITCO.today.en),
+              withApprover: { en: "Senior or Financial Manager", ar: "المدير العام أو المالي" }, counterPrice: null, counterOn: null, decision: null, askedAtDoor: true } });
+          }
+          this.goTo("waiting"); return;
+        }
+        this.setState((p) => ({ confirmings: { ...(p.confirmings || {}), [p.stop]: true } }));
+      },
+      // Kept per stop, like arrivals and routes, so an open panel cannot follow
+      // him into the next shop.
+      confirming: !!(s.confirmings || {})[s.stop],
+      todayLeft: (() => {
+        const n = STOPS.filter((x) => x.state !== "done").length;
+        return n === 0 ? (ar ? "كل المحطات مسجّلة" : "All stops logged")
+          : ar ? n + " محطات متبقية" : n + (n === 1 ? " stop still to do" : " stops still to do");
+      })(),
+      stopAccepted: !stop.order || stop.accepted || stop.state === "done",
+      priceAnswered: !!answered,
+      acceptStops: () => { const Z2 = window.ZEITCO; if (Z2) Z2.acceptStops(this.truckId(), window.ZEITCO.today.en); this.forceUpdate(); },
+      acceptCard: (() => {
+        const n = STOPS.filter((x) => x.order && !x.accepted && x.state !== "done").length;
+        if (s.screen !== "today" || !n) return null;
+        return { title: ar ? n + " محطات جديدة من العمليات" : n + " new stops from operations",
+          note: ar ? "اقبلها قبل أن تنطلق. العمليات ترى أنك قبلتها." : "Accept them before you set off. Operations sees that you did.",
+          label: ar ? "اقبل محطات اليوم" : "Accept today's stops",
+          go: () => { const Z2 = window.ZEITCO; if (Z2) Z2.acceptStops(this.truckId(), window.ZEITCO.today.en); this.forceUpdate(); } };
+      })(),
+      // Confirming records the collection against the stop, so it leaves Today,
+      // appears under Collected, and its barrels show on the car.
+      doCollect: () => {
+        // Added: the confirmed stop goes to the shared data (Operations, agent).
+        const Z = window.ZEITCO, o = stop && stop.order;
+        if (Z && o && stop.state !== "done") {
+          const n = new Date(), at = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+          if (collectedOutcome && kg > 0) Z.collect(o, kg, at, { paid: paidNow, price });
+          else Z.failStop(o, ({ quality_rejected: "bad_oil", sold_to_competitor: "sold", no_oil: "no_oil", price_refused: "price", shut: "shut", wrong_address: "wrong_address" })[outcome] || "no_oil", "", at);
+        }
+        this.setState((p) => ({
+        confirmings: { ...(p.confirmings || {}), [p.stop]: false },
+        done: {
+          ...(p.done || {}),
+          [p.stop]: { took: kg, price, owed: owedNow, barrels: pickedBarrels },
+        },
+        screen: "receipt",
+      }));
+      },
+      cancelCollect: () => this.setState((p) => ({
+        confirmings: { ...(p.confirmings || {}), [p.stop]: false },
+      })),
+      t_collectNow: ar ? "تأكيد" : "Confirm",
+      t_confirmWord: ar ? "تأكيد" : "Confirm",
+      t_cancelWord: ar ? "إلغاء" : "Cancel",
+      // Names the amount that actually matters: cash out on a prepaid stop, the
+      // debt on a postpaid one.
+      t_confirmTitle: kg === 0
+        ? (ar ? "إغلاق المحطة بلا زيت؟" : "Close this stop with no oil?")
+        : owedNow > 0
+          ? (ar ? "تأكيد " + kg + " كجم و" + money(due) + " آجلة؟" : "Confirm " + kg + " Kg and " + money(due) + " on account?")
+          : (ar ? "تأكيد " + kg + " كجم و" + money(paidNow) + "؟" : "Confirm " + kg + " Kg and " + money(paidNow) + "?"),
+      t_confirmBody: kg === 0
+        ? (ar ? "لا كمية ولا مبلغ. والسبب يُسجَّل ويراه مركز الاتصال."
+             : "No quantity and nothing to pay. The reason is recorded and the call center sees it.")
+        : owedNow > 0
+          ? (ar ? "لن تدفع نقداً. يُفاتَر المحل بـ" + money(due) + " ويبقى ديناً عليه. لا يمكن تعديل المحطة بعد ذلك."
+               : "You pay nothing now. The shop is invoiced " + money(due) + " and it stays owed by them. The stop cannot be edited afterwards.")
+          : (ar ? "ستدفع " + money(paidNow) + " من نقديتك وتُطبع إيصالاً للمالك. لا يمكن تعديل المحطة بعد ذلك."
+               : "You will pay " + money(paidNow) + " out of your cash and print a receipt for the owner. The stop cannot be edited afterwards."),
+      otherOutcomes: OTHER_OUTCOMES,
+      mustDecide: ar
+        ? "تبقى هذه المحطة مفتوحة حتى تسجل أحد هذه الخيارات — لا يمكن تسوية اليوم ومحطة غير محسوبة."
+        : "This stop stays open until you log one of these \u2014 the day can't be reconciled with a stop unaccounted for.",
+      paymentNote: ar
+        ? (stop.payment === "postpaid"
+            ? "عميل آجل — يُفاتر ولا يُدفع عند الباب. ومع ذلك يجب أن يوقّع أحد على الاستلام."
+            : "يدفع نقداً عند الباب. إذا لم يوجد من يستلم النقد فهذا ليس تحصيلاً — سجّل السبب بدلاً من ذلك.")
+        : stop.payment === "postpaid"
+        ? "Post-paid vendor \u2014 invoiced, not paid at the door. Somebody still has to sign for the collection."
+        : "Pays cash at the door. If nobody can take the cash, that is not a collection \u2014 log why instead.",
+
+      // The whole back-and-forth, growing a round at a time so he can see who
+      // moved and by how much.
+      waitingThread: (() => {
+        const t = [
+          { when: "18:22", what: ar ? "أرسلت طلب المحل" : "You sent the shop's demand", amount: priceAsked, color: "#B3261E" },
+          { when: "18:24", what: ar ? "العمليات حوّلته لمدير" : "Operations passed it to a manager", amount: "—", color: "#63736A" },
+          { when: "18:28", what: ar ? "المدير عرض سعراً" : "Manager countered", amount: "6.00", color: "#1F5240" },
+        ];
+        if (roundNo >= 2) {
+          t.push({ when: "18:31", what: ar ? "المحل رفض · أعدته للأعلى" : "Shop refused · you sent it back up", amount: "6.40", color: "#B3261E" });
+          t.push({ when: "18:36", what: ar ? "المدير عرض مرة ثانية" : "Manager countered again", amount: "6.20", color: "#1F5240" });
+        }
+        if (roundNo >= 3) {
+          t.push({ when: "18:39", what: ar ? "المحل رفض مرة ثانية" : "Shop refused again", amount: "6.40", color: "#B3261E" });
+          t.push({ when: "18:44", what: ar ? "المدير: هذا آخر سعر" : "Manager: this is our last price", amount: "6.30", color: "#8A5B08" });
+        }
+        return t;
+      })(),
+      roundLabel: roundNo === 1
+        ? (ar ? "الجولة 1" : "Round 1")
+        : roundNo === 2 ? (ar ? "الجولة 2" : "Round 2") : (ar ? "آخر سعر" : "Their last price"),
+      roundLabelColor: roundNo >= 3 ? "#8A5B08" : "#63736A",
+      // Accepting the price unlocks the weight form — it does not collect
+      // anything. The receipt comes after weighing, via Confirm Collection.
+      acceptPrice: () => {
+        if (!answered) return;
+        const Z2 = window.ZEITCO;
+        if (Z2 && priceStop) {
+          Z2.journal.add({ op: "orderPatch", order: priceStop.order, fields: { atDoor: false } });
+          Z2.journal.add({ op: "patch", shop: priceStop.shopId, fields: { price: "agreed", agreedPrice: counterPrice.toFixed(2), askedPrice: null, askedOn: null, withApprover: null, counterPrice: null, counterOn: null, refusedOn: null, decision: null, atRisk: null, askedAtDoor: null } });
+        }
+        const n = new Date();
+        const at = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+        this.setState((p) => ({
+          // Everything is written to the negotiation's own stop, and he is taken
+          // there — not to whichever stop happened to be selected.
+          stop: priceIdx,
+          arrivals: { ...p.arrivals, [priceIdx]: p.arrivals[priceIdx] || { at, t: Date.now() } },
+          // The agreed figure is written onto the stop, so the collection is
+          // priced at it instead of the rate the manifest went out with.
+          agreedPrices: { ...(p.agreedPrices || {}), [priceIdx]: counterPrice },
+          weight: "", forced: null, demands: false, screen: "stop",
+        }));
+      },
+
+      receiptRef: stop.ref,
+      receipt: withVal([
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0645\u0646\u0641\u0630 (\u0625\u0646\u062c\u0644\u064a\u0632\u064a)" : "Outlet", value: stop.name, font: "inherit", weight: 600, color: "#10231C" },
+        { cls: "num", label: ar ? "\u0627\u0644\u0645\u0646\u0641\u0630" : "\u0627\u0644\u0645\u0646\u0641\u0630", value: stop.nameAr, font: "'Noto Kufi Arabic',sans-serif", weight: 600, color: "#10231C" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u062a\u0627\u0631\u064a\u062e" : "Date", value: stop.at, font: "inherit", weight: 400, color: "#3A4A43" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0645\u062a\u0648\u0642\u0639" : "Expected", value: `${expected} ${KG}`, font: "'IBM Plex Mono',monospace", weight: 400, color: "#63736A" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0643\u0645\u064a\u0629" : "Quantity taken", value: `${kg} ${KG}`, font: "'IBM Plex Mono',monospace", weight: 600, color: "#10231C" },
+        { cls: "numltr",
+          label: revisedPrice != null
+            ? (ar ? "\u0633\u0639\u0631 \u0627\u0644\u0643\u064a\u0644\u0648 (\u0645\u064f\u0631\u0627\u062c\u064e\u0639)" : "Price per kg (revised)")
+            : (ar ? "\u0633\u0639\u0631 \u0627\u0644\u0643\u064a\u0644\u0648" : "Price per kg"),
+          value: `${price.toFixed(2)} ${ar ? "\u062c\u0646\u064a\u0647" : "EGP"}`, font: "'IBM Plex Mono',monospace", weight: 400, color: "#3A4A43" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0645\u0628\u0644\u063a \u0627\u0644\u0645\u0633\u062a\u062d\u0642" : "Amount due", value: money(due), font: "'IBM Plex Mono',monospace", weight: 600, color: "#10231C" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0645\u0628\u0644\u063a \u0627\u0644\u0645\u062f\u0641\u0648\u0639" : "Amount paid", value: money(paidNow), font: "'IBM Plex Mono',monospace", weight: 600, color: "#1F5240" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0645\u062a\u0628\u0642\u064a" : "Still owed", value: money(owedNow), font: "'IBM Plex Mono',monospace", weight: owedNow > 0 ? 600 : 400, color: owedNow > 0 ? "#B3261E" : "#3A4A43" },
+        { cls: "numltr", label: ar ? "\u0627\u0644\u0633\u0627\u0626\u0642" : "Driver", value: "H. Saber · TRK-04", font: "inherit", weight: 400, color: "#3A4A43" }
+      ]),
+
+      cashRows: withVal([
+        { label: ar ? "السلفة المصروفة صباحاً" : "Float issued this morning", value: floatIssued.toLocaleString("en-US"), color: "#10231C", labelColor: "#55655D" },
+        { label: ar ? "المدفوع في المحطات" : "Paid out at stops", value: `\u2212${paidOut.toLocaleString("en-US")}`, color: "#10231C", labelColor: "#55655D" },
+        { label: ar ? "النقدية المتوفرة الآن" : "Cash on hand now", value: cashInHand.toLocaleString("en-US"), color: "#1F5240", labelColor: "#10231C" },
+        { label: ar ? "عجز مرحّل من 4 سبتمبر" : "Carried from 4 Sep shortfall", value: "1,200", color: "#B3261E", labelColor: "#B3261E" }
+      ]),
+      paidPerStop: STOPS.map((st) => ({
+        name: ar ? st.nameAr : st.name,
+        detail: ar ? st.detailAr : st.detail,
+        amount: st.logged ? (dueFor(st) - st.owed).toLocaleString("en-US") : "\u2014",
+        color: st.logged ? "#10231C" : "#63736A"
+      })),
+
+      weighed: s.weighed,
+      reconcileRows: withVal([
+        { label: ar ? "\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0633\u062c\u0644 \u0641\u064a \u0645\u062d\u0637\u0627\u062a\u0643" : "Logged total across your stops", value: `${loggedTotal.toLocaleString("en-US")} ${KG}`, color: "#10231C" },
+        { label: ar ? "\u0648\u0632\u0646 \u0627\u0644\u0645\u062e\u0632\u0646" : "Warehouse weighed", value: `${weighedKg.toLocaleString("en-US")} ${KG}`, color: "#10231C" },
+        { label: ar ? "\u0627\u0644\u0641\u0631\u0642" : "Difference", value: `${diffKg > 0 ? "+" : diffKg < 0 ? "\u2212" : ""}${Math.abs(diffKg).toLocaleString("en-US")} ${KG}`, color: diffKg === 0 ? "#1F5240" : diffKg > 0 ? "#B3261E" : "#B3261E" }
+      ]),
+      diffBg: diffKg === 0 ? "#EEF6F2" : diffKg > 0 ? "#FBE9E7" : "#FBEAE9",
+      diffBorder: diffKg === 0 ? "#1F5240" : diffKg > 0 ? "#B3261E" : "#B3261E",
+      diffColor: diffKg === 0 ? "#1F5240" : diffKg > 0 ? "#B3261E" : "#B3261E",
+      diffTitle: ar
+        ? (diffKg === 0 ? "مطابق تماماً" : diffKg > 0 ? `زيادة ${diffKg} كجم — مرصودة للتحقيق، لا تُحتسب لك` : `عجز ${-diffKg} كجم`)
+        : diffKg === 0
+        ? "Matches exactly"
+        : diffKg > 0
+          ? `${diffKg} Kg surplus \u2014 flagged, not credited`
+          : `${-diffKg} Kg short`,
+      diffBody: ar
+        ? (diffKg === 0
+            ? "لا مستحقات في أي اتجاه. التسوية تُقفل اليوم."
+            : diffKg > 0
+              ? "الزيادة لا تُحتسب لك أبداً. تُرصد للمراجعة، لأن الزيت الواصل أكثر مما تفسره المحطات."
+              : "وزن المخزن هو المعتمد. يُحسب العجز بمتوسط سعر اليوم، ويُخصم أولاً من النقدية التي تعيدها.")
+        : diffKg === 0
+        ? "Nothing owed either way. Reconciling closes the day."
+        : diffKg > 0
+          ? "A surplus is never credited to you. It is flagged for someone to look at, because more oil arrived than the stops account for."
+          : "The warehouse weight is the one that counts. The shortfall is charged at the day's average paid price, taken from the cash you're returning first.",
+      hasShortfall: diffKg < 0,
+      shortfallRows: withVal([
+        { label: (ar ? "\u0627\u0644\u0639\u062c\u0632 \u0628\u0645\u062a\u0648\u0633\u0637 \u0633\u0639\u0631 \u0627\u0644\u064a\u0648\u0645 (" : "Shortfall at the day's average price (") + avgPrice.toFixed(2) + ")", value: money(shortfallAmount), color: "#B3261E" },
+        { label: ar ? "\u0645\u062e\u0635\u0648\u0645 \u0645\u0646 \u0627\u0644\u0646\u0642\u062f\u064a\u0629 \u0627\u0644\u062a\u064a \u062a\u0639\u064a\u062f\u0647\u0627" : "Taken from the cash you're returning", value: money(recovered), color: "#3A4A43" },
+        { label: ar ? "\u0645\u0631\u062d\u0651\u0644 \u0639\u0644\u064a\u0643" : "Carried forward against you", value: money(carried), color: carried > 0 ? "#B3261E" : "#1F5240" }
+      ]),
+
+      // Logging a stop and its receipt are only reachable through a shop — they
+      // need its price and expectation, so there is no context-free way in.
+      jump: [
+
+      ],
+      tabs: [
+        { label: ar ? "يومي" : "My Day", edge: s.screen === "today" ? "#1F5240" : "transparent", color: lockedToStop ? "#C6C0B2" : s.screen === "today" ? "#1F5240" : "#63736A", go2: 1, d1: "M6 5h12a2.5 2.5 0 0 1 2.5 2.5v10a2.5 2.5 0 0 1-2.5 2.5H6a2.5 2.5 0 0 1-2.5-2.5v-10A2.5 2.5 0 0 1 6 5Z", d2: "M3.5 9.5h17M8 3v4M16 3v4", go: () => (lockedToStop ? null : this.goTo("today")) },
+        { label: ar ? "على السيارة" : "On board", edge: s.screen === "board" ? "#1F5240" : "transparent", color: lockedToStop ? "#C6C0B2" : s.screen === "board" ? "#1F5240" : "#63736A", go: () => (lockedToStop ? null : this.goTo("board")) },
+        { label: ar ? "المُحصَّل" : "Collected", edge: s.screen === "collected" ? "#1F5240" : "transparent", color: lockedToStop ? "#C6C0B2" : s.screen === "collected" ? "#1F5240" : "#63736A", go: () => (lockedToStop ? null : this.goTo("collected")) },
+        { label: ar ? "\u0627\u0644\u0646\u0642\u062f" : "Cash", edge: s.screen === "cash" ? "#1F5240" : "transparent", color: lockedToStop ? "#C6C0B2" : s.screen === "cash" ? "#1F5240" : "#63736A", go: () => (lockedToStop ? null : this.goTo("cash")) },
+        { label: ar ? "حسابي" : "Me", edge: s.screen === "me" ? "#1F5240" : "transparent", color: lockedToStop ? "#C6C0B2" : s.screen === "me" ? "#1F5240" : "#63736A", go: () => (lockedToStop ? null : this.goTo("me")) },
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

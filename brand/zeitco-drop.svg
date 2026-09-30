@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 24 140 200">
+<defs>
+  <path id="zd-d" d="M100,8 C106,44 152,112 163,172 A63,63 0 1 1 37,172 C48,112 94,44 100,8 Z"></path>
+  <radialGradient id="zd-base" cx="54%" cy="34%" r="78%">
+    <stop offset="0%" stop-color="#63e695"></stop>
+    <stop offset="30%" stop-color="#2cbd66"></stop>
+    <stop offset="60%" stop-color="#118a47"></stop>
+    <stop offset="84%" stop-color="#075a2a"></stop>
+    <stop offset="100%" stop-color="#02200f"></stop>
+  </radialGradient>
+  <radialGradient id="zd-edge" cx="50%" cy="55%" r="60%">
+    <stop offset="0%" stop-color="#000" stop-opacity="0"></stop>
+    <stop offset="80%" stop-color="#000" stop-opacity="0"></stop>
+    <stop offset="100%" stop-color="#001208" stop-opacity=".8"></stop>
+  </radialGradient>
+  <linearGradient id="zd-spec" x1=".2" y1="0" x2=".8" y2="1">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity=".95"></stop>
+    <stop offset="50%" stop-color="#dfffec" stop-opacity=".55"></stop>
+    <stop offset="100%" stop-color="#dfffec" stop-opacity="0"></stop>
+  </linearGradient>
+  <linearGradient id="zd-tip" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#fff" stop-opacity=".95"></stop>
+    <stop offset="100%" stop-color="#fff" stop-opacity="0"></stop>
+  </linearGradient>
+  <filter id="zd-b1"><feGaussianBlur stdDeviation="1"></feGaussianBlur></filter>
+  <filter id="zd-b2"><feGaussianBlur stdDeviation="2.5"></feGaussianBlur></filter>
+  <filter id="zd-b5"><feGaussianBlur stdDeviation="6"></feGaussianBlur></filter>
+  <clipPath id="zd-c"><use href="#zd-d"></use></clipPath>
+</defs>
+<g transform="translate(100,140) scale(1,0.84) translate(-100,-140)">
+<use href="#zd-d" fill="url(#zd-base)"></use>
+<g clip-path="url(#zd-c)">
+  <ellipse cx="106" cy="106" rx="40" ry="56" fill="#c9ffde" opacity=".4" filter="url(#zd-b5)"></ellipse>
+  <path d="M146,84 C170,134 181,180 172,216 C163,241 140,254 116,256 C147,242 162,220 164,194 C167,156 158,120 138,82 Z" fill="#02160b" opacity=".7" filter="url(#zd-b2)"></path>
+  <path d="M120,236 C96,248 70,244 54,228 C72,252 108,256 130,242 Z" fill="#011008" opacity=".8" filter="url(#zd-b2)"></path>
+  <path d="M52,192 C70,226 130,236 158,206 C144,240 78,248 50,214 Z" fill="#b8ffd2" opacity=".85" filter="url(#zd-b1)"></path>
+  <path d="M99,22 C83,58 68,98 61,138 C57,166 59,192 68,212 C71,219 76,225 82,229 C73,219 68,205 67,188 C66,160 71,128 78,100 C84,72 92,44 100,28 Z" fill="url(#zd-spec)" filter="url(#zd-b1)"></path>
+  <path d="M48,168 C50,196 59,219 75,234" stroke="#eafff2" stroke-opacity=".45" stroke-width="3" stroke-linecap="round" fill="none" filter="url(#zd-b1)"></path>
+  <path d="M100,12 C102,40 106,66 113,94 C104,72 97,44 96,14 Z" fill="url(#zd-tip)" filter="url(#zd-b1)"></path>
+  <ellipse cx="141" cy="102" rx="6" ry="17" fill="#ffffff" opacity=".8" filter="url(#zd-b1)" transform="rotate(16 141 102)"></ellipse>
+  <path d="M160,150 C165,172 166,192 161,210" stroke="#8df5b4" stroke-opacity=".65" stroke-width="4" stroke-linecap="round" fill="none" filter="url(#zd-b2)"></path>
+</g>
+<use href="#zd-d" fill="url(#zd-edge)"></use>
+</g>
+</svg>

@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="data.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+  .num { font-family:"IBM Plex Mono",monospace; unicode-bidi:isolate; direction:ltr; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="width:100%;max-width:1180px;margin:0 auto;background:#FAF6EE;font-family:{{ face }};-webkit-font-smoothing:antialiased;color:#3A4A43;padding-bottom:40px">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <div style="display:flex;align-items:stretch;gap:16px;padding:0 24px;height:56px">
+      <a href="agent.dc.html" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;padding-inline-end:20px;border-inline-end:1px solid #EFEBE1;flex-shrink:0">
+        <img src="../public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto;flex-shrink:0">
+        Zeitco
+      </a>
+      <div style="display:flex;align-items:center;flex:1;min-width:0;font-size:12px;color:#63736A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ crumbs }}</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+          <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden">
+            <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+              <button type="button" onClick="{{ l.pick }}" style="border:0;height:26px;padding:0 10px;background:{{ l.bg }};color:{{ l.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ l.label }}</button>
+            </sc-for>
+          </div>
+          <a href="Start.dc.html" style="font-size:13px;font-weight:500;color:#55655D;white-space:nowrap">{{ logoutWord }}</a>
+      </div>
+    </div>
+  </header>
+
+  <div style="padding:14px 20px 0">
+
+    <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-inline-end:4px">{{ L.showState }}</span>
+      <sc-for list="{{ stateTabs }}" as="s" hint-placeholder-count="6">
+        <button type="button" onClick="{{ s.pick }}" style="border:1px solid {{ s.border }};border-radius:999px;height:28px;padding:0 12px;background:{{ s.bg }};color:{{ s.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ s.label }}</button>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <a href="{{ backHref }}" onClick="{{ backClick }}" style="display:inline-block;padding:0 0 8px;font-size:12px;font-weight:600;color:#1F5240">{{ back }}</a>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:10px;align-items:start">
+
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 16px 14px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px 14px;flex-wrap:wrap">
+            <span style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0">
+              <h1 style="margin:0;font-size:19px;font-weight:700;color:#10231C">{{ L.title }}</h1>
+              <span class="num" style="font-size:13px;font-weight:600;color:#55655D">{{ negId }}</span>
+            </span>
+            <span style="border-radius:999px;padding:3px 11px;font-size:11px;font-weight:600;background:{{ view.badgeBg }};color:{{ view.badgeColor }};white-space:nowrap">{{ view.statusLabel }}</span>
+          </div>
+          <p style="margin:4px 0 0;font-size:13px;color:#10231C;font-weight:500">{{ view.shop }}</p>
+          <p style="margin:2px 0 0;font-size:12px;color:{{ view.scopeColor }}">
+            <sc-if value="{{ view.scopeIsCode }}" hint-placeholder-val="{{ true }}">
+              <span class="num">{{ view.scope }}</span>
+            </sc-if>
+            <sc-if value="{{ view.scopeIsProse }}" hint-placeholder-val="{{ false }}">
+              <span>{{ view.scope }}</span>
+            </sc-if>
+          </p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;margin-top:11px;padding-top:10px;border-top:1px solid #EFEBE1">
+            <sc-for list="{{ view.facts }}" as="f" hint-placeholder-count="4">
+              <div style="min-width:0">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+                <div style="font-size:13px;font-weight:600;color:{{ f.color }};margin-top:2px">{{ f.value }}</div>
+                <sc-if value="{{ f.note }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:11px;color:#8A9188;margin-top:1px;text-wrap:pretty">{{ f.note }}</div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <sc-if value="{{ view.notice }}" hint-placeholder-val="{{ false }}">
+          <section style="border:1px solid {{ view.noticeBorder }};background:{{ view.noticeBg }};border-radius:12px;padding:11px 14px 12px">
+            <h2 style="margin:0;font-size:13px;font-weight:700;color:{{ view.noticeColor }}">{{ view.noticeTitle }}</h2>
+            <p style="margin:3px 0 0;font-size:12px;color:{{ view.noticeColor }};text-wrap:pretty">{{ view.notice }}</p>
+          </section>
+        </sc-if>
+
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 16px 14px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px 14px;flex-wrap:wrap;margin-bottom:10px">
+            <h2 style="margin:0;font-size:13px;font-weight:700;color:#10231C">{{ L.theLadder }}</h2>
+            <span style="font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.theLadderSub }}</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px;margin-bottom:10px">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#2B5C8A;padding-bottom:4px;border-bottom:1px solid #EFEBE1">{{ L.ourSide }}</div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#B3261E;padding-bottom:4px;border-bottom:1px solid #EFEBE1;text-align:end">{{ L.theirSide }}</div>
+            <sc-for list="{{ ladder.rungs }}" as="r" hint-placeholder-count="6">
+              <div style="grid-column:{{ r.col }};display:flex;align-items:center;justify-content:{{ r.align }};gap:8px;padding:5px 0;min-width:0">
+                <span style="width:9px;height:9px;border-radius:999px;background:{{ r.dot }};flex-shrink:0;order:{{ r.dotOrder }}"></span>
+                <span class="num" style="font-size:17px;font-weight:600;color:{{ r.color }};order:2">{{ r.amount }}</span>
+                <span style="font-size:11px;color:#8A9188;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;order:3">{{ r.who }}</span>
+              </div>
+            </sc-for>
+            <div style="grid-column:1 / -1;display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-top:1px dashed #9EBFAB;background:#EEF6F2;border-radius:0 0 8px 8px;padding:5px 9px;margin-top:2px">
+              <span style="font-size:11px;font-weight:600;color:#1F5240">{{ ladder.ceilingLabel }}</span>
+              <span class="num" style="font-size:13px;font-weight:600;color:#1F5240">{{ ladder.ceiling }}</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:16px;flex-wrap:wrap;border-top:1px solid #EFEBE1;padding-top:9px">
+            <sc-for list="{{ ladder.legend }}" as="g" hint-placeholder-count="3">
+              <span style="display:flex;align-items:center;gap:6px;font-size:11px;color:#55655D">
+                <span style="width:8px;height:8px;border-radius:999px;background:{{ g.dot }}"></span>{{ g.label }}
+              </span>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 16px 14px">
+          <h2 style="margin:0 0 9px;font-size:13px;font-weight:700;color:#10231C">{{ L.history }}</h2>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 78px 130px;gap:10px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.whatHappened }}</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.amountCol }}</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.whenCol }}</span>
+          </div>
+          <sc-for list="{{ events }}" as="e" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 78px 130px;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid #F4F1EA">
+              <span style="min-width:0">
+                <span style="display:block;font-size:13px;color:#10231C">{{ e.what }}</span>
+                <span style="display:block;font-size:11px;color:#8A9188">{{ e.who }}</span>
+              </span>
+              <span class="num" style="font-size:13px;font-weight:600;color:{{ e.color }};text-align:end">{{ e.amount }}</span>
+              <span class="num" style="font-size:11px;color:#8A9188;text-align:end">{{ e.when }}</span>
+            </div>
+          </sc-for>
+          <p style="margin:9px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.historyNote }}</p>
+        </section>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+
+        <sc-if value="{{ view.canAct }}" hint-placeholder-val="{{ true }}">
+          <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 16px 14px">
+            <h2 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#10231C">{{ L.logSomething }}</h2>
+            <p style="margin:0 0 10px;font-size:12px;color:#63736A;text-wrap:pretty">{{ view.turnHint }}</p>
+
+            <label style="display:block">
+              <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ L.amountLabel }}</span>
+              <input type="text" value="{{ amount }}" onChange="{{ setAmount }}" placeholder="{{ L.amountPlaceholder }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:10px;padding:0 10px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+            </label>
+            <p style="margin:5px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ view.ceilingHint }}</p>
+
+            <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #E8B4AE;background:#FDF1EF;border-radius:9px;padding:9px 12px;margin-top:10px;font-size:12px;color:#B3261E;text-wrap:pretty">{{ error }}</div>
+            </sc-if>
+
+
+
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px;margin-top:11px">
+              <sc-for list="{{ actions }}" as="a" hint-placeholder-count="2">
+                <button type="button" onClick="{{ a.run }}" style="min-height:32px;padding:6px 12px;border:1px solid {{ a.border }};border-radius:10px;background:{{ a.bg }};color:{{ a.color }};font-family:inherit;font-size:13px;font-weight:600;line-height:1.3;cursor:pointer">{{ a.label }}</button>
+              </sc-for>
+            </div>
+
+
+            <sc-if value="{{ pause }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #BCCFE0;background:#F5F8FB;border-radius:10px;padding:10px 13px 12px;margin-top:10px">
+                <h3 style="margin:0;font-size:13px;font-weight:700;color:#2C5578">{{ pause.title }}</h3>
+                <p style="margin:3px 0 10px;font-size:12px;color:#55655D;text-wrap:pretty">{{ pause.note }}</p>
+                <div>
+                  <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:6px">{{ pause.dayLabel }}</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ pause.days }}" as="d" hint-placeholder-count="4">
+                      <button type="button" onClick="{{ d.pick }}" style="height:32px;padding:0 12px;border:1px solid {{ d.border }};border-radius:16px;background:{{ d.bg }};color:{{ d.colour }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ d.label }}</button>
+                    </sc-for>
+                    <button type="button" onClick="{{ pause.pickDate }}" style="height:32px;padding:0 12px;border:1px dashed {{ pause.pickChip.border }};border-radius:16px;background:{{ pause.pickChip.bg }};color:{{ pause.pickChip.colour }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ pause.pickLabel }}</button>
+                  </div>
+                  <sc-if value="{{ pause.showCalendar }}" hint-placeholder-val="{{ false }}">
+                    <input type="date" value="{{ pause.day }}" onChange="{{ pause.setDay }}" min="{{ minToday }}" style="margin-top:8px;width:180px;max-width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;background:#fff;padding:0 10px;font-family:inherit;font-size:13px;color:#10231C">
+                  </sc-if>
+                  <sc-if value="{{ pause.day }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin:12px 0 6px">{{ pause.atLabel }}</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                      <sc-for list="{{ pause.times }}" as="h" hint-placeholder-count="7">
+                        <button type="button" onClick="{{ h.pick }}" style="height:30px;padding:0 11px;border:1px {{ h.line }} {{ h.border }};border-radius:15px;background:{{ h.bg }};color:{{ h.colour }};font-family:{{ h.face }};font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ h.label }}</button>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ pause.showClock }}" hint-placeholder-val="{{ false }}">
+                      <input type="time" value="{{ pause.at }}" onChange="{{ pause.setAt }}" step="900" style="margin-top:8px;width:140px;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;background:#fff;padding:0 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+                    </sc-if>
+                  </sc-if>
+                </div>
+                <p style="margin:8px 0 0;font-size:12px;font-weight:600;color:{{ pause.readyColour }}">{{ pause.ready }}</p>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:7px;margin-top:7px;padding-top:10px;border-top:1px solid {{ closeEdge }}">
+              <span style="font-size:12px;font-weight:700;color:{{ closeAskColour }};text-wrap:pretty">{{ closeAsk }}</span>
+              <sc-for list="{{ closes }}" as="c" hint-placeholder-count="3">
+                <button type="button" onClick="{{ c.run }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:38px;padding:7px 13px;border:1px solid {{ c.border }};border-radius:10px;background:{{ c.bg }};color:{{ c.color }};font-family:inherit;font-size:13px;font-weight:600;line-height:1.3;text-align:start;cursor:pointer" style-hover="background:{{ c.hoverBg }}">
+                  <span style="min-width:0">{{ c.label }}</span>
+                  <sc-if value="{{ c.showAmount }}" hint-placeholder-val="{{ true }}">
+                    <span class="num" style="font-size:15px;font-weight:600;flex-shrink:0">{{ c.amount }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ closing }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#fff;border:1px solid #BFD8C9;border-radius:12px;padding:12px 16px 14px">
+            <h2 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#1F5240">{{ L.agreementTerms }}</h2>
+            <p style="margin:0;font-size:13px;font-weight:600;color:#10231C">{{ closingLine }}</p>
+            <p style="margin:3px 0 11px;font-size:12px;color:#63736A;text-wrap:pretty">{{ L.agreementTermsSub }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px 12px">
+              <sc-for list="{{ termFields }}" as="f" hint-placeholder-count="5">
+                <label style="display:block;min-width:0">
+                  <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                  <sc-if value="{{ f.isChoice }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:flex;gap:1px;border:1px solid #8A9188;border-radius:10px;overflow:hidden">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2">
+                        <button type="button" onClick="{{ o.pick }}" style="flex:1;border:0;height:30px;padding:0 8px;background:{{ o.bg }};color:{{ o.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ o.label }}</button>
+                      </sc-for>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                    <select value="{{ f.value }}" onChange="{{ f.set }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:10px;padding:0 8px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="5">
+                        <option value="{{ o.value }}">{{ o.label }}</option>
+                      </sc-for>
+                    </select>
+                  </sc-if>
+                  <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}">
+                    <input type="text" inputmode="numeric" value="{{ f.value }}" onChange="{{ f.set }}" placeholder="{{ f.placeholder }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:10px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                  </sc-if>
+                  <sc-if value="{{ f.required }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:block;font-size:11px;color:#B3261E;margin-top:3px">{{ L.required }}</span>
+                  </sc-if>
+                </label>
+              </sc-for>
+            </div>
+            <sc-if value="{{ termsError }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:10px 0 0;font-size:12px;font-weight:600;color:#B3261E;text-wrap:pretty">{{ termsError }}</p>
+            </sc-if>
+            <p style="margin:10px 0 0;padding-top:9px;border-top:1px solid #EFEBE1;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.noSignoffNote }}</p>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ view.isPending }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#fff;border:1px solid #E8B4AE;border-radius:12px;padding:12px 16px 14px">
+            <h2 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#B3261E">{{ L.assignCeiling }}</h2>
+            <p style="margin:0 0 10px;font-size:12px;color:#63736A;text-wrap:pretty">{{ L.assignCeilingSub }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 14px;margin-bottom:11px">
+              <sc-for list="{{ view.approverFacts }}" as="f" hint-placeholder-count="3">
+                <div style="min-width:0">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+                  <div class="num" style="font-size:13px;font-weight:600;color:{{ f.color }};margin-top:2px">{{ f.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <label style="display:block">
+              <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ L.newCeiling }}</span>
+              <input type="text" placeholder="6.35" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:10px;padding:0 10px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+            </label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">
+              <button type="button" style="min-height:32px;padding:6px 14px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ L.assign }}</button>
+              <button type="button" style="min-height:32px;padding:6px 14px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ L.refuse }}</button>
+            </div>
+            <p style="margin:10px 0 0;padding-top:9px;border-top:1px solid #EFEBE1;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.assignNote }}</p>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ view.hasAgreement }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#fff;border:1px solid #BFD8C9;border-radius:12px;padding:12px 16px 14px">
+            <h2 style="margin:0 0 9px;font-size:13px;font-weight:700;color:#1F5240">{{ L.theAgreement }}</h2>
+            <sc-for list="{{ view.agreement }}" as="r" hint-placeholder-count="6">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #F4F1EA">
+                <span style="font-size:12px;color:#55655D;min-width:0">{{ r.label }}</span>
+                <span style="font-size:13px;font-weight:600;color:#10231C;flex-shrink:0;text-align:end">{{ r.value }}</span>
+              </div>
+            </sc-for>
+            <p style="margin:10px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.agreementNote }}</p>
+            <sc-if value="{{ view.nextHref }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding-top:11px;border-top:1px solid #EFEBE1">
+                <a href="{{ view.nextHref }}" style="height:34px;display:inline-flex;align-items:center;padding:0 16px;border-radius:10px;background:#1F5240;color:#fff;font-size:13px;font-weight:600;white-space:nowrap">{{ view.nextLabel }}</a>
+                <span style="font-size:12px;color:#55655D;min-width:0;flex:1;text-wrap:pretty">{{ view.nextNote }}</span>
+              </div>
+            </sc-if>
+          </section>
+        </sc-if>
+
+        <section style="background:#F6F2E9;border:1px solid #EFEBE1;border-radius:12px;padding:12px 16px 14px">
+          <h2 style="margin:0 0 9px;font-size:13px;font-weight:700;color:#10231C">{{ L.theRules }}</h2>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ rules }}" as="r" hint-placeholder-count="5">
+              <p style="margin:0;font-size:12px;color:#3A4A43;text-wrap:pretty"><b style="color:#10231C">{{ r.head }}</b> {{ r.body }}</p>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div style="height:96px"></div>
+    <sc-if value="{{ bar }}" hint-placeholder-val="{{ false }}">
+      <div dir="{{ bar.dir }}" style="position:fixed;left:0;right:0;bottom:0;z-index:6;padding:0 20px 12px;pointer-events:none">
+        <div style="max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:{{ bar.bg }};border:1px solid {{ bar.edge }};border-radius:12px;padding:11px 16px;box-shadow:0 -4px 18px rgba(16,35,28,.10);pointer-events:auto">
+          <div style="min-width:0;flex:1">
+            <div style="font-size:13px;font-weight:700;color:{{ bar.ink }};text-wrap:pretty">{{ bar.title }}</div>
+            <div style="font-size:12px;color:{{ bar.sub }};text-wrap:pretty">{{ bar.line }}</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <sc-if value="{{ bar.third }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ bar.third.go }}" style="height:38px;padding:0 14px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ bar.third.label }}</button>
+            </sc-if>
+            <sc-if value="{{ bar.second }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ bar.second.go }}" style="height:38px;padding:0 16px;border:1px solid {{ bar.second.edge }};border-radius:10px;background:#fff;color:{{ bar.second.ink }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">{{ bar.second.label }}</button>
+            </sc-if>
+            <sc-if value="{{ bar.main }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;align-items:flex-end">
+                <button type="button" onClick="{{ bar.main.go }}" disabled="{{ bar.main.off }}" style="height:38px;padding:0 18px;border:0;border-radius:10px;background:{{ bar.main.bg }};color:{{ bar.main.ink }};font-family:inherit;font-size:13px;font-weight:600;cursor:{{ bar.main.cursor }};white-space:nowrap">{{ bar.main.label }}</button>
+                <sc-if value="{{ bar.main.why }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11px;color:#B3261E;margin-top:3px">{{ bar.main.why }}</span>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;language&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ar&quot;,&quot;en&quot;],&quot;default&quot;:&quot;ar&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;},&quot;state&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;their_turn&quot;,&quot;our_turn&quot;,&quot;pending_approval&quot;,&quot;accepted&quot;,&quot;rejected&quot;,&quot;chain&quot;],&quot;default&quot;:&quot;their_turn&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;}}">
+const GREEN = "#1F5240", INK = "#10231C", RED = "#B3261E", AMBER = "#B3261E", BLUE = "#2B5C8A";
+
+const T = {
+  en: {
+    crumbs: "Outlets · El Prince Imbaba · Negotiation tool",
+    back: "← Back to the shop", title: "Negotiation tool", showState: "Show:",
+    theLadder: "The Ladder", theLadderSub: "Our offers rising, their asks falling, until they meet.",
+    ourSide: "Our Offers", theirSide: "Their Asks",
+    history: "Every Round", whatHappened: "What Happened", amountCol: "Amount", whenCol: "When",
+    historyNote: "Nothing is ever edited or deleted — a round logged out of turn stays on the record.",
+    logSomething: "Log a Round", amountLabel: "Amount Per Kg", amountPlaceholder: "6.10",
+    agreementTerms: "Agreement Terms", agreementTermsSub: "Accepting closes the deal here — there is no separate approval queue to visit.",
+    required: "Required before the deal can close",
+    closeTheDeal: "Accept and close the deal", cancel: "Cancel",
+    noSignoffNote: "Closing creates the Agreement and turns the shop into an Active Supplier. Payment terms are set on the shop's own record.",
+    assignCeiling: "Assign a New Ceiling", assignCeilingSub: "The negotiator has hit their limit. Nothing can be logged until you assign a new ceiling or refuse.",
+    newCeiling: "New Ceiling", assign: "Assign", refuse: "Refuse",
+    assignNote: "You cannot assign above your own ceiling — asking for more escalates the negotiation one rung rather than stopping it.",
+    theAgreement: "The Agreement", agreementNote: "A renegotiation later creates a new agreement that supersedes this one; this record stays.",
+    theRules: "How This Works",
+  },
+  ar: {
+    crumbs: "المحلات · محل الأمير إمبابة · التفاوض",
+    back: "→ العودة إلى المحل", title: "أداة التفاوض", showState: "اعرض:",
+    theLadder: "سلّم التفاوض", theLadderSub: "عروضنا تصعد ومطالبهم تنزل حتى تتلاقى.",
+    ourSide: "عروضنا", theirSide: "مطالبهم",
+    history: "كل جولة", whatHappened: "ما حدث", amountCol: "المبلغ", whenCol: "التاريخ",
+    historyNote: "لا شيء يُعدَّل أو يُحذف — الجولة المسجَّلة خارج الدور تبقى في السجل.",
+    logSomething: "تسجيل جولة", amountLabel: "المبلغ للكجم", amountPlaceholder: "6.10",
+    agreementTerms: "شروط الاتفاق", agreementTermsSub: "القبول يُغلق الاتفاق من هنا — لا يوجد طابور موافقة منفصل.",
+    required: "مطلوب قبل إغلاق الاتفاق",
+    closeTheDeal: "القبول وإغلاق الاتفاق", cancel: "إلغاء",
+    noSignoffNote: "الإغلاق يُنشئ الاتفاق ويحوّل المحل إلى مورد نشط. شروط الدفع تُحدَّد في ملف المحل.",
+    assignCeiling: "تحديد سقف جديد", assignCeilingSub: "المفاوض وصل إلى حدّه. لا شيء يُسجَّل حتى تحدد سقفاً جديداً أو ترفض.",
+    newCeiling: "السقف الجديد", assign: "تحديد", refuse: "رفض",
+    assignNote: "لا يمكنك تحديد سقف أعلى من سقفك — طلب المزيد يُصعِّد التفاوض درجة بدل أن يوقفه.",
+    theAgreement: "الاتفاق", agreementNote: "أي إعادة تفاوض لاحقاً تُنشئ اتفاقاً جديداً يحلّ محل هذا؛ وهذا السجل يبقى.",
+    theRules: "كيف يعمل هذا",
+  },
+};
+
+const STATES = [
+  ["their_turn", { en: "Their ask is newest", ar: "آخر ما سُجِّل مطلبهم" }],
+  ["our_turn", { en: "Our counter is newest", ar: "آخر ما سُجِّل عرضنا" }],
+  ["pending_approval", { en: "Pending Approval", ar: "بانتظار الموافقة" }],
+  ["accepted", { en: "Accepted", ar: "مقبول" }],
+  ["rejected", { en: "Rejected", ar: "مرفوض" }],
+  ["chain", { en: "Chain negotiation", ar: "تفاوض سلسلة" }],
+];
+
+const STATUS = {
+  their_turn: { label: { en: "Negotiating", ar: "قيد التفاوض" }, bg: "#FBE9E7", color: AMBER },
+  our_turn: { label: { en: "Negotiating", ar: "قيد التفاوض" }, bg: "#FBE9E7", color: AMBER },
+  pending_approval: { label: { en: "Pending Approval", ar: "بانتظار الموافقة" }, bg: "#FBE9E7", color: "#B3261E" },
+  accepted: { label: { en: "Accepted", ar: "مقبول" }, bg: "#EEF6F2", color: GREEN },
+  rejected: { label: { en: "Rejected", ar: "مرفوض" }, bg: "#F1EEE6", color: "#55655D" },
+  chain: { label: { en: "Negotiating", ar: "قيد التفاوض" }, bg: "#FBE9E7", color: AMBER },
+};
+
+// Their asks descend, our offers rise. The opening offer is auto-logged from the
+// tier table, which is guidance — the negotiator can open anywhere.
+const SURVEYOR = { en: "surveyor", ar: "مساح" }, CC = { en: "call center", ar: "مركز الاتصال" }, SHOP = { en: "the shop", ar: "المحل" };
+const ROUNDS = {
+  base: [
+    { side: "our", type: "offer", amount: 5.8, actor: "N. Sobhy", role: SURVEYOR, opening: true, when: window.ZEITCO.dayLabel(-7) + " 11:20" },
+    { side: "their", type: "ask", amount: 6.8, actor: null, role: SHOP, when: window.ZEITCO.dayLabel(-7) + " 11:24" },
+    { side: "our", type: "offer", amount: 6.0, actor: "H. Fawzy", role: CC, when: window.ZEITCO.dayLabel(-5) + " 10:02" },
+    { side: "their", type: "ask", amount: 6.5, actor: null, role: SHOP, when: window.ZEITCO.dayLabel(-5) + " 10:09" },
+    { side: "our", type: "offer", amount: 6.1, actor: "H. Fawzy", role: CC, when: window.ZEITCO.dayLabel(-3) + " 09:41" },
+    { side: "their", type: "ask", amount: 6.3, actor: null, role: SHOP, when: window.ZEITCO.dayLabel(-3) + " 09:47" },
+  ],
+};
+
+const RULES = [
+  { head: { en: "We open below the ceiling.", ar: "نفتح تحت السقف." },
+    body: { en: "The opening offer comes from the volume tier table and is logged automatically — but it is guidance, not a rule, so the negotiator can open anywhere.", ar: "العرض الافتتاحي يأتي من جدول الشرائح ويُسجَّل تلقائياً — لكنه توجيه لا قاعدة، فللمفاوض أن يفتح بما يراه." } },
+  { head: { en: "The ceiling belongs to the role.", ar: "السقف يتبع الدور." },
+    body: { en: "A surveyor and a call center agent carry different limits, scoped by country and by volume. A manager can assign a higher one to this negotiation alone.", ar: "المساح وموظف مركز الاتصال لكل منهما حدّه، بحسب البلد والكمية. وللمدير أن يحدد سقفاً أعلى لهذا التفاوض وحده." } },
+  { head: { en: "Hitting the ceiling escalates, it does not stop.", ar: "الوصول للسقف يُصعِّد ولا يوقف." },
+    body: { en: "Logging above the ceiling puts the negotiation in Pending Approval and names the rung it went to. Nothing can be logged until that rung answers.", ar: "تسجيل مبلغ فوق السقف يضع التفاوض في انتظار الموافقة ويسمّي الدرجة التي صُعِّد إليها. ولا شيء يُسجَّل حتى تُجيب." } },
+  { head: { en: "Accepting closes the deal here.", ar: "القبول يُغلق الاتفاق هنا." },
+    body: { en: "There is no separate sign-off queue. Accepting collects the agreement terms in this screen and creates the Agreement in one step.", ar: "لا يوجد طابور توقيع منفصل. القبول يجمع شروط الاتفاق في هذه الشاشة ويُنشئ الاتفاق في خطوة واحدة." } },
+  { head: { en: "Out of turn still works.", ar: "خارج الدور ممكن أيضاً." },
+    body: { en: "You can log our counter twice in a row if that is what happened. The screen only tells you what is missing first.", ar: "يمكنك تسجيل عرضنا مرتين متتاليتين إن كان هذا ما حدث. الشاشة تخبرك فقط بما ينقص." } },
+];
+
+class Component extends DCLogic {
+  state = { lang: null, view: null, amount: "", closing: false, closingAt: null, closingFrom: null, closedWhen: null, error: null, confirm: null, sure: null, sureAt: null, logged: [], dealType: "recurring", termType: "verbal" };
+
+  componentDidMount() {
+    try {
+      const saved = localStorage.getItem("zeitco-lang");
+      if (saved === "ar" || saved === "en") this.setState({ lang: saved });
+    } catch (e) {}
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  // Arriving from the survey: the shop on the phone, and the ask the survey
+  // recorded as the only round so far.
+  get handoff() {
+    if (this._h !== undefined) return this._h;
+    this._h = null;
+    try {
+      const q = new URLSearchParams(window.location.search);
+      const id = q.get("shop");
+      if (!id && q.get("name")) {
+        const nm = q.get("name");
+        this._h = { id: "NEW", isNew: true, shop: { name: { en: nm, ar: nm } }, ask: parseFloat(q.get("ask") || "") || null,
+          from: q.get("from"), back: q.get("back") };
+      } else if (id) {
+        const Z = window.ZEITCO || {};
+        const list = Z.shops || [];
+        const s = (Array.isArray(list) ? list : Object.values(list)).filter((x) => x && x.id === id)[0] || null;
+        this._h = { id, shop: s, ask: parseFloat(q.get("ask") || (s && s.askedAtDoor) || "") || null, from: q.get("from"), back: q.get("back") };
+      }
+    } catch (e) {}
+    return this._h;
+  }
+  get lang() { return this.state.lang || this.props.language || "ar"; }
+  get view() { return this.state.view || this.props.state || "their_turn"; }
+  tr(v) { return v && typeof v === "object" ? (v[this.lang] || v.en) : v; }
+  actorLine(r) {
+    const role = this.tr(r.role);
+    return r.actor ? r.actor + " · " + role : role;
+  }
+  setLang(l) { try { localStorage.setItem("zeitco-lang", l); } catch (e) {} this.setState({ lang: l }); }
+
+  // The management ceiling, read live. The example rounds are built from it so
+  // changing the setting moves the whole story, not just the label.
+  ceil() { return window.ZEITCO && window.ZEITCO.ceiling ? window.ZEITCO.ceiling() : 6.2; }
+// The bottom bar, the same on every screen: white while working, amber for
+  // "Are you sure?", green once saved. The next step is always in one place.
+  barOf(kind, title, line, main, second, third, dir) {
+    const K = { work: ["#fff", "#E4DFD4", "#10231C", "#55655D"], sure: ["#FDF4F2", "#E8B4AE", "#B3261E", "#B3261E"],
+      bad: ["#FDF4F2", "#E8B4AE", "#B3261E", "#B3261E"], done: ["#EEF6F2", "#BFD8C9", "#1F5240", "#3A4A43"] }[kind];
+    const btn = (b, tone) => b ? Object.assign({ off: false, why: "" }, b, {
+      bg: b.off ? "#D5DCD7" : tone, ink: b.off ? "#63736A" : "#fff", cursor: b.off ? "default" : "pointer",
+      go: b.off ? () => {} : b.go }) : null;
+    return { bg: K[0], edge: K[1], ink: K[2], sub: K[3], title, line, dir: dir || "ltr",
+      main: btn(main, kind === "sure" ? "#B3261E" : kind === "bad" ? "#B3261E" : "#1F5240"),
+      second: second ? Object.assign({ edge: "#1F5240", ink: "#1F5240" }, second) : null,
+      third: third || null };
+  }
+
+  // What the shop says it gives a month: from the survey, corrected here if
+  // they say otherwise. What it really gives is learned later from orders.
+  volDraft() {
+    if (this.state.vol !== undefined) return this.state.vol;
+    const Z = window.ZEITCO, h2 = this.handoff, s = Z && h2 && h2.shop ? Z.byId(h2.shop) : null;
+    return s && s.volume ? String(s.volume) : "";
+  }
+
+  acceptedAt() { return this.state.closingAt ? parseFloat(this.state.closingAt) : this.ceil(); }
+
+  freqWord(k, ar) {
+    return ({ weekly: ar ? "أسبوعياً" : "Weekly", twice_week: ar ? "مرتين أسبوعياً" : "Twice a week",
+      fortnightly: ar ? "كل أسبوعين" : "Every two weeks", monthly: ar ? "شهرياً" : "Monthly" })[k] || "—";
+  }
+  dayWord(en, ar) {
+    return ar ? ({ Saturday: "السبت", Sunday: "الأحد", Monday: "الاثنين", Tuesday: "الثلاثاء", Wednesday: "الأربعاء", Thursday: "الخميس" })[en] || en : en;
+  }
+
+  dayOpts(ar, skip) {
+    const D = [["Saturday", "السبت"], ["Sunday", "الأحد"], ["Monday", "الاثنين"], ["Tuesday", "الثلاثاء"], ["Wednesday", "الأربعاء"], ["Thursday", "الخميس"]];
+    return [{ value: "", label: ar ? "— اختر يوماً —" : "— choose a day —" }]
+      .concat(D.filter(([en]) => en !== skip).map(([en, a]) => ({ value: en, label: ar ? a : en })));
+  }
+
+  doLog(kind, amt) {
+    const stamp = this.stamp();
+    const logged = (this.state.logged || []).slice();
+    if (kind === "ask") {
+      logged.push({ side: "their", type: "ask", amount: amt, actor: null, role: SHOP, when: stamp });
+      this.setState({ logged, amount: "", error: null, confirm: null });
+      return;
+    }
+    const over = amt > this.ceil() + 0.0001;
+    logged.push({ side: "our", type: "offer", amount: amt, actor: "H. Fawzy", role: CC, aboveCeiling: over, when: stamp });
+    if (over) {
+      logged.push({ side: "our", type: "escalate", amount: null, actor: "H. Fawzy", role: CC,
+        toWhom: { en: "to the Senior or Financial Manager", ar: "إلى المدير العام أو المالي" }, when: stamp });
+      // The ask goes on the outlet, where the Approvals screen picks it up.
+      const Z = window.ZEITCO, h2 = this.handoff;
+      if (Z && Z.journal && h2 && !h2.isNew && h2.shop) {
+        const theirs = logged.filter((x) => x.side === "their" && x.amount).slice(-1)[0];
+        Z.journal.add({ op: "patch", shop: h2.shop, fields: { price: "increase_requested",
+          askedPrice: Number((theirs && theirs.amount) || amt).toFixed(2), askedOn: Z.asDate(window.ZEITCO.today.en),
+          withApprover: { en: "Senior or Financial Manager", ar: "المدير العام أو المالي" }, counterPrice: null, decision: null } });
+      }
+      this.setState({ logged, amount: "", error: null, confirm: null, view: "pending_approval" });
+      return;
+    }
+    this.setState({ logged, amount: "", error: null, confirm: null });
+  }
+
+  rounds() {
+    const v = this.view, hd = this.handoff;
+    const r = hd ? (hd.ask ? [{ side: "their", type: "ask", amount: hd.ask, actor: null, role: SHOP, when: "on the survey" }] : []) : ROUNDS.base.slice();
+    const from = this.state.closingFrom, live = this.state.closedWhen;
+    // The canned story for each state, then whatever the user logged, then the
+    // terminal event — so an acceptance is always the last and latest round.
+    if (v === "our_turn" || (v === "accepted" && from === "our_turn")) {
+      r.push({ side: "our", type: "offer", amount: this.ceil(), actor: "H. Fawzy", role: CC, when: window.ZEITCO.today.en + " 09:15" });
+    }
+    if (v === "accepted" && !from) {
+      r.push({ side: "our", type: "offer", amount: this.ceil(), actor: "H. Fawzy", role: CC, when: window.ZEITCO.today.en + " 09:15" });
+      r.push({ side: "their", type: "ask", amount: this.ceil(), actor: null, role: SHOP, agreed: true, when: window.ZEITCO.today.en + " 09:22" });
+    }
+    if (v === "pending_approval" && !this.state.logged.length) {
+      r.push({ side: "our", type: "offer", amount: Math.round((this.ceil() + 0.15) * 100) / 100, actor: "H. Fawzy", role: CC, aboveCeiling: true, when: window.ZEITCO.today.en + " 09:15" });
+      r.push({ side: "our", type: "escalate", amount: null, actor: "H. Fawzy", role: CC,
+        toWhom: { en: "to M. Selim · manager", ar: "إلى م. سليم · المدير" }, when: window.ZEITCO.today.en + " 09:15" });
+    }
+    const all = r.concat(this.state.logged || []);
+    if (v === "accepted") {
+      all.push({ side: "our", type: "accept", amount: this.acceptedAt(), actor: "H. Fawzy", role: CC,
+        when: live || window.ZEITCO.today.en + " 09:24" });
+    }
+    if (v === "rejected") {
+      all.push({ side: "our", type: "reject", amount: null, actor: "H. Fawzy", role: CC, when: live || window.ZEITCO.today.en + " 09:30" });
+    }
+    return all;
+  }
+
+  stamp() { return window.ZEITCO.today.en + " " + new Date().toTimeString().slice(0, 5); }
+
+  ladder() {
+    const ar = this.lang === "ar";
+    const rounds = this.rounds().filter((r) => r.amount !== null);
+    const ceiling = this.ceil().toFixed(2);
+    return {
+      ceiling, ceilingLabel: ar ? "سقف المفاوض" : "The negotiator's ceiling",
+      rungs: rounds.map((r) => ({
+        col: r.side === "our" ? "1" : "2",
+        align: r.side === "our" ? "flex-start" : "flex-end",
+        dotOrder: r.side === "our" ? 1 : 4,
+        dot: r.type === "accept" ? GREEN : r.side === "our" ? BLUE : "#B3261E",
+        color: r.type === "accept" ? GREEN : INK,
+        amount: r.amount.toFixed(2),
+        who: this.actorLine(r),
+      })),
+      legend: [
+        { dot: BLUE, label: ar ? "عروضنا" : "our offers" },
+        { dot: "#B3261E", label: ar ? "مطالبهم" : "their asks" },
+        { dot: GREEN, label: ar ? "السعر المتفق" : "agreed" },
+      ],
+    };
+  }
+
+  renderVals() {
+    const o = this.baseVals();
+    if (!o || !o.L) return o;
+    const isoOf = (dt) => dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
+    Object.assign(o, { minToday: window.ZEITCO ? isoOf(window.ZEITCO.dateIn(0)) : "", minTomorrow: window.ZEITCO ? isoOf(window.ZEITCO.dateIn(1)) : "" });
+    const ar = this.lang === "ar", st = this.state, dir = ar ? "rtl" : "ltr";
+    const cancelW = o.L.cancel || (ar ? "إلغاء" : "Cancel");
+    const toList = { label: ar ? "العودة إلى قائمتي" : "Back to my list", go: () => { window.location.href = o.backHref || "agent.dc.html"; } };
+    if (o.confirm) o.bar = this.barOf("sure", o.confirm.title, o.confirm.body, { label: o.confirm.proceed, go: o.confirmProceed }, { label: cancelW, go: o.confirmCancel, edge: "#8A9188", ink: "#3A4A43" }, null, dir);
+    else if (o.sure) o.bar = this.barOf(st.sure === "reject" ? "bad" : "sure", o.sure.title, o.sure.body, { label: o.sure.proceed, go: o.sureProceed }, { label: cancelW, go: o.sureCancel, edge: "#8A9188", ink: "#3A4A43" }, null, dir);
+    else if (o.pause) o.bar = this.barOf("work", o.pause.title, o.pause.ready, { label: o.pause.goWord, go: o.pause.go, off: !st.pDay, why: st.pDay ? "" : (ar ? "اختر اليوم" : "Pick the day") }, null, { label: o.pause.cancelWord, go: o.pause.cancel }, dir);
+    else if (o.closing) {
+      const ok = st.freq && st.day1 && (st.freq !== "twice_week" || st.day2);
+      o.bar = this.barOf("work", o.L.agreementTerms, o.closingLine, { label: o.L.closeTheDeal, go: o.confirmClose, off: !ok, why: ok ? "" : (ar ? "اختر التكرار واليوم" : "Pick frequency and day") }, null, { label: cancelW, go: o.cancelClose }, dir);
+    }
+    else if (st.view === "accepted" || st.view === "rejected" || st.view === "pending_approval")
+      o.bar = this.barOf(st.view === "rejected" ? "bad" : st.view === "pending_approval" ? "sure" : "done", o.view.statusLabel,
+        st.view === "accepted" ? (ar ? "حُفظ الاتفاق. أصبح المحل مورداً." : "The deal is saved. The shop is now a Supplier.")
+        : st.view === "rejected" ? (ar ? "حُفظ الرفض." : "The rejection is saved.")
+        : (ar ? "بانتظار المدير. لا شيء آخر عليّ الآن." : "Waiting on the manager. Nothing more for me now."), toList, null, null, dir);
+    else o.bar = this.barOf("work", o.view.statusLabel, ar ? "سجّل جولة، أو اختر كيف انتهت أعلاه." : "Log a round, or choose how it ended above.", null, null, { label: ar ? "رجوع" : "Back", go: () => { window.location.href = o.backHref || "agent.dc.html"; } }, dir);
+    return o;
+  }
+
+  baseVals() {
+    const ar = this.lang === "ar", L = T[this.lang] || T.en, v = this.view;
+    const rounds = this.rounds();
+    const last = rounds[rounds.length - 1];
+    const st = STATUS[v];
+    const ceiling = this.ceil().toFixed(2);
+    const agreedPrice = this.acceptedAt().toFixed(2);
+    const TYPE = {
+      ask: { en: "Their ask", ar: "مطلبهم" }, offer: { en: "Our offer", ar: "عرضنا" },
+      accept: { en: "Accepted", ar: "قُبل" }, reject: { en: "Rejected — we walked away", ar: "رُفض — انسحبنا" },
+      escalate: { en: "Escalated for a new ceiling", ar: "صُعِّد لسقف جديد" },
+    };
+    const theirTurn = last && last.side === "their";
+    const ourRounds = rounds.filter((r) => r.side === "our" && r.amount !== null);
+    const newestOurs = ourRounds[ourRounds.length - 1] || ourRounds[0];
+    const negotiator = newestOurs ? { name: newestOurs.actor, role: newestOurs.role.en, roleAr: newestOurs.role.ar } : { name: "H. Fawzy", role: CC.en, roleAr: CC.ar };
+    const theirAsks = rounds.filter((r) => r.side === "their" && r.amount !== null);
+    const lastAsk = theirAsks.length ? theirAsks[theirAsks.length - 1].amount.toFixed(2) : null;
+    const lastOffer = ourRounds.length ? ourRounds[ourRounds.length - 1].amount.toFixed(2) : null;
+    const gap = lastAsk && lastOffer ? (parseFloat(lastAsk) - parseFloat(lastOffer)) : null;
+    const lastLogged = last && last.amount !== null ? last.amount.toFixed(2) : null;
+    const party = v === "chain"
+      ? { name: ar ? "كشري التحرير — 9 فروع" : "Koshary El Tahrir — 9 branches",
+          scope: ar ? "تفاوض سلسلة · لا محل واحد" : "chain negotiation · no single shop",
+          crumbs: ar ? "السلاسل · كشري التحرير · تفاوض سلسلة" : "Chains · Koshary El Tahrir · Chain negotiation",
+          back: ar ? "→ العودة إلى السلسلة" : "← Back to the chain", negId: "NEG-001207" }
+      : { name: ar ? "محل الأمير إمبابة" : "El Prince Imbaba",
+          scope: "ZC-0104",
+          crumbs: ar ? "المحلات · محل الأمير إمبابة · التفاوض" : "Outlets · El Prince Imbaba · Negotiation",
+          back: ar ? "→ العودة إلى المحل" : "← Back to the shop", negId: "NEG-001184" };
+    const hd = this.handoff;
+    if (hd && v !== "chain") {
+      const nm = hd.shop ? this.tr(hd.shop.name) : hd.id;
+      party.name = nm; party.scope = hd.isNew ? (ar ? "محل جديد — لم يُسجَّل بعد" : "new shop — not in the book yet") : hd.id; party.negId = "NEG-" + hd.id.replace(/\D/g, "").padStart(6, "0");
+      party.crumbs = ar ? "المحلات · " + nm + " · أداة التفاوض" : "Outlets · " + nm + " · Negotiation tool";
+      if (hd.from === "survey") party.back = ar ? "→ العودة إلى المسح" : "← Back to the survey";
+      if (hd.from === "agent") party.back = hd.back && /shop=/.test(hd.back) ? (ar ? "→ العودة إلى المحل" : "← Back to the outlet") : (ar ? "→ العودة إلى قائمتي" : "← Back to my list");
+    }
+    // Back to exactly where the agent was, with a line saying what was saved.
+    const saidLine = v === "accepted" ? (ar ? "اتُّفق على السعر." : "Price agreed.")
+      : v === "rejected" ? (ar ? "أُغلق التفاوض بالرفض." : "Negotiation closed — refused.")
+      : v === "pending_approval" ? (ar ? "صعد إلى المدير — فوق سقفي." : "Went up to the manager — above my ceiling.")
+      : (this.state.logged || []).length ? (ar ? "سُجِّلت " + this.state.logged.length + " جولة." : this.state.logged.length + " round(s) logged.") : "";
+    party.backHref = hd && hd.back && /^agent\.dc\.html/.test(hd.back)
+      ? hd.back + (saidLine ? "&banner=" + encodeURIComponent(saidLine) + "&bshop=" + encodeURIComponent(hd.shop ? this.tr(hd.shop.name) : hd.id) : "")
+      : hd ? (hd.from === "survey" ? (hd.isNew ? "survey.dc.html?phase=form&name=" + encodeURIComponent(this.tr(hd.shop.name)) : "survey.dc.html?phase=form&shop=" + encodeURIComponent(hd.id)) : hd.from === "agent" ? "agent.dc.html?tab=lead" : "shop.dc.html?shop=" + encodeURIComponent(hd.id)) : "agent.dc.html";
+    const acts = [], closes = [];
+    if (v === "their_turn" || v === "our_turn" || v === "chain") {
+      const counterFirst = theirTurn;
+      const counter = { label: ar ? "تسجيل عرضنا" : "Log Our Offer", key: "counter" };
+      const ask = { label: ar ? "تسجيل مطلبهم" : "Log Their Ask", key: "ask" };
+      const ordered = counterFirst ? [counter, ask] : [ask, counter];
+      ordered.forEach((o, i) => acts.push({
+        label: o.label,
+        run: () => {
+          const amt = parseFloat(this.state.amount);
+          if (!this.state.amount || isNaN(amt)) { this.setState({ error: "need_amount" }); return; }
+          const outOfTurn = (o.key === "ask" && theirTurn) || (o.key === "counter" && !theirTurn);
+          if (outOfTurn) { this.setState({ confirm: o.key, error: null }); return; }
+          this.doLog(o.key, amt);
+        },
+        bg: i === 0 ? GREEN : "#fff", color: i === 0 ? "#fff" : "#3A4A43", border: i === 0 ? GREEN : "#8A9188",
+      }));
+      closes.push({
+        label: ar ? "نقبل مطلبهم الأخير" : "Accept their final ask",
+        amount: lastAsk, showAmount: true,
+        run: () => this.setState({ sure: "their", sureAt: lastAsk, error: null }),
+        bg: "#fff", color: GREEN, border: "#BFD8C9", hoverBg: "#F4FAF6",
+      });
+      if (lastOffer) closes.push({
+        label: ar ? "قبلوا عرضنا الأخير" : "They accepted our last offer",
+        amount: lastOffer, showAmount: true,
+        run: () => this.setState({ sure: "our", sureAt: lastOffer, error: null }),
+        bg: "#fff", color: GREEN, border: "#BFD8C9", hoverBg: "#F4FAF6",
+      });
+      closes.push({
+        label: ar ? "لا اتفاق بعد — نعاود الاتصال" : "No deal yet — call them back",
+        amount: "", showAmount: false,
+        run: () => this.setState({ pausing: true, sure: null, error: null }),
+        bg: "#fff", color: "#2C5578", border: "#BCCFE0", hoverBg: "#F5F8FB",
+      });
+      closes.push({
+        label: ar ? "الرفض والانسحاب" : "Reject and walk away",
+        amount: "", showAmount: false,
+        run: () => this.setState({ sure: "reject", sureAt: null, error: null }),
+        bg: "#fff", color: RED, border: "#E8B4AE", hoverBg: "#FDF4F2",
+      });
+    }
+
+    const facts = [
+      { label: ar ? "المفاوض" : "Negotiator", value: negotiator.name,
+        note: ar ? negotiator.roleAr : negotiator.role, color: INK },
+      { label: ar ? "السقف الحالي" : "Current Ceiling", value: ceiling, color: INK,
+        note: ar ? "الحد الافتراضي لمركز الاتصال" : "call center default" },
+      { label: ar ? "الجولات" : "Rounds", value: String(rounds.filter((r) => r.amount !== null).length), color: INK,
+        note: this.handoff ? (ar ? "بدأ في المسح" : "opened on the survey") : (ar ? "بدأ 14 سبتمبر" : "opened 14 Sep") },
+      { label: ar ? "الفارق الحالي" : "Gap Now",
+        value: v === "accepted" || gap === null || gap <= 0 ? (ar ? "لا شيء" : "none") : gap.toFixed(2),
+        color: v === "accepted" || gap === null || gap <= 0 ? GREEN : AMBER,
+        note: v === "accepted"
+          ? (ar ? "اتفقا على " + agreedPrice : "met at " + agreedPrice)
+          : !lastOffer ? (ar ? "لا عرض منّا بعد" : "no offer from us yet")
+            : (ar ? lastOffer + " مقابل " + lastAsk : lastOffer + " against " + lastAsk) },
+    ];
+    if (v === "pending_approval") facts[3] = { label: ar ? "صُعِّد إلى" : "Escalated To", value: ar ? "المدير" : "Manager", color: RED, note: (ar ? "منذ " + window.ZEITCO.today.ar : "since " + window.ZEITCO.today.en) };
+
+    const NOTICE = {
+      pending_approval: { title: { en: "Waiting on the manager", ar: "بانتظار المدير" },
+        body: { en: (this.ceil() + 0.15).toFixed(2) + " was logged above the ceiling of " + ceiling + ", so the negotiation escalated to the manager. Nothing further can be logged until a new ceiling is assigned or the request is refused.", ar: "سُجِّل " + (this.ceil() + 0.15).toFixed(2) + " فوق سقف " + ceiling + "، فصُعِّد التفاوض إلى المدير. ولا شيء يُسجَّل حتى يُحدَّد سقف جديد أو يُرفض الطلب." },
+        bg: "#FDF4F2", border: "#E8B4AE", color: "#B3261E" },
+      accepted: { title: { en: "Closed at " + agreedPrice + " EGP a Kg", ar: "أُغلق على " + agreedPrice + " ج.م للكجم" },
+        body: { en: "The agreement is live and the shop is now a Supplier. It becomes active once the first collection comes in.", ar: "الاتفاق سارٍ والمحل مورد نشط. ويمكن إصدار طلبات تحصيل عليه." },
+        bg: "#EEF6F2", border: "#BFD8C9", color: GREEN },
+      rejected: { title: { en: "We walked away", ar: "انسحبنا" },
+        body: { en: "No agreement. The shop keeps its history and can be reopened later — a new negotiation, not this one.", ar: "لا اتفاق. يحفظ المحل سجله ويمكن إعادة فتحه لاحقاً — بتفاوض جديد لا هذا." },
+        bg: "#F1EEE6", border: "#E4DFD4", color: "#55655D" },
+      chain: { title: { en: "This is a chain negotiation", ar: "هذا تفاوض سلسلة" },
+        body: { en: "It covers every branch under Koshary El Tahrir, so it has no single shop. Agreeing here prices all 9 branches at once.", ar: "يشمل كل فروع كشري التحرير، فلا محل واحد له. والاتفاق هنا يسعّر الفروع التسعة كلها." },
+        bg: "#E9F0F7", border: "#BCCFE0", color: BLUE },
+    };
+    const n = NOTICE[v];
+
+    return {
+      L, dir: ar ? "rtl" : "ltr",
+      face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      logoutWord: ar ? "تسجيل الخروج" : "Log out",
+      langs: [["en", "EN"], ["ar", "ع"]].map(([k, label]) => ({
+        label, pick: () => this.setLang(k),
+        bg: this.lang === k ? GREEN : "#fff", color: this.lang === k ? "#fff" : "#55655D",
+      })),
+      showTabs: !this.handoff,
+      stateTabs: STATES.map(([k, label]) => ({
+        label: this.tr(label),
+        pick: () => this.setState({ view: k, closing: false, error: null, confirm: null, sure: null, sureAt: null, closingAt: null, closingFrom: null, closedWhen: null, logged: [], amount: "" }),
+        bg: v === k ? GREEN : "#fff", color: v === k ? "#fff" : "#55655D", border: v === k ? GREEN : "#8A9188",
+      })),
+      crumbs: party.crumbs, back: party.back, backHref: party.backHref, negId: party.negId,
+      view: {
+        statusLabel: this.tr(st.label), badgeBg: st.bg, badgeColor: st.color,
+        shop: party.name,
+        scope: party.scope,
+        scopeIsCode: v !== "chain", scopeIsProse: v === "chain",
+        scopeColor: v === "chain" ? BLUE : "#8A9188",
+        facts,
+        notice: n ? this.tr(n.body) : null,
+        noticeTitle: n ? this.tr(n.title) : "",
+        noticeBg: n ? n.bg : "#fff", noticeBorder: n ? n.border : "#E4DFD4", noticeColor: n ? n.color : INK,
+        canAct: v === "their_turn" || v === "our_turn" || v === "chain",
+        isPending: v === "pending_approval",
+        hasAgreement: v === "accepted",
+        // Straight on to the collection: who to meet, then the first order. The
+        // terms already chosen here travel with it, so nothing is asked twice.
+        nextHref: v === "accepted" && hd ? "survey.dc.html?" + (hd.isNew ? "name=" + encodeURIComponent(this.tr(hd.shop.name)) : "shop=" + encodeURIComponent(hd.id)) + "&phase=collect&price=" + agreedPrice
+          + (this.state.freq ? "&freq=" + this.state.freq : "") + (this.state.day1 ? "&day1=" + this.state.day1 : "")
+          + (this.state.day2 ? "&day2=" + this.state.day2 : "")
+          + (hd.back ? "&back=" + encodeURIComponent(hd.back) : "") : "",
+        nextLabel: ar ? "متابعة إلى طلب التحصيل ←" : "Continue to the collection order →",
+        nextNote: ar ? "من نلتقي، ثم أول طلب. ويمكن التوقف هنا والعودة لاحقاً." : "Who to meet, then the first order. You can also stop here and come back to it.",
+        turnHint: theirTurn
+          ? (ar ? "آخر ما سُجِّل مطلبهم عند " + lastLogged + " — الدور عليك أن تسجّل عرضنا." : "Their ask at " + lastLogged + " is the newest round — it is our turn to counter.")
+          : (ar ? "آخر ما سُجِّل عرضنا عند " + lastLogged + " — بانتظار ردّهم." : "Our offer at " + lastLogged + " is the newest round — we are waiting on them."),
+        ceilingHint: ar
+          ? "فوق " + ceiling + " يصعد التفاوض إلى المدير بدل أن يُسجَّل."
+          : "Above " + ceiling + " this escalates to the manager instead of being logged.",
+        approverFacts: [
+          { label: ar ? "المطلوب" : "Asked For", value: (this.ceil() + 0.15).toFixed(2), color: RED },
+          { label: ar ? "سقفه" : "His Ceiling", value: this.ceil().toFixed(2), color: INK },
+          { label: ar ? "سقفك" : "Your Own Ceiling", value: "6.50", color: INK },
+        ],
+        agreement: [
+          { label: ar ? "السعر المتفق" : "Agreed price", value: agreedPrice + " EGP / Kg" },
+          { label: ar ? "نوع الاتفاق" : "Deal type", value: ar ? "متكرر" : "Recurring" },
+          { label: ar ? "الشكل" : "Term", value: ar ? "شفهي" : "Verbal" },
+          { label: ar ? "التكرار" : "Collection frequency", value: this.freqWord(this.state.freq, ar) },
+          { label: ar ? "الأيام المفضلة" : "Preferred days", value: [this.state.day1, this.state.freq === "twice_week" ? this.state.day2 : ""]
+              .filter(Boolean).map((d) => this.dayWord(d, ar)).join(ar ? " و" : " and ") || "—" },
+          { label: ar ? "الكمية الشهرية التي يقولونها" : "Monthly volume they say", value: this.volDraft() ? Number(this.volDraft()).toLocaleString("en-US") + (ar ? " كجم" : " Kg") : "—" },
+          { label: ar ? "تأمين" : "Deposit", value: ar ? "لا" : "None" },
+        ],
+      },
+      ladder: this.ladder(),
+      events: rounds.slice().reverse().map((r) => ({
+        what: this.tr(TYPE[r.type])
+          + (r.opening ? (ar ? " · افتتاحي" : " · opening") : "")
+          + (r.aboveCeiling ? (ar ? " · فوق سقفه" : " · above his ceiling") : "")
+          + (r.agreed ? (ar ? " · وافق" : " · they agreed") : "")
+          + (r.toWhom ? " · " + this.tr(r.toWhom) : ""),
+        who: this.actorLine(r), when: r.when,
+        amount: r.amount === null ? "—" : r.amount.toFixed(2),
+        color: r.type === "accept" ? GREEN : r.type === "reject" || r.type === "escalate" ? RED : INK,
+      })),
+      actions: acts, closes,
+      // A call in progress must end in one of these. Leaving without choosing
+      // would leave a negotiation nobody knows the state of.
+      closeAsk: ar ? "كيف انتهت المكالمة؟ اختر واحدة — هذا إلزامي." : "How did the call end? Choose one — this is required.",
+      closeAskColour: this.state.needOutcome ? RED : "#55655D",
+      closeEdge: this.state.needOutcome ? RED : "#EFEBE1",
+      backClick: (e) => {
+        const open = v === "their_turn" || v === "our_turn";
+        const live = hd && ((this.state.logged || []).length > 0 || hd.from === "survey");
+        if (open && live && !this.state.pausing) { if (e && e.preventDefault) e.preventDefault(); this.setState({ needOutcome: true }); }
+      },
+      // Leaving it open: the rounds stay on the record, the negotiation stays
+      // live, and a Scheduled call is booked for when they said to ring back.
+      pause: this.state.pausing ? (() => {
+        const day = this.state.pDay || "", at = this.state.pAt || "";
+        const fmt = (iso) => { const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          return m ? parseInt(m[3], 10) + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(m[2], 10) - 1] : ""; };
+        return {
+          title: ar ? "لا اتفاق بعد — متى نعاود الاتصال؟" : "No deal yet — when do we call back?",
+          note: ar ? "يبقى التفاوض مفتوحاً وكل الجولات على السجل. وتظهر مكالمة مجدولة في قائمتي في ذلك الوقت."
+                   : "The negotiation stays open and every round stays on the record. A Scheduled call shows in my list at that time.",
+          dayLabel: ar ? "اليوم" : "Day", atLabel: ar ? "الساعة" : "Time",
+          day, at,
+          setDay: (e) => this.setState({ pDay: e.target.value }),
+          setAt: (e) => this.setState({ pAt: e.target.value }),
+          ...(() => {
+            const q = this.state.pQuick || "", other = !!this.state.pOther;
+            const iso = (n) => { const d = window.ZEITCO.dateIn(n); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+            const chip = (on) => ({ bg: on ? "#2C5578" : "#fff", colour: on ? "#fff" : "#10231C", border: on ? "#2C5578" : "#8A9188" });
+            const DAYS = [{ k: "today", n: 0, en: "Later today", ar: "لاحقاً اليوم" }, { k: "tomorrow", n: 1, en: "Tomorrow", ar: "غداً" },
+              { k: "two", n: 2, en: "In 2 days", ar: "بعد يومين" }, { k: "week", n: 7, en: "Next week", ar: "الأسبوع القادم" }];
+            const times = [{ k: "", label: ar ? "أي وقت" : "Any time", face: "inherit" }]
+              .concat(["10:00", "12:00", "14:00", "16:00", "18:00"].map((h) => ({ k: h, label: h, face: "'IBM Plex Mono',monospace" })));
+            return {
+              days: DAYS.map((d) => Object.assign({ label: (ar ? d.ar : d.en) + (d.n ? " · " + fmt(iso(d.n)) : ""),
+                pick: () => this.setState({ pQuick: d.k, pDay: iso(d.n) }) }, chip(q === d.k))),
+              pickLabel: ar ? "اختر تاريخاً" : "Pick a date",
+              pickChip: chip(q === "pick"),
+              pickDate: () => this.setState({ pQuick: "pick", pDay: q === "pick" ? day : "" }),
+              showCalendar: q === "pick",
+              times: times.map((h) => Object.assign({ label: h.label, face: h.face, line: "solid",
+                pick: () => this.setState({ pAt: h.k, pOther: false }) }, chip(!other && at === h.k)))
+                .concat([Object.assign({ label: ar ? "وقت آخر" : "Other time", face: "inherit", line: "dashed",
+                  pick: () => this.setState({ pOther: true }) }, chip(other))]),
+              showClock: other,
+            };
+          })(),
+          ready: day ? (ar ? "جاهز." : "Ready.") : (ar ? "اختر اليوم الذي حددوه." : "Pick the day they gave."),
+          readyColour: day ? GREEN : "#B3261E",
+          goWord: ar ? "احجز المكالمة وأبقِ التفاوض مفتوحاً" : "Book the call and keep it open",
+          cancelWord: ar ? "إلغاء" : "Cancel",
+          cancel: () => this.setState({ pausing: false }),
+          go: () => {
+            if (!day) return;
+            const Z = window.ZEITCO, h2 = this.handoff;
+            const when = fmt(day) + (at ? " " + at : "");
+            const nw = new Date(), now = String(nw.getHours()).padStart(2, "0") + ":" + String(nw.getMinutes()).padStart(2, "0");
+            if (Z && Z.journal && h2 && !h2.isNew && h2.shop) {
+              const rounds = (h2.shop.rounds || []).concat((this.state.logged || []).filter((r) => r.amount !== null)
+                .map((r) => ({ side: r.side === "our" ? "us" : "them", amount: r.amount.toFixed(2), when: Z.asDate(window.ZEITCO.today.en + " " + now) })));
+              const theirs = rounds.filter((r) => r.side === "them").pop();
+              Z.journal.add({ op: "patch", shop: h2.id, fields: { price: "in_negotiation", rounds,
+                askedPrice: theirs ? theirs.amount : (h2.shop.askedPrice || null),
+                callBack: Z.asDate(when), tries: 0,
+                lastCall: { when: Z.asDate(window.ZEITCO.today.en + " " + now), by: { en: "H. Fawzy", ar: "ه. فوزي" }, result: Z.callOutcome.call_back } } });
+              Z.journal.add({ op: "call", call: { shop: h2.id, at: now, outcome: "call_back" } });
+            }
+            const line = (ar ? "لا اتفاق بعد. مكالمة مجدولة في " : "No deal yet. A call is booked for ") + when + ".";
+            const back = h2 && h2.back && /^agent\.dc\.html/.test(h2.back) ? h2.back : "agent.dc.html?tab=lead";
+            window.location.href = back + (back.indexOf("?") > -1 ? "&" : "?") + "banner=" + encodeURIComponent(line)
+              + "&bshop=" + encodeURIComponent(h2 && h2.shop ? this.tr(h2.shop.name) : "");
+          },
+        };
+      })() : null,
+      confirm: (() => {
+        const k = this.state.confirm;
+        if (!k) return null;
+        const lastAmt = lastLogged || "—";
+        if (k === "ask") return {
+          title: ar ? "لم تسجّل عرضنا بعد" : "You have not logged our offer yet",
+          body: ar
+            ? "آخر ما سُجِّل مطلبهم عند " + lastAmt + " ولم يُسجَّل عرض منّا بعده. يمكنك تسجيل مطلب جديد إن كان هذا ما حدث فعلاً — سيُسجَّل مطلبان متتاليان."
+            : "Their ask at " + lastAmt + " is the newest round and we have not answered it with an offer. You can still log a new ask if that is what happened — two of their asks will sit in a row.",
+          proceed: ar ? "نعم، سجّل مطلبهم" : "Yes, log their ask",
+        };
+        return {
+          title: ar ? "هذا عرض ثانٍ منّا" : "This is a second offer from us",
+          body: ar
+            ? "آخر ما سُجِّل عرضنا عند " + lastAmt + " ولم يردّوا بعد. تسجيل عرض آخر يعني أننا رفعنا سعرنا دون أن يطلبوا — وهذا يبقى في السجل."
+            : "Our offer at " + lastAmt + " is the newest round and they have not answered it. Logging another offer means we raised our own price unprompted — that stays on the record.",
+          proceed: ar ? "نعم، سجّل عرضنا" : "Yes, log our offer",
+        };
+      })(),
+      closingAt: this.state.closingAt,
+      closingLine: this.state.closingSide === "their"
+        ? (ar ? "بسعرهم " + (this.state.closingAt || "") + " ج.م للكجم — آخر مطلب لهم." : "At their price of " + (this.state.closingAt || "") + " EGP a Kg — their final ask.")
+        : (ar ? "بسعرنا " + (this.state.closingAt || "") + " ج.م للكجم — آخر عرض لنا." : "At our price of " + (this.state.closingAt || "") + " EGP a Kg — our last offer."),
+      sure: (() => {
+        const k = this.state.sure, at = this.state.sureAt;
+        if (!k) return null;
+        if (k === "reject") return {
+          title: ar ? "الانسحاب من هذا التفاوض؟" : "Walk away from this negotiation?",
+          body: ar
+            ? "لا اتفاق، ويبقى المحل بلا سعر. يبقى السجل كما هو، وأي محاولة لاحقة تكون تفاوضاً جديداً لا هذا."
+            : "No agreement, and the shop stays unpriced. This record stays as it is, and any later attempt is a new negotiation, not this one.",
+          proceed: ar ? "نعم، انسحب" : "Yes, walk away",
+          bg: "#FDF4F2", border: "#E8B4AE", color: "#B3261E", btn: RED,
+        };
+        const theirs = k === "their";
+        return {
+          title: ar
+            ? "الإغلاق على " + at + " ج.م للكجم؟"
+            : "Close at " + at + " EGP a Kg?",
+          body: theirs
+            ? (ar
+              ? "هذا قبول مطلبهم الأخير " + at + ". سيصبح المحل مورداً نشطاً بهذا السعر، وسيُطلب منك شروط الاتفاق بعد التأكيد."
+              : "This accepts their final ask of " + at + ". The shop becomes an Active Supplier at that price, and you will be asked for the agreement terms next.")
+            : (ar
+              ? "هذا تسجيل موافقتهم على عرضنا الأخير " + at + ". سيصبح المحل مورداً نشطاً بهذا السعر، وسيُطلب منك شروط الاتفاق بعد التأكيد."
+              : "This records that they took our last offer of " + at + ". The shop becomes an Active Supplier at that price, and you will be asked for the agreement terms next."),
+          proceed: ar ? "نعم، أكمل" : "Yes, carry on",
+          bg: "#F4FAF6", border: "#BFD8C9", color: "#16483A", btn: GREEN,
+        };
+      })(),
+      sureProceed: () => {
+        const k = this.state.sure;
+        if (k === "reject") { this.setState({ sure: null, view: "rejected", closedWhen: this.stamp() }); return; }
+        this.setState({ sure: null, closing: true, closingAt: this.state.sureAt, closingFrom: v, closingSide: k });
+      },
+      sureCancel: () => this.setState({ sure: null, sureAt: null }),
+      confirmProceed: () => this.doLog(this.state.confirm, parseFloat(this.state.amount)),
+      confirmCancel: () => this.setState({ confirm: null }),
+      amount: this.state.amount,
+      setAmount: (e) => this.setState({ amount: e.target.value }),
+      error: this.state.error === "need_amount"
+        ? (ar ? "اكتب المبلغ أولاً — كل جولة تُسجَّل بمبلغها." : "Type the amount first — every round is logged with its figure.") : null,
+      closing: this.state.closing,
+      // Frequency and day(s) are required: the collection cannot be set up without them.
+      confirmClose: () => {
+        const ok = this.state.freq && this.state.day1 && (this.state.freq !== "twice_week" || this.state.day2);
+        if (!ok) { this.setState({ termsError: true }); return; }
+        this.setState({ closing: false, termsError: false, view: "accepted", closedWhen: this.stamp() });
+        // The agreement goes on the outlet for every screen to see: a Supplier
+        // at this price, collecting on the days just chosen.
+        const Z = window.ZEITCO, h2 = this.handoff;
+        if (Z && Z.journal && h2 && !h2.isNew && h2.shop) {
+          const fw = { weekly: "weekly", twice_week: "twice a week", fortnightly: "every two weeks", monthly: "monthly" }[this.state.freq];
+          const days = this.state.freq === "twice_week" ? this.state.day1 + " and " + this.state.day2 : this.state.day1;
+          const cd = days + ", " + fw;
+          const nw = new Date(), at = String(nw.getHours()).padStart(2, "0") + ":" + String(nw.getMinutes()).padStart(2, "0");
+          Z.journal.add({ op: "patch", shop: h2.id, fields: { stage: "supplier", price: "agreed", activity: "new",
+            agreedPrice: this.acceptedAt().toFixed(2), agreedOn: Z.asDate(window.ZEITCO.today.en), collectionDay: { en: cd, ar: cd },
+            ...(this.volDraft() ? { volume: parseInt(this.volDraft(), 10) } : {}),
+            payment: this.state.payTerm || "cash",
+            tries: 0, lastCall: { when: Z.asDate(window.ZEITCO.today.en + " " + at), by: { en: "H. Fawzy", ar: "ه. فوزي" }, result: Z.callOutcome.agreed } } });
+          Z.journal.add({ op: "call", call: { shop: h2.id, at, outcome: "agreed" } });
+        }
+      },
+      termsError: this.state.termsError
+        ? (ar ? "اختر التكرار واليوم المفضل قبل إغلاق الاتفاق." : "Pick the collection frequency and preferred day before closing the deal.") : "",
+      cancelClose: () => this.setState({ closing: false }),
+      termFields: [
+        { label: ar ? "التكرار" : "Collection Frequency", isSelect: true, required: true, value: this.state.freq || "",
+          set: (e) => this.setState({ freq: e.target.value, day2: e.target.value === "twice_week" ? this.state.day2 : "" }),
+          options: [["", ar ? "— اختر —" : "— choose —"], ["weekly", ar ? "أسبوعياً" : "Weekly"], ["twice_week", ar ? "مرتين أسبوعياً" : "Twice a week"],
+            ["fortnightly", ar ? "كل أسبوعين" : "Every two weeks"], ["monthly", ar ? "شهرياً" : "Monthly"]].map(([value, label]) => ({ value, label })) },
+        { label: ar ? "اليوم المفضل" : "Preferred Day", isSelect: true, required: true, value: this.state.day1 || "",
+          set: (e) => this.setState({ day1: e.target.value }), options: this.dayOpts(ar, "") },
+      ].concat(this.state.freq === "twice_week" ? [
+        { label: ar ? "اليوم المفضل الثاني" : "Second Preferred Day", isSelect: true, required: true, value: this.state.day2 || "",
+          set: (e) => this.setState({ day2: e.target.value }), options: this.dayOpts(ar, this.state.day1) },
+      ] : []).concat([
+        { label: ar ? "نوع الاتفاق" : "Deal Type", isChoice: true,
+          options: [["recurring", ar ? "متكرر" : "Recurring"], ["spot", ar ? "فوري" : "Spot"]].map(([k, lbl]) => ({
+            label: lbl, pick: () => this.setState({ dealType: k }),
+            bg: this.state.dealType === k ? GREEN : "#fff", color: this.state.dealType === k ? "#fff" : "#55655D",
+          })) },
+        { label: ar ? "طريقة الدفع" : "How They Are Paid", isChoice: true,
+          options: [["cash", ar ? "نقداً عند التحصيل" : "Cash at collection"], ["postpaid", ar ? "آجل — فاتورة" : "On account — invoiced"]].map(([k, lbl]) => ({
+            label: lbl, pick: () => this.setState({ payTerm: k }),
+            bg: (this.state.payTerm || "cash") === k ? GREEN : "#fff", color: (this.state.payTerm || "cash") === k ? "#fff" : "#55655D",
+          })) },
+        { label: ar ? "الشكل" : "Term Type", isChoice: true,
+          options: [["verbal", ar ? "شفهي" : "Verbal"], ["written", ar ? "مكتوب" : "Written"]].map(([k, lbl]) => ({
+            label: lbl, pick: () => this.setState({ termType: k }),
+            bg: this.state.termType === k ? GREEN : "#fff", color: this.state.termType === k ? "#fff" : "#55655D",
+          })) },
+        { label: ar ? "الكمية الشهرية التي يقولونها (كجم)" : "Monthly Volume They Say (Kg)", isText: true,
+          value: this.volDraft(), placeholder: "—",
+          set: (e) => this.setState({ vol: String(e.target.value).replace(/[^0-9]/g, "").slice(0, 5) }) },
+      ]).map((x) => Object.assign({ isSelect: false, isChoice: false, isText: false, options: [], value: "", set: null, required: false, placeholder: "" }, x)),
+      rules: RULES.map((r) => ({ head: this.tr(r.head), body: this.tr(r.body) })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

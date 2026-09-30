@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#10231C; text-decoration:underline; }
+</style>
+</helmet>
+<div style="max-width:880px;margin:0 auto;padding:40px 20px 60px;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1F5240">Zeitco · Test Build</span>
+    <h1 style="margin:0;font-size:28px;font-weight:700;color:#10231C">Call center, operations and driver</h1>
+    <p style="margin:0;font-size:15px;line-height:1.55;text-wrap:pretty">This is a working prototype with sample data. Everything you do is kept only in this browser tab, and closing the tab starts you fresh. Other testers can't see what you do.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+    <a href="agent.dc.html" style="display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:16px 18px;text-decoration:none">
+      <span style="font-size:17px;font-weight:700;color:#10231C">Call-center agent →</span>
+      <span style="font-size:13px;color:#55655D;text-wrap:pretty">My Day, calls to make, recording results, surveys by phone, negotiation, placing orders.</span>
+    </a>
+    <a href="operations.dc.html" style="display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:16px 18px;text-decoration:none">
+      <span style="font-size:17px;font-weight:700;color:#10231C">Operations →</span>
+      <span style="font-size:13px;color:#55655D;text-wrap:pretty">Put the agents' orders on trucks, set the stop order, see the day on the road and the end-of-day totals.</span>
+    </a>
+    <a href="driver.dc.html" style="display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:16px 18px;text-decoration:none">
+      <span style="font-size:17px;font-weight:700;color:#10231C">Driver's phone →</span>
+      <span style="font-size:13px;color:#55655D;text-wrap:pretty">Accept the day's stops, then weigh and pay, or say why a stop didn't go through. Best opened on a phone.</span>
+    </a>
+    <a href="surveyor.dc.html" style="display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:16px 18px;text-decoration:none">
+      <span style="font-size:17px;font-weight:700;color:#10231C">Surveyor →</span>
+      <span style="font-size:13px;color:#55655D;text-wrap:pretty">The surveyor's phone app, in Arabic or English. Pre-surveys sent to him, the six-step survey with GPS check-in, revisits. Best opened on a phone.</span>
+    </a>
+    <a href="hr.dc.html" style="display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:16px 18px;text-decoration:none">
+      <span style="font-size:17px;font-weight:700;color:#10231C">HR →</span>
+      <span style="font-size:13px;color:#55655D;text-wrap:pretty">People, leave, payroll. Leave → Call-Center Cover marks an agent away and names who manages his outlets.</span>
+    </a>
+    <a href="approvals.dc.html" style="display:flex;flex-direction:column;gap:4px;background:#fff;border:1px dashed #8A9188;border-radius:12px;padding:16px 18px;text-decoration:none">
+      <span style="font-size:17px;font-weight:700;color:#10231C">Price approvals (early) →</span>
+      <span style="font-size:13px;color:#55655D;text-wrap:pretty">For the Senior or Financial Manager. It will move into their own screens later.</span>
+    </a>
+  </div>
+
+  <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <h2 style="margin:0;font-size:16px;font-weight:700;color:#10231C">A full loop to try</h2>
+    <ol style="margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:5px;font-size:14px;line-height:1.5">
+      <li>As the agent, open a supplier with a collection call, answer it, and place a collection order.</li>
+      <li>In Operations, find the order under Not Placed Yet, press Place, then Give it to him on a driver.</li>
+      <li>Open the driver's phone as that driver (driver.dc.html?truck=t1 to t6, in the order of the trucks in Operations), press Accept today's stops, open the stop, and record the weight, or say why it didn't go through.</li>
+      <li>Back as the agent, see the order Executed, or see it in Came Back From The Road with the driver's reason.</li>
+      <li>Surveyor loop: as the agent, add a New Pre-Survey and pick "Send it to a surveyor". Open the surveyor app, go to Pre-surveys, press Survey, go through the six steps and save. It comes back to the agent as a verification call.</li>
+    </ol>
+    <p style="margin:0;font-size:13px;color:#55655D;text-wrap:pretty">Open the screens in the same browser tab, one after another, so they share the same session. Every screen has an EN / ع switch. The dates follow the real calendar: the sample data is always set around today. Driver: add ?truck=t2 (t1–t6) to choose who you are. Surveyor: ?surveyor=A.%20Sameh.</p>
+  </section>
+</div>
+</x-dc>
+</body>
+</html>

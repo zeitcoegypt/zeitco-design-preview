@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="data.js"></script>
+<script src="rules.js"></script>
+<script src="calls.js"></script>
+<script src="shell.js"></script>
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+  .num { font-family:"IBM Plex Mono",monospace; unicode-bidi:isolate; direction:ltr; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="width:100%;max-width:1400px;margin:0 auto;padding:0 0 44px;font-family:{{ face }};-webkit-font-smoothing:antialiased;color:#3A4A43">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <div style="display:flex;align-items:stretch;gap:14px;padding:0 20px;height:56px">
+      <a href="agent.dc.html" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;padding-inline-end:20px;border-inline-end:1px solid #EFEBE1;flex-shrink:0">
+        <img src="../public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto;flex-shrink:0">
+        Zeitco
+      </a>
+      <nav style="display:flex;align-items:stretch;gap:2px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none">
+        <sc-for list="{{ shellTabs }}" as="t" hint-placeholder-count="8">
+          <a href="{{ t.href }}" style="display:flex;align-items:center;white-space:nowrap;padding:0 10px;border:0;border-bottom:2.5px solid transparent;background:transparent;color:#55655D;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ t.label }}</a>
+        </sc-for>
+      </nav>
+      <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+          <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden">
+            <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+              <button type="button" onClick="{{ l.go }}" style="border:0;height:26px;padding:0 10px;background:{{ l.bg }};color:{{ l.colour }};font-family:{{ l.face }};font-size:12px;font-weight:600;cursor:pointer">{{ l.short }}</button>
+            </sc-for>
+          </div>
+          <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;color:{{ roleColour }};background:{{ roleBg }};white-space:nowrap">{{ roleLabel }}</span>
+          <a href="Start.dc.html" style="font-size:13px;font-weight:500;color:#55655D;white-space:nowrap">{{ logoutWord }}</a>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 24px 9px;border-top:1px solid #EFEBE1;flex-wrap:wrap">
+      <a href="{{ backHref }}" style="font-size:12px;font-weight:600;color:#1F5240;white-space:nowrap">{{ backLabel }}</a>
+      <span style="font-size:12px;color:#63736A;min-width:0">{{ crumb }}</span>
+      <span style="flex:1;min-width:0"></span>
+      <select value="{{ pick }}" onChange="{{ setShop }}" style="height:26px;max-width:210px;border:1px dashed #C6BFB0;border-radius:8px;background:#fff;padding:0 8px;font-family:inherit;font-size:12px;color:#55655D">
+        <sc-for list="{{ all }}" as="o" hint-placeholder-count="8">
+          <option value="{{ o.value }}">{{ o.label }}</option>
+        </sc-for>
+      </select>
+    </div>
+  </header>
+
+  <div style="padding:13px 20px 0">
+
+    <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 13px;margin-bottom:9px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px 16px;flex-wrap:wrap">
+        <h1 style="margin:0;font-size:19px;font-weight:700;color:#10231C;min-width:0">{{ name }}</h1>
+        <span dir="{{ subDir }}" style="font-family:{{ subFace }};font-size:15px;font-weight:600;color:#55655D;min-width:0;text-align:end">{{ sub }}</span>
+      </div>
+      <div style="margin-top:11px;padding-top:9px;border-top:1px solid #EFEBE1">
+        <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;margin-bottom:6px">{{ factsWord }}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:0 20px">
+        <sc-for list="{{ facts }}" as="f" hint-placeholder-count="7">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+            <span style="color:#55655D;flex-shrink:0">{{ f.label }}</span>
+            <span style="font-family:{{ f.face }};font-weight:500;color:{{ f.colour }};text-align:end;min-width:0;overflow-wrap:anywhere">{{ f.value }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:11px">
+        <span style="flex:1;min-width:0"></span>
+        <a href="{{ telHref }}" style="height:28px;display:inline-flex;align-items:center;gap:6px;border-radius:8px;background:#1F5240;color:#fff;font-size:12px;font-weight:600;padding:0 12px;white-space:nowrap">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11 11 0 0 0 3.4.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11 11 0 0 0 .55 3.4 1 1 0 0 1-.25 1Z"></path></svg>
+          {{ callWord }}
+        </a>
+        <sc-if value="{{ canOrder }}" hint-placeholder-val="{{ false }}">
+          <a href="{{ agentHref }}" style="height:28px;display:inline-flex;align-items:center;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-size:12px;font-weight:600;padding:0 12px;white-space:nowrap">{{ orderWord }}</a>
+        </sc-if>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid #EFEBE1">
+        <span style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;white-space:nowrap">{{ standsWord }}</span>
+        <span style="font-size:13px;font-weight:500;color:{{ standsColour }};min-width:0;text-wrap:pretty">{{ stands }}</span>
+        <span style="flex:1;min-width:0"></span>
+        <span style="font-size:12px;color:#55655D;min-width:0;text-wrap:pretty">{{ rail.next }}</span>
+      </div>
+    </section>
+
+    <sc-if value="{{ callWhy }}" hint-placeholder-val="{{ false }}">
+      <section style="background:{{ callWhy.bg }};border:1px solid {{ callWhy.border }};border-radius:12px;padding:11px 15px 12px;margin-top:9px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <h2 style="margin:0;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8A9188">{{ callWhy.label }}</h2>
+          <span style="border-radius:999px;padding:2px 10px;background:{{ callWhy.tagBg }};color:{{ callWhy.tagInk }};font-size:11px;font-weight:700">{{ callWhy.tag }}</span>
+          <span style="margin-inline-start:auto;font-size:12px;font-weight:600;color:{{ callWhy.colour }}">{{ callWhy.due }}</span>
+        </div>
+        <p style="margin:4px 0 0;font-size:14px;font-weight:600;color:{{ callWhy.colour }};text-wrap:pretty">{{ callWhy.why }}</p>
+        <p style="margin:6px 0 0;font-size:12px;color:#55655D;text-wrap:pretty"><span style="font-weight:700;color:#10231C">{{ callWhy.goalLabel }}:</span> {{ callWhy.goal }}</p>
+      </section>
+    </sc-if>
+
+    <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px;margin-bottom:9px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:11px">
+        <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ storyTitle }}</h2>
+        <span style="font-size:12px;color:#63736A;text-wrap:pretty">{{ storyNote }}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px">
+        <sc-for list="{{ tiles }}" as="s" hint-placeholder-count="7">
+          <button type="button" onClick="{{ s.go }}" style="display:block;text-align:start;width:100%;min-width:0;background:{{ s.bg }};border:1px solid {{ s.border }};border-inline-start:3px solid {{ s.edge }};border-radius:9px;padding:9px 10px 10px;font-family:inherit;cursor:pointer">
+            <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;line-height:1.25;text-wrap:pretty">{{ s.label }}</span>
+            <span style="display:flex;align-items:baseline;gap:5px;margin-top:5px">
+              <span class="{{ s.cls }}" style="font-size:{{ s.size }};font-weight:600;color:{{ s.colour }};line-height:1.15;min-width:0;text-wrap:pretty">{{ s.value }}</span>
+              <span style="font-size:11px;color:#63736A;min-width:0">{{ s.unit }}</span>
+            </span>
+            <span style="display:block;font-size:11px;color:{{ s.noteColour }};margin-top:6px;text-wrap:pretty">{{ s.note }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display:flex;flex-wrap:wrap;gap:2px 0;border-bottom:1px solid #E4DFD4;min-width:0;margin-bottom:11px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+        <button type="button" onClick="{{ t.go }}" style="flex:0 0 auto;display:flex;align-items:baseline;gap:5px;border:0;background:transparent;padding:7px 10px;border-bottom:2.5px solid {{ t.edge }};margin-bottom:-1px;color:{{ t.colour }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">
+          {{ t.label }}<span class="num" style="font-size:11px;font-weight:600;color:{{ t.countColour }}">{{ t.count }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ panel.empty }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:22px 18px;text-align:center">
+        <p style="margin:0;font-size:13px;color:#55655D;text-wrap:pretty">{{ panel.empty }}</p>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ panel.pairs }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:10px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ panel.title }}</h2>
+          <span style="font-size:12px;color:#63736A;text-wrap:pretty">{{ panel.note }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2px 20px">
+          <sc-for list="{{ panel.pairs }}" as="p" hint-placeholder-count="8">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid #EFEBE1;font-size:13px">
+              <span style="color:#55655D;flex-shrink:0">{{ p.label }}</span>
+              <span style="font-family:{{ p.face }};font-weight:500;color:{{ p.colour }};text-align:end;min-width:0;overflow-wrap:anywhere">{{ p.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ panel.rows }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ panel.rowsTitle }}</h2>
+          <span style="font-size:12px;color:#63736A">{{ panel.meta }}</span>
+        </div>
+        <p style="margin:0 0 11px;font-size:12px;color:#55655D;text-wrap:pretty">{{ panel.rowsNote }}</p>
+        <div style="overflow-x:auto">
+          <div style="min-width:{{ panel.minWidth }}">
+            <div style="display:grid;grid-template-columns:{{ panel.cols }};gap:10px;padding:0 0 6px;border-bottom:1px solid #EFEBE1">
+              <sc-for list="{{ panel.heads }}" as="h" hint-placeholder-count="5">
+                <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:{{ h.align }}">{{ h.label }}</span>
+              </sc-for>
+            </div>
+            <sc-for list="{{ panel.rows }}" as="r" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:{{ panel.cols }};gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid #F4F1EA;background:{{ r.bg }}">
+                <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5">
+                  <span style="min-width:0;font-size:{{ c.size }};font-weight:{{ c.weight }};color:{{ c.colour }};text-align:{{ c.align }};font-family:{{ c.face }};text-wrap:pretty">{{ c.text }}</span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <p style="margin:10px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ panel.foot }}</p>
+      </section>
+    </sc-if>
+
+    <section style="background:#F6F2E9;border:1px solid #EFEBE1;border-radius:12px;padding:11px 15px 12px;margin-top:9px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:8px">
+        <h2 style="margin:0;font-size:13px;font-weight:700;color:#10231C">{{ rail.powersTitle }}</h2>
+        <span style="font-size:11px;color:#8A9188;text-wrap:pretty">{{ rail.powersNote }}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:4px 16px">
+        <sc-for list="{{ rail.powers }}" as="p" hint-placeholder-count="8">
+          <span style="display:flex;align-items:baseline;gap:7px;font-size:11px;color:{{ p.colour }};text-wrap:pretty">
+            <span style="flex-shrink:0;font-weight:700">{{ p.mark }}</span>{{ p.label }}
+          </span>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-top:9px;padding-top:8px;border-top:1px solid #E4DFD4;flex-wrap:wrap">
+        <span style="font-size:11px;color:#55655D;min-width:0;text-wrap:pretty">{{ rail.ownership }}</span>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  state = { lang: null, tab: "overview", shop: null };
+
+  componentDidMount() {
+    let want = null;
+    try { want = new URLSearchParams(window.location.search).get("shop"); this.back = new URLSearchParams(window.location.search).get("back"); } catch (e) {}
+    this.setState({ lang: window.ZSHELL ? ZSHELL.lang() : "ar", shop: want });
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  get lang() { return this.state.lang || "ar"; }
+  t(v) { return v && typeof v === "object" && !Array.isArray(v) ? (v[this.lang] || v.en || "") : v; }
+
+  // Everything that has happened to this shop, derived from what is stored
+  // rather than kept as a second list that could disagree with it.
+  timeline(s) {
+    const t = (v) => this.t(v);
+    const ar = this.lang === "ar";
+    const ev = [];
+    const add = (when, kind, what, colour) => ev.push({ when: t(when) || "", kind, what, colour });
+    if (s.addedOn) add(s.addedOn, ar ? "أُضيف" : "Added",
+      (ar ? "أضافه " : "Added by ") + t(s.addedBy), "#8A9188");
+    if (s.surveyedOn) add(s.surveyedOn, ar ? "مُسح" : "Surveyed",
+      (ar ? "زاره " : "Visited by ") + t(s.surveyor) + " · " + s.gps + " · " + s.complete + "%", "#2C5578");
+    if (s.verifiedOn) add(s.verifiedOn, ar ? "تم التحقق" : "Verified",
+      (ar ? "مكالمة تحقق · أصبح عميلاً محتملاً وأسنده " : "Verifying call · became a Lead, held by ") + t(s.agent), "#1F5240");
+    if (s.phoneSurveyOn) add(s.phoneSurveyOn, ar ? "مسح بالهاتف" : "Phone survey",
+      (ar ? "مسحه " : "Filled in by ") + t(s.agent) +
+      (ar ? " بالهاتف · أصبح عميلاً محتملاً دون مكالمة تحقق" : " on the phone · became a Lead with no verification call"), "#1F5240");
+    if (s.locationDue && !s.verifiedOn) add(s.locationDue,
+      ar ? "الموقع" : "Location",
+      (window.ZEITCO.locationLate(s)
+        ? (ar ? "غير مثبت · متأخر · مع " : "Unproved · overdue · with ")
+        : (ar ? "غير مثبت · مستحق · مع " : "Unproved · due · with ")) + t(s.locationWith),
+      window.ZEITCO.locationLate(s) ? "#B3261E" : "#B3261E");
+    (s.rounds || []).forEach((r) => add(r.when,
+      r.side === "us" ? (ar ? "عرضنا" : "Our offer") : (ar ? "مطلبهم" : "Their ask"),
+      r.amount + (ar ? " ج.م · " : " EGP · ") + t(r.who), r.side === "us" ? "#2C5578" : "#B3261E"));
+    if (s.agreedOn) add(s.agreedOn, ar ? "اتُّفق" : "Agreed",
+      s.agreedPrice + (ar ? " ج.م للكجم · أصبح مورداً" : " EGP a Kg · became a Supplier"), "#1F5240");
+    if (s.firstOrderOn) add(s.firstOrderOn, ar ? "أول طلب" : "First order",
+      ar ? "خرج أول طلب تحصيل" : "The first collection order went out", "#2C5578");
+    (s.collections || []).slice().reverse().forEach((c) => add(c.when, ar ? "تحصيل" : "Collected",
+      c.kg + (ar ? " كجم بسعر " : " Kg at ") + c.price, "#1F5240"));
+    if (s.askedOn) add(s.askedOn, ar ? "طلبوا زيادة" : "Asked for more",
+      s.askedPrice + (ar ? " ج.م · صعد إلى " : " EGP · sent to the ") + t(s.withApprover || { en: "Financial Manager", ar: "المدير المالي" }), "#B3261E");
+    if (s.counterOn) add(s.counterOn, ar ? "قابلناهم" : "Countered",
+      s.counterPrice + (ar ? " ج.م من الإدارة" : " EGP from management"), "#2C5578");
+    if (s.refusedOn) add(s.refusedOn, ar ? "رُفض" : "Refused",
+      ar ? "رفضت الإدارة · السعر القديم قائم" : "Management refused · the old price stands", "#B3261E");
+    if (s.inactiveSince) add(s.inactiveSince, ar ? "توقفوا" : "Stopped",
+      t(this.reasonWord(s.inactiveReason)), "#B3261E");
+    if (s.failedReason) add(s.firstOrderOn, ar ? "لم يورّدوا" : "Did not deliver",
+      t(this.reasonWord(s.failedReason)), "#B3261E");
+    return ev;
+  }
+
+  reasonWord(key) {
+    const R = window.ZRULES;
+    const hit = R.whyStopped.concat(R.whyNever).filter((x) => x.key === key)[0];
+    return hit ? hit.label : { en: "no reason given", ar: "بلا سبب" };
+  }
+
+  renderVals() {
+    const D = window.ZEITCO, R = window.ZRULES, S = window.ZSHELL;
+    if (!D || !R || !S) return { crumb: "Loading…" };
+    const ar = this.lang === "ar", t = (v) => this.t(v);
+    const C = S.ink;
+    const shop = (this.state.shop && D.byId(this.state.shop)) || D.at("supplier")[0];
+    const tab = this.state.tab;
+
+    const cell = (text, o) => Object.assign({ text, size: "13px", weight: "400",
+      colour: C.INK, align: "start", face: "inherit" }, o || {});
+    const mono = { face: "'IBM Plex Mono',monospace" };
+    const pair = (label, value, colour, face) => ({ label, value, colour: colour || C.INK, face: face || "inherit" });
+    const many = (n, one, few, plural) => {
+      if (!ar) return n + " " + (n === 1 ? one : plural);
+      if (n === 1) return one;
+      if (n === 2) return few;
+      return n <= 10 ? n + " " + plural : n + " " + one;
+    };
+
+    const TABS = [
+      ["overview", ar ? "نظرة عامة" : "Overview"],
+      ["survey", ar ? "المسح" : "Survey"],
+      ["agreement", ar ? "الاتفاق" : "Agreement"],
+      ["negotiation", ar ? "التفاوض" : "Negotiation"],
+      ["orders", ar ? "الطلبات" : "Orders"],
+      ["collections", ar ? "التحصيلات" : "Collections"],
+      ["calls", ar ? "المكالمات" : "Calls"],
+      ["history", ar ? "السجل" : "History"],
+    ];
+
+    const events = this.timeline(shop);
+    const isCall = (e) => /Verified|Our offer|Their ask|Agreed|Asked for more|Countered|Refused|تم التحقق|عرضنا|مطلبهم|اتُّفق|طلبوا زيادة|قابلناهم|رُفض/.test(e.kind);
+    const callCount = events.filter(isCall).length;
+    let panel = {};
+
+    if (tab === "overview") {
+      panel = {
+        title: ar ? "المحل" : "The shop",
+        note: ar ? "من هم، وأين، ومن يمسك بهم." : "Who they are, where, and who holds them.",
+        pairs: [
+          pair(ar ? "من نطلبه" : "Who we ask for", t(shop.contact)),
+          pair(ar ? "الهاتف" : "Phone", shop.phone, C.INK, "'IBM Plex Mono',monospace"),
+          pair(ar ? "المنطقة" : "Area", t(shop.area), C.MUTED),
+          pair(ar ? "ماذا يطبخون" : "What they cook", t(shop.type), C.MUTED),
+          shop.agent ? pair(ar ? "الموظف" : "Agent", t(shop.agent)) : null,
+          shop.surveyor ? pair(ar ? "المساح" : "Surveyor", t(shop.surveyor)) : null,
+          shop.addedBy ? pair(ar ? "أضافه" : "Added by", t(shop.addedBy), C.MUTED) : null,
+          shop.verifiedOn ? pair(ar ? "تم التحقق" : "Verified", t(shop.verifiedOn), C.MUTED) : null,
+          shop.phoneSurveyOn ? pair(ar ? "مسح بالهاتف" : "Phone survey", t(shop.phoneSurveyOn), C.MUTED) : null,
+          D.locationUnproved(shop)
+            ? pair(ar ? "الموقع" : "Location",
+                (D.locationLate(shop)
+                  ? (ar ? "غير مثبت · متأخر منذ " : "Unproved · overdue since ")
+                  : (ar ? "غير مثبت · حتى " : "Unproved · due ")) + t(shop.locationDue) +
+                " · " + t(shop.locationWith),
+                D.locationLate(shop) ? C.RED : C.AMBER)
+            : null,
+          shop.tries ? pair(ar ? "محاولات بلا رد" : "Tries, no answer", String(shop.tries), C.RED) : null,
+        ].filter(Boolean),
+      };
+    } else if (tab === "survey") {
+      const rows = D.surveyRows ? D.surveyRows(shop, ar) : [];
+      panel = rows.length ? {
+        title: ar ? "إجابات المسح" : "Survey answers",
+        note: ar ? "نفس الأسئلة سواء أُجري المسح بالهاتف أو بزيارة مساح." : "The same questions whether it was done by phone or by a surveyor's visit.",
+        pairs: rows.map((r) => pair(r.label, r.value)),
+      } : { empty: ar ? "لا مسح بعد. يُملأ عند الرد على المسح بالهاتف أو بزيارة مساح." : "No survey yet. It is filled when the owner answers a phone survey or a surveyor visits." };
+    } else if (tab === "agreement") {
+      panel = shop.agreedPrice ? {
+        title: ar ? "الاتفاق" : "The agreement",
+        note: ar
+          ? "ما اتُّفق عليه، ومتى، وكيف نصل إلى الباب. وتغييره ليس بيد الموظف."
+          : "What was agreed, when, and how we reach the door. Changing it is not the agent's to do.",
+        pairs: [
+          pair(ar ? "السعر المتفق" : "Agreed price", shop.agreedPrice + (ar ? " ج.م للكجم" : " EGP a Kg"), C.GREEN, "'IBM Plex Mono',monospace"),
+          pair(ar ? "متى اتُّفق" : "Agreed on", t(shop.agreedOn), C.MUTED),
+          pair(ar ? "يوم التحصيل" : "Collection day", t(shop.collectionDay)),
+          pair(ar ? "طريقة الدفع" : "How they are paid", shop.payment === "postpaid" ? (ar ? "آجل — فاتورة" : "On account — invoiced") : (ar ? "نقداً عند التحصيل" : "Cash at collection")),
+          pair(ar ? "مندوب تحصيل الزيت" : "Oil Collection Representative", t(shop.rep)),
+          pair(ar ? "رقمه" : "Their number", shop.repPhone, C.INK, "'IBM Plex Mono',monospace"),
+          pair(ar ? "من يغيّر السعر" : "Who may change it", t(R.approvers.price), C.MUTED),
+        ],
+      } : { empty: ar
+        ? "لا اتفاق بعد. ولا يوجد اتفاق حتى يُتفق على سعر ويصبح المحل مورداً."
+        : "No agreement yet. There is none until a price is agreed and the shop becomes a Supplier." };
+    } else if (tab === "negotiation") {
+      const rounds = this.negRows(shop, ar, C, cell, mono, t);
+      panel = rounds.length ? {
+        rowsTitle: ar ? "كل جولة" : "Every round",
+        meta: t(D.label.price[shop.price]),
+        rowsNote: R.priceIsMine(shop)
+          ? (ar ? "هذا السعر لي حتى " + R.ceiling.toFixed(2) + " ج.م. وما فوقه قرار ليس لي."
+                : "This price is mine up to " + R.ceiling.toFixed(2) + " EGP. Above that it is not my decision.")
+          : (ar ? "السعر متفق، فالتفاوض مغلق. ولا يفتحه إلا المحل بطلب زيادة."
+                : "A price is agreed, so the negotiation is closed. Only the shop reopens it, by asking for more."),
+        cols: "92px minmax(120px,0.8fr) 80px minmax(160px,1.4fr)",
+        minWidth: "560px",
+        heads: [{ label: ar ? "متى" : "When", align: "start" },
+          { label: ar ? "ماذا" : "What", align: "start" },
+          { label: ar ? "المبلغ" : "Amount", align: "end" },
+          { label: ar ? "من / ملاحظة" : "Who, and the note", align: "start" }],
+        rows: rounds,
+        foot: ar ? "لا شيء هنا يُعدَّل. الجولة المسجَّلة تبقى." : "Nothing here is edited. A round logged stays logged.",
+      } : { empty: ar
+        ? "لم يبدأ تفاوض. ولا يبدأ قبل أن يصبح المحل عميلاً محتملاً."
+        : "No negotiation has started. None does until the shop is a Lead." };
+    } else if (tab === "orders") {
+      const orders = (shop.collections || []).map((c, i) => ({
+        bg: "transparent",
+        cells: [
+          cell("ORD-" + shop.id.slice(3) + "-" + String((shop.collections.length - i)).padStart(2, "0"),
+            Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+          cell(t(c.when), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+          cell(c.kg + (ar ? " كجم" : " Kg"), Object.assign({ align: "end", weight: "600" }, mono)),
+          cell(c.price, Object.assign({ align: "end" }, mono)),
+          cell(ar ? "جُمع" : "Collected", { size: "12px", weight: "600", colour: C.GREEN }),
+        ],
+      }));
+      if (shop.activity === "first_order_out") orders.unshift({ bg: "#FDFAF3", cells: [
+        cell("ORD-" + shop.id.slice(3) + "-01", Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+        cell(t(shop.firstOrderOn), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+        cell("—", Object.assign({ align: "end", colour: C.FAINT }, mono)),
+        cell(shop.agreedPrice, Object.assign({ align: "end" }, mono)),
+        cell(ar ? "خرج · ننتظر" : "Out · waiting", { size: "12px", weight: "600", colour: C.AMBER }),
+      ] });
+      panel = orders.length ? {
+        rowsTitle: ar ? "طلبات التحصيل" : "Collection orders",
+        meta: many(orders.length, ar ? "طلب واحد" : "order", ar ? "طلبان" : "orders", ar ? "طلبات" : "orders"),
+        rowsNote: ar
+          ? "كل طلب أصدره موظف وذهب إلى العمليات. والتحصيل هو ما عاد به السائق."
+          : "Every order an agent raised and sent to Operations. The collection is what the driver came back with.",
+        cols: "140px 92px 84px 70px minmax(110px,0.8fr)",
+        minWidth: "560px",
+        heads: [{ label: ar ? "الطلب" : "Order", align: "start" },
+          { label: ar ? "متى" : "When", align: "start" },
+          { label: ar ? "الكمية" : "Quantity", align: "end" },
+          { label: ar ? "السعر" : "Price", align: "end" },
+          { label: ar ? "الحالة" : "State", align: "start" }],
+        rows: orders,
+        foot: ar
+          ? "أرقام الطلبات مشتقة من التحصيلات في هذا النموذج — والنظام الحقيقي يصدرها عند الطلب."
+          : "Order references are derived from the collections in this prototype — the real system issues them when the order is raised.",
+      } : { empty: ar
+        ? "لا طلبات. ولا يمكن إصدار طلب قبل الاتفاق على سعر."
+        : "No orders. None can be raised before a price is agreed." };
+    } else if (tab === "collections") {
+      const rows = (shop.collections || []).map((c) => ({
+        bg: "transparent",
+        cells: [
+          cell(t(c.when), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+          cell(c.kg + (ar ? " كجم" : " Kg"), Object.assign({ align: "end", weight: "600" }, mono)),
+          cell(c.price, Object.assign({ align: "end" }, mono)),
+          cell((c.kg * parseFloat(c.price)).toFixed(2) + (ar ? " ج.م" : " EGP"),
+            Object.assign({ align: "end", colour: C.MUTED }, mono)),
+        ],
+      }));
+      const kg = D.kg(shop);
+      panel = rows.length ? {
+        rowsTitle: ar ? "ما جُمع فعلاً" : "What was actually collected",
+        meta: kg.toLocaleString("en-US") + (ar ? " كجم في المجمل" : " Kg all told"),
+        rowsNote: ar
+          ? "الوزن عند المخزن، لا ما قاله السائق. وهذا ما يُدفع عليه."
+          : "Weighed at the warehouse, not what the driver said. This is what gets paid.",
+        cols: "110px 90px 72px 110px",
+        minWidth: "420px",
+        heads: [{ label: ar ? "متى" : "When", align: "start" },
+          { label: ar ? "الكمية" : "Quantity", align: "end" },
+          { label: ar ? "السعر" : "Price", align: "end" },
+          { label: ar ? "المدفوع" : "Paid", align: "end" }],
+        rows,
+        foot: ar ? "أول تحصيل موزون ومدفوع هو ما يجعل المورد نشطاً."
+                 : "The first collection weighed and paid is what makes a Supplier active.",
+      } : { empty: ar
+        ? "لا تحصيلات بعد. وحتى تصل أول حمولة، لم يعطنا هذا المحل شيئاً."
+        : "No collections yet. Until the first load arrives, this shop has given us nothing." };
+    } else if (tab === "calls") {
+      const calls = events.filter(isCall);
+      panel = calls.length ? {
+        rowsTitle: ar ? "كل مكالمة" : "Every call",
+        meta: many(calls.length, ar ? "مكالمة واحدة" : "call logged", ar ? "مكالمتان" : "calls logged", ar ? "مكالمات" : "calls logged"),
+        rowsNote: ar
+          ? "كل مكالمة انتهت إلى شيء. ومحاولة بلا رد لا تُسجَّل هنا — تُسجَّل كمحاولة."
+          : "Every call that came to something. A call that rang out is not here — it is counted as a try.",
+        cols: "92px minmax(120px,0.8fr) minmax(180px,1.6fr)",
+        minWidth: "520px",
+        heads: [{ label: ar ? "متى" : "When", align: "start" },
+          { label: ar ? "إلامَ انتهت" : "What it came to", align: "start" },
+          { label: ar ? "التفصيل" : "The detail", align: "start" }],
+        rows: calls.map((e) => ({ bg: "transparent", cells: [
+          cell(e.when, Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+          cell(e.kind, { weight: "600", colour: e.colour }),
+          cell(e.what, { size: "12px", colour: C.MUTED }),
+        ] })),
+        foot: shop.tries
+          ? (ar ? shop.tries + " محاولات بلا رد لا تظهر هنا." : shop.tries + " tries with no answer are not shown here.")
+          : (ar ? "لا محاولات ضائعة على هذا المحل." : "No unanswered tries on this shop."),
+      } : { empty: ar ? "لم يتحدث إليهم أحد بعد." : "Nobody has spoken to them yet." };
+    } else {
+      panel = {
+        rowsTitle: ar ? "كل ما حدث" : "Everything that has happened",
+        meta: many(events.length, ar ? "حدث واحد" : "event", ar ? "حدثان" : "events", ar ? "أحداث" : "events"),
+        rowsNote: ar
+          ? "مشتق مما هو مخزَّن، لا قائمة ثانية يمكن أن تخالفه."
+          : "Derived from what is stored, not a second list that could disagree with it.",
+        cols: "92px minmax(110px,0.7fr) minmax(200px,1.7fr)",
+        minWidth: "520px",
+        heads: [{ label: ar ? "متى" : "When", align: "start" },
+          { label: ar ? "ماذا" : "What", align: "start" },
+          { label: ar ? "التفصيل" : "The detail", align: "start" }],
+        rows: events.map((e) => ({ bg: "transparent", cells: [
+          cell(e.when, Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+          cell(e.kind, { weight: "600", colour: e.colour }),
+          cell(e.what, { size: "12px", colour: C.MUTED }),
+        ] })),
+        foot: ar ? "بترتيب ما سُجِّل، لا بترتيب التاريخ — فالتواريخ في هذا النموذج نصوص."
+                 : "In the order it was recorded rather than by date — dates in this prototype are text.",
+      };
+    }
+
+    const chipOf = (axis, key) => {
+      const v = t(D.label[key][shop[key]]), raw = shop[key];
+      const good = raw === "confirmed" || raw === "active" || raw === "agreed";
+      const bad = raw === "inactive" || raw === "non_committed" || raw === "refused" || raw === "wrong";
+      const dull = raw === "not_started" || raw === "not_discussed";
+      return { axis, value: v,
+        colour: key === "stage" ? C.INK : good ? C.GREEN : bad ? C.RED : dull ? C.MUTED : C.AMBER,
+        bg: key === "stage" ? "#F1EEE6" : good ? "#EAF2EC" : bad ? "#FBE9E7" : dull ? "#F1EEE6" : "#FBE9E7",
+        border: key === "stage" ? "#E4DFD4" : good ? "#BFD8C9" : bad ? "#E8B4AE" : dull ? "#E4DFD4" : "#E8B4AE" };
+    };
+
+    return {
+      dir: ar ? "rtl" : "ltr",
+      face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      crumb: (ar ? "مركز الاتصال · ملف المحل" : "Call center · shop record") + " · " + t(D.label.stage[shop.stage]),
+      backLabel: this.back ? (ar ? "→ العودة إلى القائمة" : "← Back to the list") : (ar ? "→ العودة إلى الشاشة" : "← Back to the agent screen"),
+      backHref: this.back && /^agent\.dc\.html/.test(this.back) ? this.back : "agent.dc.html",
+      callWhy: (() => {
+        const c = window.ZCALLS ? ZCALLS.as(this.lang).callFor(shop, ar) : null;
+        if (!c) return null;
+        const ty = ZCALLS.as(this.lang).callType(c.type, ar);
+        const hot = c.rank <= 1, warm = c.rank <= 3;
+        return { label: ar ? "لماذا أتصل" : "Why I am calling", tag: ty.label, tagInk: ty.ink, tagBg: ty.bg,
+          why: c.why, goal: c.goal, goalLabel: ar ? "المطلوب من المكالمة" : "What this call needs to get", due: c.due,
+          colour: hot ? C.RED : warm ? "#B3261E" : C.INK,
+          border: hot ? "#E8B4AE" : warm ? "#E8B4AE" : "#E4DFD4", bg: hot ? "#FDF4F2" : warm ? "#FDF9F0" : "#fff" };
+      })(),
+      langs: [["en", "EN", "'IBM Plex Sans',sans-serif"], ["ar", "ع", "'Noto Kufi Arabic',sans-serif"]]
+        .map(([k, short, f]) => ({ short, face: f,
+          go: () => { if (window.ZSHELL) ZSHELL.setLang(k); this.setState({ lang: k }); },
+          bg: this.lang === k ? C.GREEN : "#fff", colour: this.lang === k ? "#fff" : C.MUTED })),
+      pick: shop.id,
+      all: D.shops.map((s) => ({ value: s.id, label: t(s.name) + " · " + s.id })),
+      setShop: (e) => this.setState({ shop: e.target.value }),
+      name: t(shop.name), id: shop.id,
+      line: [t(shop.area), t(shop.type), shop.phone].filter(Boolean).join(" · "),
+      chips: [chipOf(ar ? "المرحلة" : "Stage", "stage"), chipOf(ar ? "البيانات" : "Data", "data"),
+              chipOf(ar ? "النشاط" : "Activity", "activity"), chipOf(ar ? "السعر" : "Price", "price")],
+      standsWord: ar ? "الوضع" : "Where it stands",
+      factsWord: ar ? "معلومات المحل" : "Outlet Information",
+      storyTitle: ar ? "المحل كله في سطر" : "The whole shop at a glance",
+      storyNote: ar
+        ? "من محل لم يزره أحد إلى زيت مدفوع الثمن — اضغط أي بطاقة لتفتح تفصيلها."
+        : "From a shop nobody has visited to oil paid for — click any tile for the detail behind it.",
+      tiles: (() => {
+        const kg = D.kg(shop), colls = (shop.collections || []).length;
+        const rounds = this.negCount(shop);
+        const tile = (label, value, unit, note, key, tone) => ({
+          label, value, unit, note, go: () => this.setState({ tab: key }),
+          colour: tone === "bad" ? C.RED : tone === "warn" ? C.AMBER : tone === "good" ? C.GREEN : C.INK,
+          noteColour: tone === "bad" ? C.RED : tone === "warn" ? C.AMBER : "#63736A",
+          edge: tone === "bad" ? C.RED : tone === "warn" ? "#B3261E" : tone === "good" ? C.GREEN : "#C6BFB0",
+          border: tone === "bad" ? "#E8B4AE" : tone === "warn" ? "#E8B4AE" : tone === "good" ? "#BFD8C9" : "#E4DFD4",
+          bg: tone === "bad" ? "#FDF4F2" : tone === "warn" ? "#FDFAF3" : tone === "good" ? "#F6FAF7" : "#fff",
+          // A word needs less room than a number, and its own length decides.
+          size: String(value).length > 11 ? "13px" : String(value).length > 7 ? "15px" : "19px",
+          cls: /^[0-9.,—-]+$/.test(String(value)) ? "num" : "",
+        });
+        const priceTone = shop.price === "agreed" ? "good"
+          : shop.price === "refused" ? "bad" : shop.price === "not_discussed" ? "" : "warn";
+        const actTone = shop.activity === "active" ? "good"
+          : shop.activity === "inactive" || shop.activity === "non_committed" ? "bad"
+          : shop.activity === "not_started" ? "" : "warn";
+        return [
+          tile(ar ? "المرحلة" : "Stage", t(D.label.stage[shop.stage]), "",
+            shop.verifiedOn ? (ar ? "تم التحقق " : "verified ") + t(shop.verifiedOn)
+              : shop.phoneSurveyOn ? (ar ? "مسح بالهاتف " : "phone survey ") + t(shop.phoneSurveyOn)
+              : shop.surveyedOn ? (ar ? "مُسح " : "surveyed ") + t(shop.surveyedOn)
+              : shop.addedOn ? (ar ? "أُضيف " : "added ") + t(shop.addedOn)
+              : "", "overview", ""),
+          tile(ar ? "الاتصال" : "Reaching them", t(D.label.data[shop.data]), "",
+            shop.tries ? shop.tries + (ar ? " محاولات بلا رد" : " tries, no answer")
+              : (ar ? "الرقم يعمل" : "the number works"),
+            "overview", shop.data === "confirmed" ? "good" : "bad"),
+          tile(ar ? "النشاط" : "Activity", t(D.label.activity[shop.activity]), "",
+            shop.inactiveSince ? (ar ? "منذ " : "since ") + t(shop.inactiveSince)
+              : shop.firstOrderOn ? (ar ? "أول طلب " : "first order ") + t(shop.firstOrderOn)
+              : colls ? (ar ? "يورّد بانتظام" : "supplying on cycle")
+              : (ar ? "لم يعطنا شيئاً بعد" : "has given us nothing yet"),
+            "collections", actTone),
+          tile(ar ? "السعر" : "Price", shop.agreedPrice || shop.askedPrice || "—",
+            shop.agreedPrice || shop.askedPrice ? (ar ? "ج.م" : "EGP") : "",
+            t(D.label.price[shop.price]), "agreement", priceTone),
+          tile(ar ? "جولات التفاوض" : "Rounds", String(rounds || "—"), "",
+            rounds ? (ar ? "آخرها " + t(this.lastRoundWhen(shop)) : "last " + t(this.lastRoundWhen(shop)))
+              : (ar ? "لم يبدأ تفاوض" : "none started"),
+            "negotiation", ""),
+          tile(ar ? "الكجم المجمَّع" : "Kg collected", kg ? kg.toLocaleString("en-US") : "—", "",
+            colls ? colls + (ar ? " تحصيلات" : " collections") : (ar ? "لا شيء بعد" : "nothing yet"),
+            "collections", kg ? "good" : ""),
+          tile(ar ? "المدفوع لهم" : "Paid to them",
+            kg ? Math.round((shop.collections || []).reduce((a, c2) => a + c2.kg * parseFloat(c2.price), 0)).toLocaleString("en-US") : "—",
+            kg ? (ar ? "ج.م" : "EGP") : "",
+            kg ? (ar ? "بسعر " : "at ") + shop.agreedPrice : (ar ? "لم يُدفع شيء" : "nothing paid"),
+            "orders", ""),
+        ];
+      })(),
+      shellTabs: S.tabs("agent").map((tb) => ({ label: t(tb.label), href: "agent.dc.html?tab=" + tb.key })),
+      roleLabel: t(S.role.agent.label),
+      roleColour: S.role.agent.colour,
+      roleBg: S.role.agent.bg,
+      logoutWord: t(S.words.logout),
+      sub: this.lang === "ar" ? shop.name.en : shop.name.ar,
+      subDir: this.lang === "ar" ? "ltr" : "rtl",
+      subFace: this.lang === "ar" ? "'IBM Plex Sans',sans-serif" : "'Noto Kufi Arabic',sans-serif",
+      telHref: "tel:" + (shop.phone || "").replace(/ /g, ""),
+      callWord: ar ? "اتصل بالمحل" : "Call the shop",
+      canOrder: shop.stage === "pre_supplier" || shop.stage === "supplier",
+      orderWord: ar ? "إصدار طلب تحصيل" : "Place a collection order",
+      agentHref: "agent.dc.html?shop=" + encodeURIComponent(shop.id),
+      standsBorder: (shop.tries > 0) || shop.price === "refused" ? "#E8B4AE"
+        : shop.price === "agreed" ? "#BFD8C9" : "#E4DFD4",
+      standsBg: (shop.tries > 0) || shop.price === "refused" ? "#FDF4F2"
+        : shop.price === "agreed" ? "#F6FAF7" : "#F7F4EE",
+      // Only what the tiles above do not already say.
+      facts: [
+        [ar ? "الرقم" : "Reference", shop.id, C.MUTED, "'IBM Plex Mono',monospace"],
+        [ar ? "الهاتف" : "Phone", shop.phone, C.INK, "'IBM Plex Mono',monospace"],
+        [ar ? "نطلب" : "Ask for",
+          t(shop.contact) + ((shop.rep && shop.rep.en === shop.contact.en)
+            ? (ar ? " · وهو مندوب التحصيل" : " · also the collection rep") : ""),
+          C.INK, "inherit"],
+        [ar ? "المنطقة" : "Area", t(shop.area), C.MUTED, "inherit"],
+        [ar ? "يطبخون" : "They cook", t(shop.type), C.MUTED, "inherit"],
+        shop.agent ? [ar ? "الموظف" : "Agent", t(shop.agent), C.INK, "inherit"] : null,
+        shop.surveyor ? [ar ? "المساح" : "Surveyor", t(shop.surveyor), C.INK, "inherit"] : null,
+        shop.collectionDay ? [ar ? "يوم التحصيل" : "Collection day", t(shop.collectionDay), C.MUTED, "inherit"] : null,
+        (shop.rep && shop.rep.en !== shop.contact.en)
+          ? [ar ? "نلتقي" : "We meet", t(shop.rep), C.MUTED, "inherit"] : null,
+      ].filter(Boolean).map((x) => ({ label: x[0], value: x[1], colour: x[2], face: x[3] })),
+      rail: {
+        nextTitle: ar ? "الخطوة التالية" : "The next step",
+        next: this.nextStep(shop, ar),
+        nextColour: (shop.tries > 0) || shop.price === "refused" ? C.RED : C.INK,
+        nextWho: R.priceIsMine(shop)
+          ? (ar ? "هذه لي." : "This one is mine.")
+          : (ar ? "أي تغيير في السعر يحتاج " + t(R.approvers.price) + "." : "Any price change needs the " + t(R.approvers.price).toLowerCase() + "."),
+        powersTitle: ar ? "ما أستطيعه" : "What I can do",
+        powersNote: ar ? "في هذه المرحلة، بهذا السعر." : "At this stage, with the price where it is.",
+        powers: R.powers(shop).map((p) => ({
+          mark: p.yes ? "✓" : "✗", label: t(p.label), colour: p.yes ? C.GREEN : "#A9A296" })),
+        ownership: t(R.ownership.holds) + " " + t(R.ownership.until),
+        savedTitle: ar ? "ما هو محفوظ" : "What is saved",
+        savedNote: ar ? "كل حقل على هذا المحل كما هو مخزَّن." : "Every field held against this shop, as stored.",
+      },
+      stands: this.standsLine(shop, ar),
+      standsColour: (shop.tries > 0) || shop.price === "refused" ? C.RED
+        : shop.price === "agreed" ? C.GREEN : C.INK,
+      tabs: TABS.map(([k, label]) => {
+        const on = tab === k;
+        const n = { overview: "", survey: "", agreement: shop.agreedPrice ? "1" : "",
+          negotiation: String(this.negCount(shop) || ""),
+          orders: String((shop.collections || []).length + (shop.activity === "first_order_out" ? 1 : 0) || ""),
+          collections: String((shop.collections || []).length || ""),
+          calls: String(callCount || ""), history: String(events.length) }[k];
+        return { label, go: () => this.setState({ tab: k }),
+          colour: on ? C.GREEN : C.MUTED, weight: on ? 600 : 500,
+          edge: on ? C.GREEN : "transparent",
+          count: n || "", countColour: on ? C.GREEN : C.FAINT };
+      }),
+      panel,
+    };
+  }
+
+  // What happens next, and whether it is the agent's to do.
+  nextStep(s, ar) {
+    const t = (v) => this.t(v);
+    if ((s.tries > 0))
+      return ar ? "اطلب إعادة تحقق — الرقم قد يكون ميتاً." : "Raise a reverification — the number may be dead.";
+    if (s.price === "counter_offered")
+      return ar ? "أبلغهم بـ" + s.counterPrice + " وسجّل ردّهم." : "Put " + s.counterPrice + " to them and log their answer.";
+    if (s.price === "increase_requested")
+      return ar ? "لا شيء حتى تجيب الإدارة." : "Nothing until management answers.";
+    if (s.price === "refused")
+      return ar ? "أبقهم دافئين — رفضُ سعرٍ هو أكثر ما يفقد مورداً." : "Keep them warm — a refused price is what loses a supplier.";
+    if (s.activity === "non_committed")
+      return ar ? "اسأل إن كانوا سيورّدون بعد كل شيء." : "Ask whether they will deliver after all.";
+    if (s.activity === "inactive")
+      return ar ? "اسأل إن كانوا سيعودون للتوريد." : "Ask whether they are supplying again.";
+    if (s.activity === "first_order_out")
+      return ar ? "انتظر أول تحصيل — وهو ما يجعلهم مورداً." : "Wait on the first collection — that is what makes them a Supplier.";
+    if (s.stage === "survey")
+      return ar ? "اتصل وراجع السجل معهم سطراً سطراً." : "Call and go through the record with them, line by line.";
+    if (s.stage === "pre_survey")
+      return ar ? "اتصل — ثم أرسل مساحاً أو امسح بالهاتف." : "Call them — then send a surveyor, or survey by phone.";
+    if (s.stage === "lead")
+      return window.ZEITCO.locationLate(s)
+        ? (ar ? "الموقع متأخر منذ " + t(s.locationDue) + " · طالِب المساح، وتابع التفاوض."
+              : "Location overdue since " + t(s.locationDue) + " — chase the surveyor, and carry on negotiating.")
+        : (ar ? "تابع التفاوض حتى سقفي." : "Carry on negotiating, up to my ceiling.");
+    return ar ? "أصدر طلب التحصيل القادم." : "Raise the next collection order.";
+  }
+
+  negRows(shop, ar, C, cell, mono, t) {
+    const rows = (shop.rounds || []).map((r) => ({
+      bg: "transparent",
+      cells: [
+        cell(t(r.when), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+        cell(r.side === "us" ? (ar ? "عرضنا" : "Our offer") : (ar ? "مطلبهم" : "Their ask"),
+          { weight: "600", colour: r.side === "us" ? "#2C5578" : "#B3261E" }),
+        cell(r.amount, Object.assign({ align: "end", weight: "600" }, mono)),
+        cell(t(r.who), { size: "12px", colour: C.MUTED }),
+      ],
+    }));
+    if (shop.askedPrice && shop.stage !== "lead") rows.push({ bg: "#FDFAF3", cells: [
+      cell(t(shop.askedOn), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+      cell(ar ? "طلبوا زيادة" : "Asked for more", { weight: "600", colour: C.AMBER }),
+      cell(shop.askedPrice, Object.assign({ align: "end", weight: "600", colour: C.AMBER }, mono)),
+      cell(shop.withApprover
+        ? (ar ? "صعد إلى " + t(shop.withApprover) : "sent to the " + t(shop.withApprover))
+        : (ar ? "صعد للإدارة" : "sent up to management"), { size: "12px", colour: C.MUTED }),
+    ] });
+    if (shop.counterPrice) rows.push({ bg: "#F5F8FB", cells: [
+      cell(t(shop.counterOn), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+      cell(ar ? "قابلناهم" : "We countered", { weight: "600", colour: "#2C5578" }),
+      cell(shop.counterPrice, Object.assign({ align: "end", weight: "600" }, mono)),
+      cell(ar ? "من الإدارة · لم يُبلَّغوا بعد" : "from management · not yet told", { size: "12px", colour: C.MUTED }),
+    ] });
+    if (shop.refusedOn) rows.push({ bg: "#FDF4F2", cells: [
+      cell(t(shop.refusedOn), Object.assign({ size: "12px", colour: C.MUTED }, mono)),
+      cell(ar ? "رُفض" : "Refused", { weight: "600", colour: C.RED }),
+      cell("—", Object.assign({ align: "end", colour: C.FAINT }, mono)),
+      cell(ar ? "السعر القديم قائم · معرّض للفقد" : "the old price stands · at risk", { size: "12px", colour: C.RED }),
+    ] });
+    return rows;
+  }
+
+  negCount(shop) {
+    return (shop.rounds || []).length
+      + (shop.askedPrice && shop.stage !== "lead" ? 1 : 0)
+      + (shop.counterPrice ? 1 : 0) + (shop.refusedOn ? 1 : 0);
+  }
+
+  lastRoundWhen(shop) {
+    if (shop.refusedOn) return shop.refusedOn;
+    if (shop.counterOn) return shop.counterOn;
+    if (shop.askedOn && shop.stage !== "lead") return shop.askedOn;
+    const r = shop.rounds || [];
+    return r.length ? r[r.length - 1].when : "";
+  }
+
+  standsLine(s, ar) {
+    const t = (v) => this.t(v);
+    if (s.stage === "lead" && s.price === "in_negotiation" && !(s.tries > 0)) {
+      const rounds = s.rounds || [];
+      const ours = rounds.filter((r) => r.side === "us").pop();
+      const theirs = rounds.filter((r) => r.side === "them").pop();
+      if (ours && theirs) {
+        const gap = Math.abs(parseFloat(theirs.amount) - parseFloat(ours.amount)).toFixed(2);
+        return ar
+          ? "عرضنا " + ours.amount + " ويطلبون " + theirs.amount + " · الفارق " + gap + " ج.م."
+          : "We offered " + ours.amount + ", they want " + theirs.amount + " · " + gap + " EGP apart.";
+      }
+      if (s.callBack) return ar ? "طلبوا معاودة الاتصال " + t(s.callBack) + "."
+                                : "They asked to be called back " + t(s.callBack) + ".";
+      if (s.askedPrice) return ar ? "يطلبون " + s.askedPrice + " ولم نردّ بعد."
+                                  : "They want " + s.askedPrice + " and we have not answered.";
+      return s.phoneSurveyOn
+        ? (ar ? "مسح بالهاتف ولم يبدأ التفاوض." : "Surveyed by phone, and the negotiation has not started.")
+        : (ar ? "تم التحقق ولم يبدأ التفاوض." : "Verified, and the negotiation has not started.");
+    }
+    if (s.stage === "supplier" && s.activity === "new")
+      return ar
+        ? "اتُّفق على " + s.agreedPrice + " في " + t(s.agreedOn) + " · لم يخرج أول طلب بعد."
+        : "Agreed " + s.agreedPrice + " on " + t(s.agreedOn) + " · the first order has not gone out.";
+    if ((s.tries > 0))
+      return ar ? "لا يردّون منذ " + s.tries + " محاولات." : "No answer in " + s.tries + " tries.";
+    if (s.price === "refused")
+      return ar ? "طلبوا " + s.askedPrice + " ورفضت الإدارة. والسعر القديم " + s.agreedPrice + " قائم."
+                : "They asked " + s.askedPrice + " and management refused. The old " + s.agreedPrice + " stands.";
+    if (s.price === "counter_offered")
+      return ar ? "الإدارة قابلت بـ" + s.counterPrice + " · لم يُبلَّغوا بعد."
+                : "Management countered at " + s.counterPrice + " · they have not been told yet.";
+    if (s.price === "increase_requested")
+      return ar ? "طلبوا " + s.askedPrice + " · عند " + t(s.withApprover) + " منذ " + t(s.askedOn) + "."
+                : "They asked " + s.askedPrice + " · with the " + t(s.withApprover) + " since " + t(s.askedOn) + ".";
+    if (s.activity === "non_committed")
+      return ar ? "اتفقنا على " + s.agreedPrice + " ولم يورّدوا أول طلب."
+                : "We agreed " + s.agreedPrice + " and they never delivered the first order.";
+    if (s.activity === "inactive")
+      return ar ? "توقفوا منذ " + t(s.inactiveSince) + "." : "Stopped since " + t(s.inactiveSince) + ".";
+    if (s.activity === "first_order_out")
+      return ar ? "أول طلب خرج في " + t(s.firstOrderOn) + "." : "First order went out on " + t(s.firstOrderOn) + ".";
+    if (s.stage === "survey")
+      return ar ? "مُسح في " + t(s.surveyedOn) + " · ينتظر مكالمة تحقق."
+                : "Surveyed on " + t(s.surveyedOn) + " · waiting on a verifying call.";
+    if (s.stage === "pre_survey")
+      return ar ? "أُضيف في " + t(s.addedOn) + " · لم يذهب إليه أحد." : "Added on " + t(s.addedOn) + " · nobody has been.";
+    const last = (s.collections || [])[0];
+    return last
+      ? (ar ? "آخر تحصيل " + t(last.when) + " · " + last.kg + " كجم." : "Last collected " + t(last.when) + " · " + last.kg + " Kg.")
+      : (ar ? "لا شيء معلّق." : "Nothing outstanding.");
+  }
+}
+
+</script>
+</body>
+</html>
