@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+</style>
+</helmet>
+<div style="width:1440px;background:#FAF6EE;font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4">
+    <div style="display:flex;align-items:stretch;gap:20px;padding:0 24px">
+      <a href="#" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;padding:14px 20px 14px 0;border-right:1px solid #EFEBE1;margin-right:4px">
+        <img src="public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto;flex-shrink:0">
+        Zeitco
+      </a>
+      <nav style="display:flex;align-items:stretch;gap:2px;font-size:13px;font-weight:600;color:#55655D;flex:1;min-width:0">
+        <sc-for list="{{ topTabs }}" as="tab" hint-placeholder-count="8">
+          <button type="button" onClick="{{ tab.go }}" style="display:flex;align-items:center;white-space:nowrap;padding:0 12px;border:0;border-bottom:2.5px solid {{ tab.edge }};margin-bottom:-1px;background:transparent;color:{{ tab.color }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ tab.label }}</button>
+        </sc-for>
+      </nav>
+      <div style="display:flex;align-items:center;gap:12px;flex-shrink:0">
+        <div style="position:relative;display:flex;align-items:center;color:#10231C">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 16v-5a6 6 0 0 0-12 0v5l-1.5 2h15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
+          <span style="position:absolute;top:-4px;right:-6px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#B3261E;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:0 4px">7</span>
+        </div>
+        <a href="login.dc.html" style="font-size:13px;font-weight:500;color:#55655D;white-space:nowrap">Log out</a>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1320px;margin:0 auto;padding:16px 24px 48px;display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px;align-items:start">
+
+    <aside style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 9px 12px;position:sticky;top:16px">
+      <h2 style="margin:0 0 7px 5px;font-size:15px;font-weight:600;color:#63736A">Queues and Admin</h2>
+      <div style="display:flex;flex-direction:column;gap:1px">
+        <sc-for list="{{ sideNav }}" as="item" hint-placeholder-count="8">
+          <sc-if value="{{ item.isGroup }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#8A9188;padding:10px 8px 3px">{{ item.label }}</div>
+          </sc-if>
+          <sc-if value="{{ item.isItem }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ item.go }}" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:0;border-radius:8px;background:{{ item.bg }};color:{{ item.color }};font-family:inherit;font-size:13px;font-weight:{{ item.weight }};cursor:pointer;text-align:left;width:100%" style-hover="background:#FCFAF5">
+              <span style="width:7px;height:7px;border-radius:2px;background:{{ item.dot }};flex-shrink:0"></span>
+              <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.label }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:{{ item.badgeColor }}">{{ item.badge }}</span>
+            </button>
+          </sc-if>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid #EFEBE1;margin:9px 0 0;padding:9px 5px 0">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#8A9188;margin-bottom:4px">{{ onThisPageLabel }}</div>
+        <sc-for list="{{ pageNav }}" as="p" hint-placeholder-count="4">
+          <button type="button" onClick="{{ p.go }}" style="display:block;width:100%;text-align:left;border:0;border-radius:8px;background:transparent;padding:5px 3px;font-family:inherit;font-size:12px;color:#55655D;cursor:pointer" style-hover="background:#FCFAF5">{{ p.label }}</button>
+        </sc-for>
+      </div>
+
+      <div style="border-top:1px solid #EFEBE1;margin:9px 0 0;padding:9px 5px 0">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#63736A;margin-bottom:3px">Signed in as</div>
+        <div style="font-size:13px;font-weight:600;color:#10231C;margin-bottom:7px;text-wrap:pretty">{{ whoLine }}</div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#8A9188;margin-bottom:4px">View as (testing)</div>
+        <sc-for list="{{ roleSwitch }}" as="r" hint-placeholder-count="2">
+          <button type="button" onClick="{{ r.pick }}" style="display:block;width:100%;text-align:left;border:0;background:transparent;padding:3px 0;font-family:inherit;font-size:12px;font-weight:{{ r.weight }};color:{{ r.color }};cursor:pointer">{{ r.label }}</button>
+        </sc-for>
+        <p style="margin:6px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ roleNote }}</p>
+      </div>
+      <div style="border-top:1px solid #EFEBE1;margin:9px 0 0;padding:9px 5px 0">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#63736A;margin-bottom:5px">Scope</div>
+        <div style="font-size:12px;color:#3A4A43">Cairo · Giza</div>
+        <div style="font-size:11px;color:#63736A;margin-top:2px">11 zones · 6 teams</div>
+      </div>
+    </aside>
+
+    <div style="min-width:0;display:flex;flex-direction:column;gap:14px">
+
+      <sc-if value="{{ inReport }}" hint-placeholder-val="{{ false }}">
+        <div style="order:-1;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E4DFD4;border-radius:10px;padding:7px 11px">
+          <button type="button" onClick="{{ back }}" style="height:26px;padding:0 11px;border:1px solid #8A9188;border-radius:7px;background:#fff;color:#3A4A43;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">← {{ backLabel }}</button>
+          <span style="font-size:12px;color:#63736A;min-width:0;text-wrap:pretty">{{ reportCrumb }}</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showDash }}" hint-placeholder-val="{{ true }}">
+      <div style="order:0;display:flex;align-items:flex-end;justify-content:space-between;gap:20px">
+        <div style="min-width:0">
+          <h1 style="margin:0;font-size:19px;font-weight:700;color:#10231C;letter-spacing:-0.01em">{{ page.title }}</h1>
+          <p style="margin:3px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ page.subtitle }}</p>
+        </div>
+        <div style="display:flex;gap:7px;flex-shrink:0">
+          <div style="display:flex;gap:1px;border:1px solid #8A9188;border-radius:8px;overflow:hidden;background:#fff">
+            <sc-for list="{{ periods }}" as="p" hint-placeholder-count="3">
+              <button type="button" onClick="{{ p.pick }}" style="border:0;height:28px;padding:0 12px;font-family:inherit;font-size:13px;font-weight:600;background:{{ p.bg }};color:{{ p.color }};white-space:nowrap">{{ p.label }}</button>
+            </sc-for>
+          </div>
+          <button type="button" style="height:28px;padding:0 12px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;white-space:nowrap">Export</button>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ showEmbed }}" hint-placeholder-val="{{ false }}">
+        <div style="order:2;min-width:0">
+          <dc-import name="approvals-and-settings" embedded="{{ true }}" area="{{ embedArea }}" role="{{ role }}" hint-size="100%,900px"></dc-import>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showDash }}" hint-placeholder-val="{{ true }}">
+      <div id="om-kpis" style="order:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#E4DFD4;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden">
+        <sc-for list="{{ page.kpis }}" as="k" hint-placeholder-count="4">
+          <button type="button" onClick="{{ k.open }}" style="display:flex;flex-direction:column;align-items:stretch;text-align:left;background:#fff;border:0;padding:11px 14px 13px;min-width:0;font-family:inherit;cursor:pointer" style-hover="background:#FCFAF5">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+              <span style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.label }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:{{ k.deltaColor }};flex-shrink:0">{{ k.delta }}</span>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:7px;margin-top:6px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;color:{{ k.valueColor }};line-height:1">{{ k.value }}</span>
+              <span style="font-size:12px;color:#55655D;min-width:0">{{ k.note }}</span>
+            </div>
+            <div style="height:5px;border-radius:3px;background:{{ k.track }};margin-top:9px;overflow:hidden"><div style="height:100%;width:{{ k.pct }};background:{{ k.bar }}"></div></div>
+          </button>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <section style="order:2;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:12px 15px 14px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:11px">
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">The Whole Chain Today</h2>
+            <span style="font-size:12px;color:#63736A;text-wrap:pretty">From a shop nobody has visited to oil on a ship — where work is piling up</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px">
+            <sc-for list="{{ chain }}" as="c" hint-placeholder-count="7">
+              <button type="button" onClick="{{ c.go }}" style="display:block;text-align:left;width:100%;min-width:0;background:{{ c.bg }};border:1px solid {{ c.border }};border-left:3px solid {{ c.edge }};border-radius:9px;padding:9px 10px 10px;font-family:inherit;cursor:pointer" style-hover="border-color:#1F5240">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;line-height:1.25;text-wrap:pretty">{{ c.stage }}</div>
+                <div style="display:flex;align-items:baseline;gap:5px;margin-top:5px">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:{{ c.valueColor }};line-height:1">{{ c.value }}</span>
+                  <span style="font-size:11px;color:#63736A;min-width:0">{{ c.unit }}</span>
+                </div>
+                <div style="font-size:11px;color:{{ c.noteColor }};margin-top:6px;text-wrap:pretty">{{ c.note }}</div>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:14px;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid #EFEBE1;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A;white-space:nowrap">On shift now</span>
+            <sc-for list="{{ onShift }}" as="p" hint-placeholder-count="4">
+              <div style="display:flex;align-items:baseline;gap:6px;min-width:0">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#10231C">{{ p.count }}</span>
+                <span style="font-size:12px;color:#55655D;white-space:nowrap">{{ p.label }}</span>
+              </div>
+            </sc-for>
+            <span style="margin-left:auto;font-size:11px;color:#63736A;white-space:nowrap">{{ shiftNote }}</span>
+          </div>
+        </section>
+
+      </sc-if>
+
+      <sc-if value="{{ showDash }}" hint-placeholder-val="{{ true }}">
+      <div id="om-panels" style="order:{{ panelsOrder }};display:grid;grid-template-columns:{{ panelCols }};gap:14px;align-content:start;min-width:0">
+          <sc-for list="{{ page.panels }}" as="panel" hint-placeholder-count="2">
+            <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 14px 13px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+                <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ panel.title }}</h2>
+                <span style="font-size:12px;color:#63736A;white-space:nowrap">{{ panel.meta }}</span>
+              </div>
+              <sc-if value="{{ panel.bar }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin:10px 0">
+                  <sc-for list="{{ panel.segments }}" as="seg" hint-placeholder-count="5">
+                    <div style="width:{{ seg.width }};background:{{ seg.color }}"></div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="margin-top:6px">
+                <sc-for list="{{ panel.rows }}" as="r" hint-placeholder-count="5">
+                  <div onClick="{{ r.open }}" style="display:flex;align-items:flex-start;gap:9px;padding:5px 0;border-bottom:1px solid #EFEBE1;cursor:pointer" style-hover="background:#FCFAF5">
+                    <span style="width:7px;height:7px;border-radius:{{ r.dotRadius }};background:{{ r.dot }};margin-top:5px;flex-shrink:0"></span>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:13px;color:#3A4A43;text-wrap:pretty">{{ r.label }}</div>
+                      <sc-if value="{{ r.detail }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:11px;color:#63736A;margin-top:1px;text-wrap:pretty">{{ r.detail }}</div>
+                      </sc-if>
+                    </div>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:{{ r.valueColor }};flex-shrink:0">{{ r.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ panel.link }}" hint-placeholder-val="{{ false }}">
+                <a href="{{ panel.link }}" style="display:inline-block;margin-top:9px;font-size:12px;font-weight:600;color:#1F5240">{{ panel.linkLabel }}</a>
+              </sc-if>
+            </section>
+          </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+        <section style="order:5">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">Departments</h2>
+            <span style="font-size:12px;color:#63736A">Each card reads its own summary route — one slow department never blocks the rest</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+            <sc-for list="{{ deptCards }}" as="d" hint-placeholder-count="7">
+              <button type="button" onClick="{{ d.go }}" style="display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:left;background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 13px 13px;min-width:0;font-family:inherit;cursor:pointer;width:100%" style-hover="border-color:#1F5240">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px">
+                  <h3 style="margin:0;font-size:13px;font-weight:700;color:#10231C;white-space:nowrap">{{ d.title }}</h3>
+                  <span style="font-size:11px;font-weight:600;color:#63736A;white-space:nowrap">{{ d.route }}</span>
+                </div>
+                <sc-for list="{{ d.rows }}" as="r" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:3px 0;font-size:12px">
+                    <span style="color:#55655D;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ r.color }};white-space:nowrap">{{ r.value }}</span>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ d.footnote }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin:7px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ d.footnote }}</p>
+                </sc-if>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ showDash }}" hint-placeholder-val="{{ true }}">
+      <section id="om-table" style="order:{{ tableOrder }};background:#fff;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 15px;border-bottom:1px solid #EFEBE1">
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ page.tableTitle }}</h2>
+            <a href="{{ page.tableHref }}" style="font-size:12px;font-weight:600">{{ page.tableLink }}</a>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead>
+              <tr style="background:#FCFAF5;color:#63736A;text-align:left">
+                <sc-for list="{{ page.cols }}" as="c" hint-placeholder-count="5">
+                  <th style="padding:6px 15px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid #EFEBE1;text-align:{{ c.align }};white-space:nowrap">{{ c.label }}</th>
+                </sc-for>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ page.rows }}" as="row" hint-placeholder-count="6">
+                <tr onClick="{{ row.open }}" style="border-bottom:1px solid #EFEBE1;cursor:pointer" style-hover="background:#FCFAF5">
+                  <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="5">
+                    <td onClick="{{ cell.open }}" style="padding:7px 15px;text-align:{{ cell.align }};color:{{ cell.color }};font-weight:{{ cell.weight }};font-family:{{ cell.font }};white-space:{{ cell.wrap }};min-width:0;cursor:{{ cell.cursor }}" style-hover="background:#EEF6F2">{{ cell.value }}</td>
+                  </sc-for>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <sc-if value="{{ page.tableNote }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;padding:9px 15px;font-size:12px;color:#63736A;border-top:1px solid #EFEBE1;text-wrap:pretty">{{ page.tableNote }}</p>
+        </sc-if>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ hasDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="order:7;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+          <sc-for list="{{ page.detail }}" as="d" hint-placeholder-count="3">
+            <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 14px 13px;min-width:0">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px">
+                <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C;min-width:0">{{ d.title }}</h2>
+                <span style="font-size:11px;color:#63736A;white-space:nowrap">{{ d.meta }}</span>
+              </div>
+              <sc-for list="{{ d.rows }}" as="r">
+                <div onClick="{{ r.open }}" style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid #EFEBE1;font-size:13px;cursor:pointer" style-hover="background:#FCFAF5">
+                  <span style="color:#55655D;min-width:0;text-wrap:pretty">{{ r.label }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ r.color }};white-space:nowrap">{{ r.value }}</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ d.note }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:7px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ d.note }}</p>
+              </sc-if>
+            </section>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000},&quot;period&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Today&quot;,&quot;Week&quot;,&quot;Month&quot;],&quot;default&quot;:&quot;Today&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  // Pages, rows and routes follow app/ManagerDashboardClient.tsx and the
+  // /api/manager/*-summary shapes it reads; urgency wording is
+  // t.approvals.urgency, statuses t.status, warehouse states
+  // t.warehouse.inventoryStates.
+  state = { page: "overview", period: "Today", stack: [], role: "senior_management", who: null };
+
+  componentDidMount() {
+    try {
+      const q = new URLSearchParams(window.location.search);
+      const p = q.get("dept");
+      const KEYS = ["overview", "survey", "call_center", "crm", "volumes", "operations", "warehousing", "sales", "finance"];
+      if (p && KEYS.indexOf(p) !== -1) this.setState({ page: p });
+      const r = q.get("role");
+      if (r === "financial" || r === "manager") this.setState({ role: "manager" });
+      if (r === "senior") this.setState({ role: "senior_management" });
+    } catch (e) {}
+    // Whoever actually signed in, rather than a hardcoded assumption.
+    try {
+      const raw = localStorage.getItem("zeitco-user");
+      if (raw) {
+        const u = JSON.parse(raw);
+        // Keyed off roleKey, so a senior manager keeps his permissions in
+        // Arabic — a translated label must never decide access.
+        const senior = u.roleKey === "senior" || u.roleKey === "qa";
+        this.setState({ who: u, role: senior ? "senior_management" : "manager" });
+      }
+    } catch (e) {}
+  }
+
+  renderVals() {
+    const page = this.state.page;
+    const period = this.state.period;
+    const go = (key) => () => {
+      this.setState({ page: key, stack: [] });
+      window.scrollTo(0, 0);
+    };
+
+    const kpi = (label, value, note, delta, up, pct, tone) => {
+      const tones = {
+        green: ["#1F5240", "#EEF6F2"],
+        mid: ["#2E6B54", "#EEF6F2"],
+        blue: ["#2C5578", "#E8EEF4"],
+        amber: ["#9A5B08", "#FBF0DF"],
+        red: ["#B3261E", "#FBEAE9"]
+      };
+      const [bar, track] = tones[tone];
+      return {
+        label, value, note, delta, pct, bar, track,
+        deltaColor: up === null ? "#63736A" : up ? "#1F5240" : "#B3261E",
+        valueColor: tone === "red" ? "#B3261E" : "#10231C"
+      };
+    };
+    const cell = (value, opts = {}) => ({
+      value,
+      align: opts.align || "left",
+      color: opts.color || "#3A4A43",
+      weight: opts.bold ? 600 : 400,
+      font: opts.mono ? "'IBM Plex Mono',monospace" : "inherit",
+      wrap: opts.wrap === false ? "nowrap" : "normal"
+    });
+    const row = (...cells) => ({ cells });
+    const prow = (label, value, opts = {}) => ({
+      label,
+      value,
+      detail: opts.detail || "",
+      dot: opts.dot || "#1F5240",
+      dotRadius: opts.square ? "2px" : "999px",
+      valueColor: opts.valueColor || "#10231C"
+    });
+
+    const PIPELINE_PANEL = {
+      title: "Pipeline", meta: "1,284 outlets", bar: true,
+      segments: [
+        { width: "22%", color: "#2C5578" },
+        { width: "18%", color: "#9A5B08" },
+        { width: "31%", color: "#1F5240" },
+        { width: "17%", color: "#7CC79A" },
+        { width: "12%", color: "#3A3E40" }
+      ],
+      rows: [
+        prow("Pre-survey", "282", { dot: "#2C5578", square: true }),
+        prow("Surveyed, Unverified", "231", { dot: "#9A5B08", square: true }),
+        prow("Verified / Negotiating", "398", { dot: "#1F5240", square: true }),
+        prow("Supplier", "218", { dot: "#7CC79A", square: true }),
+        prow("Lapsed / Inactive", "155", { dot: "#3A3E40", square: true })
+      ]
+    };
+
+    const PAGES = {
+      overview: {
+        title: "Dashboard",
+        subtitle: "Thu 11 Sep · what needs you first, then how each department is doing",
+        kpis: [
+          kpi("Surveys this month", "263", "of 320 · 211 verified", "+12%", true, "82%", "green"),
+          kpi("Collection orders", "41", "raised today", "+4%", true, "61%", "mid"),
+          kpi("Manifests today", "14", "31 of 38 stops done", "−3%", false, "82%", "blue"),
+          kpi("Collected this month", "214", "tonnes · 2,640 t shipped", "+9%", true, "76%", "mid")
+        ],
+        tableTitle: "Zones Today", tableLink: "Zones →",
+        cols: [{ label: "Zone", align: "left" }, { label: "Surveys", align: "right" }, { label: "Orders", align: "right" }, { label: "Stops Done", align: "right" }, { label: "Collected", align: "right" }],
+        rows: [
+          row(cell("Nasr City 3", { color: "#10231C", bold: true }), cell("11", { align: "right", mono: true }), cell("9", { align: "right", mono: true }), cell("7 / 8", { align: "right", mono: true }), cell("2,140 Kg", { align: "right", mono: true, color: "#1F5240" })),
+          row(cell("Zamalek 1", { color: "#10231C", bold: true }), cell("9", { align: "right", mono: true }), cell("8", { align: "right", mono: true }), cell("6 / 6", { align: "right", mono: true }), cell("1,880 Kg", { align: "right", mono: true, color: "#1F5240" })),
+          row(cell("Dokki 2", { color: "#10231C", bold: true }), cell("8", { align: "right", mono: true }), cell("6", { align: "right", mono: true }), cell("4 / 7", { align: "right", mono: true, color: "#9A5B08" }), cell("1,310 Kg", { align: "right", mono: true })),
+          row(cell("Giza 4", { color: "#10231C", bold: true }), cell("12", { align: "right", mono: true }), cell("11", { align: "right", mono: true }), cell("9 / 9", { align: "right", mono: true }), cell("2,410 Kg", { align: "right", mono: true, color: "#1F5240" })),
+          row(cell("Faisal 2", { color: "#10231C", bold: true }), cell("4", { align: "right", mono: true }), cell("5", { align: "right", mono: true }), cell("3 / 6", { align: "right", mono: true, color: "#9A5B08" }), cell("940 Kg", { align: "right", mono: true })),
+          row(cell("Mohandessin 3", { color: "#10231C", bold: true }), cell("4", { align: "right", mono: true }), cell("2", { align: "right", mono: true }), cell("2 / 2", { align: "right", mono: true }), cell("740 Kg", { align: "right", mono: true }))
+        ],
+        tableNote: "Dokki 2 and Faisal 2 are behind on stops — both have a driver still out.",
+        panels: [
+          PIPELINE_PANEL,
+          {
+            title: "Needs Looking At", meta: "this month", bar: false,
+            rows: [
+              prow("Quality Flags Open", "12", { detail: "Not-working-number, against surveyor and verifier", dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Sold-elsewhere Streaks", "5", { detail: "One more in a row moves them to Inactive automatically", dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Lapsed Suppliers", "31", { detail: "Past the never-started / stopped-supplying thresholds", dot: "#B3261E", valueColor: "#B3261E" }),
+              prow("Scales Overdue", "1", { detail: "Readings can't charge a driver without an acknowledgement", dot: "#B3261E", valueColor: "#B3261E" })
+            ]
+          }
+        ]
+      },
+
+      survey: {
+        title: "Survey",
+        subtitle: "/api/manager/survey-summary · surveys captured and what verification did with them",
+        kpis: [
+          kpi("Today", "48", "across 9 surveyors", "+12%", true, "80%", "green"),
+          kpi("This week", "263", "of 320 target", "+8%", true, "82%", "green"),
+          kpi("This month", "1,042", "target 1,280", "+5%", true, "81%", "mid"),
+          kpi("Verified of those", "839", "80% pass rate", "−2%", false, "80%", "amber")
+        ],
+        tableTitle: "Surveyors This Month", tableLink: "Teams →",
+        cols: [{ label: "Surveyor", align: "left" }, { label: "Zone", align: "left" }, { label: "Captured", align: "right" }, { label: "Verified", align: "right" }, { label: "Rework", align: "right" }],
+        rows: [
+          row(cell("M. Fawzy", { color: "#10231C", bold: true }), cell("Nasr City 3"), cell("142", { align: "right", mono: true }), cell("121", { align: "right", mono: true, color: "#1F5240" }), cell("6", { align: "right", mono: true })),
+          row(cell("R. Sobhy", { color: "#10231C", bold: true }), cell("Zamalek 1"), cell("128", { align: "right", mono: true }), cell("110", { align: "right", mono: true, color: "#1F5240" }), cell("4", { align: "right", mono: true })),
+          row(cell("K. Nabil", { color: "#10231C", bold: true }), cell("Dokki 2"), cell("117", { align: "right", mono: true }), cell("84", { align: "right", mono: true, color: "#9A5B08" }), cell("19", { align: "right", mono: true, color: "#B3261E" })),
+          row(cell("A. Mostafa", { color: "#10231C", bold: true }), cell("Giza 4"), cell("104", { align: "right", mono: true }), cell("92", { align: "right", mono: true, color: "#1F5240" }), cell("5", { align: "right", mono: true })),
+          row(cell("Y. Gamal", { color: "#10231C", bold: true }), cell("Faisal 2"), cell("61", { align: "right", mono: true }), cell("48", { align: "right", mono: true }), cell("9", { align: "right", mono: true, color: "#9A5B08" }))
+        ],
+        tableNote: "A high rework count is a data-quality signal, not a productivity one — it comes from verification ticking a field wrong.",
+        panels: [
+          {
+            title: "Why Surveys Came Back", meta: "this month", bar: false,
+            rows: [
+              prow("Decision-maker Phone Wrong", "14", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Nobody Could Be Reached", "11", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Outlet Name / Type Wrong", "8", { dot: "#2C5578" }),
+              prow("Street or Area Wrong", "6", { dot: "#2C5578" }),
+              prow("Steward Details Wrong", "4", { dot: "#3A3E40" })
+            ]
+          },
+          {
+            title: "Pre-surveys", meta: "waiting to survey", bar: false,
+            rows: [
+              prow("Assigned to Surveyors", "61"),
+              prow("From the Call Centre", "24", { dot: "#2C5578" }),
+              prow("Unassigned", "9", { dot: "#9A5B08", valueColor: "#9A5B08" })
+            ]
+          }
+        ]
+      },
+
+      call_center: {
+        title: "Call Centre",
+        subtitle: "/api/manager/call-center-summary · outcomes logged and orders raised",
+        kpis: [
+          kpi("Orders today", "41", "from 176 calls logged", "+4%", true, "61%", "green"),
+          kpi("This week", "228", "of 250 expected", "+6%", true, "91%", "green"),
+          kpi("This month", "917", "vs 864 last month", "+6%", true, "78%", "mid"),
+          kpi("Call-backs overdue", "23", "past their due date", "+7", false, "46%", "amber")
+        ],
+        tableTitle: "Agents This Week", tableLink: "Agent roster →",
+        cols: [{ label: "Agent", align: "left" }, { label: "Verified", align: "right" }, { label: "Orders", align: "right" }, { label: "Escalations", align: "right" }, { label: "Overdue", align: "right" }],
+        rows: [
+          row(cell("N. Halim", { color: "#10231C", bold: true }), cell("38", { align: "right", mono: true }), cell("61", { align: "right", mono: true, color: "#1F5240" }), cell("4", { align: "right", mono: true }), cell("2", { align: "right", mono: true })),
+          row(cell("S. Adel", { color: "#10231C", bold: true }), cell("31", { align: "right", mono: true }), cell("54", { align: "right", mono: true, color: "#1F5240" }), cell("6", { align: "right", mono: true }), cell("5", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("H. Mounir", { color: "#10231C", bold: true }), cell("27", { align: "right", mono: true }), cell("47", { align: "right", mono: true }), cell("2", { align: "right", mono: true }), cell("9", { align: "right", mono: true, color: "#B3261E" })),
+          row(cell("L. Sameh", { color: "#10231C", bold: true }), cell("22", { align: "right", mono: true }), cell("38", { align: "right", mono: true }), cell("3", { align: "right", mono: true }), cell("4", { align: "right", mono: true }))
+        ],
+        tableNote: "Calls made is not recorded anywhere yet — only outcomes are, so these counts are outcomes, not dials.",
+        panels: [
+          {
+            title: "Outcomes This Week", meta: "all levels", bar: false,
+            rows: [
+              prow("Verified", "118", { dot: "#1F5240" }),
+              prow("Confirmed — Collect", "228", { dot: "#1F5240" }),
+              prow("Busy / Call Back", "94", { dot: "#2C5578" }),
+              prow("Sold Elsewhere", "31", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Won't Agree / Declined", "12", { dot: "#B3261E", valueColor: "#B3261E" })
+            ]
+          },
+          {
+            title: "Negotiations", meta: "open now", bar: false,
+            rows: [
+              prow("Negotiating", "22"),
+              prow("Pending Your Approval", "3", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Deal Pending Sign-off", "5", { dot: "#2C5578" })
+            ]
+          }
+        ]
+      },
+
+      crm: {
+        title: "CRM",
+        subtitle: "/api/manager/crm-summary · where every outlet currently sits",
+        kpis: [
+          kpi("Outlets total", "1,284", "across 11 zones", "+42", true, "100%", "mid"),
+          kpi("Active suppliers", "218", "collected in last 30 days", "+9", true, "17%", "green"),
+          kpi("Lapsed", "155", "31 newly lapsed", "+6", false, "12%", "amber"),
+          kpi("Waiting on competitor", "63", "contracts ending soon", "−4", true, "5%", "blue")
+        ],
+        tableTitle: "By Zone", tableLink: "Zones →",
+        cols: [{ label: "Zone", align: "left" }, { label: "Outlets", align: "right" }, { label: "Suppliers", align: "right" }, { label: "Lapsed", align: "right" }, { label: "Trust Avg", align: "right" }],
+        rows: [
+          row(cell("Nasr City 3", { color: "#10231C", bold: true }), cell("184", { align: "right", mono: true }), cell("41", { align: "right", mono: true, color: "#1F5240" }), cell("18", { align: "right", mono: true }), cell("74", { align: "right", mono: true })),
+          row(cell("Zamalek 1", { color: "#10231C", bold: true }), cell("146", { align: "right", mono: true }), cell("38", { align: "right", mono: true, color: "#1F5240" }), cell("11", { align: "right", mono: true }), cell("79", { align: "right", mono: true })),
+          row(cell("Dokki 2", { color: "#10231C", bold: true }), cell("139", { align: "right", mono: true }), cell("22", { align: "right", mono: true }), cell("27", { align: "right", mono: true, color: "#B3261E" }), cell("61", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("Giza 4", { color: "#10231C", bold: true }), cell("128", { align: "right", mono: true }), cell("31", { align: "right", mono: true, color: "#1F5240" }), cell("14", { align: "right", mono: true }), cell("71", { align: "right", mono: true })),
+          row(cell("Faisal 2", { color: "#10231C", bold: true }), cell("97", { align: "right", mono: true }), cell("19", { align: "right", mono: true }), cell("21", { align: "right", mono: true, color: "#9A5B08" }), cell("64", { align: "right", mono: true }))
+        ],
+        tableNote: "",
+        panels: [
+          PIPELINE_PANEL,
+          {
+            title: "Why Outlets Went Inactive", meta: "rolling 90 days", bar: false,
+            rows: [
+              prow("Sold Oil Elsewhere Repeatedly", "14", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Stopped Working with Us", "9", { dot: "#B3261E", valueColor: "#B3261E" }),
+              prow("Couldn't Agree a New Price", "6", { dot: "#3A3E40" }),
+              prow("Stopped Supplying (No Contact)", "12", { dot: "#3A3E40" })
+            ]
+          }
+        ]
+      },
+
+      operations: {
+        title: "Operations",
+        subtitle: "/api/manager/operations-summary · today's routes and the teams running them",
+        kpis: [
+          kpi("Manifests today", "14", "31 of 38 stops done", "−3%", false, "82%", "blue"),
+          kpi("Collected today", "9,420", "kg · 64% of expected", "+6%", true, "64%", "green"),
+          kpi("Cash with drivers", "84,200", "EGP on hand", null, null, "70%", "mid"),
+          kpi("Same-day requests", "3", "waiting on your approval", "+3", false, "30%", "amber")
+        ],
+        tableTitle: "Today's Manifests", tableLink: "All manifests →",
+        cols: [{ label: "Manifest", align: "left" }, { label: "Driver · Vehicle", align: "left" }, { label: "Stops", align: "right" }, { label: "Collected", align: "right" }, { label: "Status", align: "right" }],
+        rows: [
+          row(cell("M-812", { color: "#10231C", bold: true }), cell("H. Saber · TRK-04"), cell("6 / 7", { align: "right", mono: true }), cell("2,140 Kg", { align: "right", mono: true }), cell("Waiting on price", { align: "right", color: "#B3261E", bold: true, wrap: false })),
+          row(cell("M-813", { color: "#10231C", bold: true }), cell("A. Rady · TRK-02"), cell("5 / 5", { align: "right", mono: true }), cell("1,880 Kg", { align: "right", mono: true }), cell("Closed", { align: "right", color: "#1F5240", bold: true, wrap: false })),
+          row(cell("M-814", { color: "#10231C", bold: true }), cell("M. Ezz · TRK-07"), cell("4 / 6", { align: "right", mono: true }), cell("1,310 Kg", { align: "right", mono: true }), cell("In progress", { align: "right", color: "#2C5578", bold: true, wrap: false })),
+          row(cell("M-815", { color: "#10231C", bold: true }), cell("S. Kamal · TRK-01"), cell("3 / 8", { align: "right", mono: true }), cell("940 Kg", { align: "right", mono: true }), cell("In progress", { align: "right", color: "#2C5578", bold: true, wrap: false })),
+          row(cell("M-816", { color: "#10231C", bold: true }), cell("T. Osman · TRK-05"), cell("0 / 6", { align: "right", mono: true }), cell("—", { align: "right", mono: true }), cell("Not started", { align: "right", color: "#63736A", bold: true, wrap: false }))
+        ],
+        tableNote: "M-812's driver is at a counter waiting on a door-side price — it's the first thing in your approvals queue.",
+        panels: [
+          {
+            title: "Stop Outcomes Today", meta: "31 logged", bar: false,
+            rows: [
+              prow("Collected as Scheduled", "19", { dot: "#1F5240" }),
+              prow("More / Less Oil Than Expected", "7", { dot: "#2C5578" }),
+              prow("No Oil at All", "3", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Sold to a Competitor", "1", { dot: "#B3261E", valueColor: "#B3261E" }),
+              prow("Paying Contact Absent", "1", { dot: "#3A3E40" })
+            ]
+          },
+          {
+            title: "Teams", meta: "6 active", bar: false,
+            rows: [
+              prow("Vehicles", "8"),
+              prow("Drivers (Main · Sub)", "11"),
+              prow("Shops Assigned", "412"),
+              prow("Reconciliations Pending", "4", { dot: "#9A5B08", valueColor: "#9A5B08" })
+            ]
+          }
+        ]
+      },
+
+      warehousing: {
+        title: "Warehousing",
+        subtitle: "/api/manager/warehouse-summary · intake, filtration and what stock is free",
+        kpis: [
+          kpi("Available", "22", "batches, 41.2 t", "+3", true, "61%", "green"),
+          kpi("Reserved", "9", "against open contracts", "−1", false, "25%", "blue"),
+          kpi("Committed", "5", "loaded into tanks", "+2", true, "14%", "mid"),
+          kpi("Over tolerance", "3", "this month · flagged", "+1", false, "30%", "red")
+        ],
+        tableTitle: "Over-tolerance Batches", tableLink: "Warehouse →",
+        cols: [{ label: "Batch", align: "left" }, { label: "Intake", align: "right" }, { label: "Filtered", align: "right" }, { label: "Loss", align: "right" }, { label: "Drivers Involved", align: "left" }],
+        rows: [
+          row(cell("W-2291", { color: "#10231C", bold: true }), cell("4,120 Kg", { align: "right", mono: true }), cell("3,610 Kg", { align: "right", mono: true }), cell("12.4%", { align: "right", mono: true, color: "#B3261E", bold: true }), cell("H. Saber, A. Rady")),
+          row(cell("W-2286", { color: "#10231C", bold: true }), cell("3,880 Kg", { align: "right", mono: true }), cell("3,470 Kg", { align: "right", mono: true }), cell("10.6%", { align: "right", mono: true, color: "#B3261E", bold: true }), cell("H. Saber, M. Ezz")),
+          row(cell("W-2274", { color: "#10231C", bold: true }), cell("4,610 Kg", { align: "right", mono: true }), cell("4,180 Kg", { align: "right", mono: true }), cell("9.3%", { align: "right", mono: true, color: "#9A5B08", bold: true }), cell("S. Kamal"))
+        ],
+        tableNote: "No loss amount is ever attributed to one driver. A driver appearing in several of these is a pattern worth a look — one batch is not.",
+        panels: [
+          {
+            title: "Composite Quality", meta: "weighted average", bar: false,
+            rows: [
+              prow("FFA", "3.8", { detail: "Lab tested · 12 Sep" }),
+              prow("MI", "1.2", { detail: "Computed weighted average" }),
+              prow("IV", "118", { detail: "Lab tested · 10 Sep" }),
+              prow("Sulphur", "—", { detail: "Not tested — treated as not satisfied", dot: "#9A5B08", valueColor: "#9A5B08" })
+            ]
+          },
+          {
+            title: "Buffer & Scales", meta: "", bar: false,
+            rows: [
+              prow("In IBC Buffer Storage", "4", { detail: "Awaiting filtration capacity", dot: "#2C5578" }),
+              prow("Scales Overdue", "1", { detail: "WH-SCALE-2 · 41 days since calibration", dot: "#B3261E", valueColor: "#B3261E" })
+            ]
+          }
+        ]
+      },
+
+      sales: {
+        title: "Sales",
+        subtitle: "/api/manager/sales-summary · contracts, shipments and the money still owed",
+        kpis: [
+          kpi("Open contracts", "17", "4,820 t contracted", "+2", true, "62%", "green"),
+          kpi("Fulfilled", "3,140", "t · 65% of contracted", "+8%", true, "65%", "mid"),
+          kpi("Overdue holdbacks", "4", "past expected release", "+1", false, "40%", "red"),
+          kpi("Open disputes", "2", "spec and quantity", null, null, "20%", "amber")
+        ],
+        tableTitle: "Shipments", tableLink: "All shipments →",
+        cols: [{ label: "Shipment", align: "left" }, { label: "Buyer", align: "left" }, { label: "Tons", align: "right" }, { label: "Status", align: "left" }, { label: "Outstanding Docs", align: "right" }],
+        rows: [
+          row(cell("S-118", { color: "#10231C", bold: true }), cell("Rotterdam BioFuels"), cell("980", { align: "right", mono: true }), cell("BOL issued", { color: "#1F5240", bold: true, wrap: false }), cell("1", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("S-117", { color: "#10231C", bold: true }), cell("Antwerp Green Oils"), cell("1,020", { align: "right", mono: true }), cell("Loaded", { color: "#2C5578", bold: true, wrap: false }), cell("2", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("S-116", { color: "#10231C", bold: true }), cell("Valencia Renewables"), cell("640", { align: "right", mono: true }), cell("Loading", { color: "#2C5578", bold: true, wrap: false }), cell("3", { align: "right", mono: true, color: "#B3261E" })),
+          row(cell("S-115", { color: "#10231C", bold: true }), cell("Rotterdam BioFuels"), cell("1,100", { align: "right", mono: true }), cell("Finished", { color: "#3A3E40", bold: true, wrap: false }), cell("0", { align: "right", mono: true }))
+        ],
+        tableNote: "Documents never block loading or BOL issuance — only marking a shipment finished.",
+        panels: [
+          {
+            title: "Holdbacks", meta: "not yet released", bar: false,
+            rows: [
+              prow("Overdue", "4", { detail: "Raise these — don't absorb the discrepancy", dot: "#B3261E", valueColor: "#B3261E" }),
+              prow("Due This Month", "3", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Released, Discrepancy Flagged", "2", { dot: "#9A5B08" })
+            ]
+          },
+          {
+            title: "Deductions Taken", meta: "rolling 90 days", bar: false,
+            rows: [
+              prow("Above-threshold FFA", "18,400", { detail: "EGP equivalent", dot: "#9A5B08" }),
+              prow("Moisture & Impurities", "6,140", { dot: "#9A5B08" }),
+              prow("Quantity Short", "2,900", { dot: "#3A3E40" })
+            ]
+          }
+        ]
+      },
+
+      volumes: {
+        title: "Volumes Won And Lost",
+        subtitle: "CRM · estimated monthly volume moving in and out of the book, and what we actually collected",
+        kpis: [
+          kpi("Gained in negotiation", "+18.4", "t/month · 14 outlets won", "+3.1 t", true, "72%", "green"),
+          kpi("Lost in negotiation", "\u22127.2", "t/month · 9 outlets lost", "+1.4 t", false, "38%", "red"),
+          kpi("Net won this month", "+11.2", "t/month added", "+1.7 t", true, "58%", "mid"),
+          kpi("Collected vs last month", "+9%", "214 t vs 196 t", "+18 t", true, "76%", "green")
+        ],
+        tableTitle: "Biggest Moves This Month", tableLink: "CRM \u2192",
+        cols: [{ label: "Outlet", align: "left" }, { label: "Zone", align: "left" }, { label: "Volume", align: "right" }, { label: "Price", align: "right" }, { label: "What Happened", align: "left" }],
+        rows: [
+          row(cell("Abou Tarek Downtown", { color: "#10231C", bold: true }), cell("Downtown 1"), cell("+4.2 t", { align: "right", mono: true, color: "#1F5240", bold: true }), cell("6.10", { align: "right", mono: true }), cell("Deal agreed \u2014 signed off 6 Sep", { wrap: false })),
+          row(cell("Gad Mohandessin", { color: "#10231C", bold: true }), cell("Mohandessin 3"), cell("+3.4 t", { align: "right", mono: true, color: "#1F5240", bold: true }), cell("6.10", { align: "right", mono: true }), cell("Deal pending sign-off", { wrap: false })),
+          row(cell("Hadramout Faisal", { color: "#10231C", bold: true }), cell("Faisal 2"), cell("\u22122.8 t", { align: "right", mono: true, color: "#B3261E", bold: true }), cell("asked 6.80", { align: "right", mono: true }), cell("Won't agree \u2014 above every ceiling", { wrap: false })),
+          row(cell("Cilantro Maadi", { color: "#10231C", bold: true }), cell("Maadi 1"), cell("\u22121.9 t", { align: "right", mono: true, color: "#B3261E", bold: true }), cell("\u2014", { align: "right", mono: true }), cell("Signed with a competitor", { wrap: false })),
+          row(cell("Bazooka Chicken", { color: "#10231C", bold: true }), cell("Giza 4"), cell("+2.6 t", { align: "right", mono: true, color: "#1F5240", bold: true }), cell("5.95", { align: "right", mono: true }), cell("Deal agreed on site, verified", { wrap: false })),
+          row(cell("Koshary El Sayed", { color: "#10231C", bold: true }), cell("Dokki 2"), cell("\u22121.2 t", { align: "right", mono: true, color: "#B3261E", bold: true }), cell("\u2014", { align: "right", mono: true }), cell("Stopped working with us", { wrap: false }))
+        ],
+        tableNote: "Volume is the outlet's estimated monthly volume at the time the deal closed or failed \u2014 not a measured collection.",
+        panels: [
+          {
+            title: "Why Volume Was Lost", meta: "this month · 7.2 t", bar: true,
+            segments: [
+              { width: "39%", color: "#B3261E" },
+              { width: "26%", color: "#9A5B08" },
+              { width: "21%", color: "#3A3E40" },
+              { width: "14%", color: "#2C5578" }
+            ],
+            rows: [
+              prow("Price Above Every Ceiling", "2.8 t", { dot: "#B3261E", square: true, valueColor: "#B3261E" }),
+              prow("Signed with a Competitor", "1.9 t", { dot: "#9A5B08", square: true, valueColor: "#9A5B08" }),
+              prow("Stopped Working with Us", "1.5 t", { dot: "#3A3E40", square: true }),
+              prow("Closed Down", "1.0 t", { dot: "#2C5578", square: true })
+            ]
+          },
+          {
+            title: "Collected vs Last Month", meta: "tonnes", bar: false,
+            rows: [
+              prow("This Month to Date", "214 t", { detail: "11 days in", dot: "#1F5240" }),
+              prow("Same Point Last Month", "196 t", { dot: "#3A3E40" }),
+              prow("From Outlets Won This Month", "12 t", { detail: "First collections already landing", dot: "#7CC79A" }),
+              prow("Lost to Sold-elsewhere", "\u22126 t", { detail: "31 stops where the oil had gone", dot: "#9A5B08", valueColor: "#9A5B08" })
+            ]
+          }
+        ]
+      },
+
+      approvals: {
+        title: "Approvals Waiting On You",
+        subtitle: "Price ceilings and door-side requests, ranked by urgency — a driver at a counter outranks everything",
+        kpis: [
+          kpi("Waiting on you", "7", "oldest 3 days", "+2", false, "40%", "red"),
+          kpi("Driver at a counter", "2", "collection blocked", "+2", false, "100%", "red"),
+          kpi("Median answer time", "14", "minutes, this week", "−3", true, "46%", "green"),
+          kpi("Approved above ask", "0", "of 31 this month", null, null, "0%", "mid")
+        ],
+        tableTitle: "Open Requests", tableLink: "Open the approvals screen →",
+        cols: [{ label: "Urgency", align: "left" }, { label: "Item", align: "left" }, { label: "Kind", align: "left" }, { label: "Asked", align: "right" }, { label: "Waiting", align: "right" }],
+        rows: [
+          row(cell("Oil ready", { color: "#B3261E", bold: true, wrap: false }), cell("Al Nour Grill — driver at the counter", { color: "#10231C", bold: true }), cell("Door-side", { wrap: false }), cell("6.40", { align: "right", mono: true }), cell("9 min", { align: "right", mono: true, color: "#B3261E" })),
+          row(cell("Urgent", { color: "#9A5B08", bold: true, wrap: false }), cell("Bazooka Chicken — driver at the counter", { color: "#10231C", bold: true }), cell("Door-side", { wrap: false }), cell("6.25", { align: "right", mono: true }), cell("4 min", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("Critical", { color: "#B3261E", bold: true, wrap: false }), cell("Zamalek Fish House — ceiling request", { color: "#10231C", bold: true }), cell("Price", { wrap: false }), cell("6.40", { align: "right", mono: true }), cell("2 days", { align: "right", mono: true, color: "#B3261E" })),
+          row(cell("Urgent", { color: "#9A5B08", bold: true, wrap: false }), cell("Gad Mohandessin — ceiling request", { color: "#10231C", bold: true }), cell("Price", { wrap: false }), cell("6.30", { align: "right", mono: true }), cell("1 day", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("Normal", { wrap: false }), cell("Koshary El Sayed — stopped working", { color: "#10231C", bold: true }), cell("Supplier", { wrap: false }), cell("—", { align: "right", mono: true }), cell("3 days", { align: "right", mono: true })),
+          row(cell("Normal", { wrap: false }), cell("Rotterdam BioFuels — spec dispute", { color: "#10231C", bold: true }), cell("Dispute", { wrap: false }), cell("38,400", { align: "right", mono: true }), cell("4 days", { align: "right", mono: true }))
+        ],
+        tableNote: "Open a row for the full decision view — offer history, the shop's price history and your ceiling.",
+        panels: [
+          { title: "By Kind", meta: "open now", bar: true,
+            segments: [{ width: "29%", color: "#B3261E" }, { width: "29%", color: "#9A5B08" }, { width: "14%", color: "#2C5578" }, { width: "14%", color: "#3A3E40" }, { width: "14%", color: "#7CC79A" }],
+            rows: [
+              prow("Door-side Prices", "2", { dot: "#B3261E", square: true, valueColor: "#B3261E" }),
+              prow("Price Ceilings", "2", { dot: "#9A5B08", square: true, valueColor: "#9A5B08" }),
+              prow("Supplier Flags", "1", { dot: "#2C5578", square: true }),
+              prow("Disputes", "1", { dot: "#3A3E40", square: true }),
+              prow("Access Requests", "1", { dot: "#7CC79A", square: true })
+            ] },
+          { title: "How You Decided", meta: "this month", bar: false,
+            rows: [
+              prow("Ceilings Raised", "19", { detail: "Average raise 0.18 EGP/kg", dot: "#1F5240" }),
+              prow("Ceilings Refused", "12", { detail: "Shop walked away in 4 of those", dot: "#9A5B08" }),
+              prow("Door-side Approved", "11", { detail: "Average wait 12 minutes", dot: "#1F5240" }),
+              prow("Door-side Refused", "7", { detail: "Paid the manifest rate", dot: "#3A3E40" })
+            ] }
+        ]
+      },
+
+      deals: {
+        title: "Deal Sign-Offs",
+        subtitle: "Shops that accepted a price — nothing collects until you sign it off",
+        kpis: [
+          kpi("Waiting", "5", "oldest 2 days", "+1", false, "50%", "amber"),
+          kpi("Volume waiting", "1.6", "tonnes per month", "+0.4", true, "62%", "mid"),
+          kpi("Average price", "6.07", "EGP/kg", "+0.04", true, "88%", "green"),
+          kpi("Signed this month", "23", "1 rejected", "+6", true, "74%", "green")
+        ],
+        tableTitle: "Waiting for Sign-off", tableLink: "Open the approvals screen →",
+        cols: [{ label: "Outlet", align: "left" }, { label: "Agreed By", align: "left" }, { label: "Price", align: "right" }, { label: "Monthly Kg", align: "right" }, { label: "Waiting", align: "right" }],
+        rows: [
+          row(cell("Abou Tarek Downtown", { color: "#10231C", bold: true }), cell("S. Adel"), cell("6.10", { align: "right", mono: true }), cell("420", { align: "right", mono: true }), cell("2 days", { align: "right", mono: true, color: "#9A5B08" })),
+          row(cell("Bazooka Chicken", { color: "#10231C", bold: true }), cell("Surveyor, on site"), cell("5.95", { align: "right", mono: true }), cell("310", { align: "right", mono: true }), cell("1 day", { align: "right", mono: true })),
+          row(cell("Gad Mohandessin", { color: "#10231C", bold: true }), cell("H. Mounir"), cell("6.10", { align: "right", mono: true }), cell("280", { align: "right", mono: true }), cell("1 day", { align: "right", mono: true })),
+          row(cell("Fish shop, Dokki", { color: "#10231C", bold: true }), cell("S. Adel"), cell("6.00", { align: "right", mono: true }), cell("190", { align: "right", mono: true }), cell("6 h", { align: "right", mono: true }))
+        ],
+        tableNote: "Signing off makes the outlet an Active Supplier and lets operations route a driver to it.",
+        panels: [
+          { title: "Terms Being Agreed", meta: "waiting deals", bar: false,
+            rows: [
+              prow("Recurring", "4", { detail: "Weekly or bi-weekly collection", dot: "#1F5240" }),
+              prow("Spot, One-time", "1", { dot: "#2C5578" }),
+              prow("Written Term", "0", { detail: "All verbal so far", dot: "#3A3E40" }),
+              prow("With a Deposit Request", "1", { detail: "Goes to senior management separately", dot: "#9A5B08" })
+            ] },
+          { title: "Price Against Ceiling", meta: "waiting deals", bar: false,
+            rows: [
+              prow("Closed Under the Ceiling", "4", { dot: "#1F5240" }),
+              prow("Closed at the Ceiling", "1", { dot: "#9A5B08" }),
+              prow("Needed a Raise First", "2", { detail: "You raised the ceiling earlier this week", dot: "#2C5578" })
+            ] }
+        ]
+      },
+
+      deposits: {
+        title: "Deposits",
+        subtitle: "Advance cash against future collections — senior management only, at every size",
+        kpis: [
+          kpi("Waiting", "2", "12,000 EGP total", null, null, "20%", "amber"),
+          kpi("Advanced this month", "96,000", "EGP across 5 deals", "+18%", true, "64%", "mid"),
+          kpi("Recovered", "61,400", "EGP against collections", "+9%", true, "64%", "green"),
+          kpi("Written off", "0", "none so far", null, null, "0%", "green")
+        ],
+        tableTitle: "Deposit Requests", tableLink: "Open the approvals screen →",
+        cols: [{ label: "Outlet", align: "left" }, { label: "Signed off By", align: "left" }, { label: "Deposit", align: "right" }, { label: "Deal Price", align: "right" }, { label: "Payback", align: "right" }],
+        rows: [
+          row(cell("Hadramout Faisal", { color: "#10231C", bold: true }), cell("N. Halim"), cell("8,000", { align: "right", mono: true, color: "#9A5B08" }), cell("6.20", { align: "right", mono: true }), cell("9 weeks", { align: "right", mono: true })),
+          row(cell("Cilantro Maadi", { color: "#10231C", bold: true }), cell("N. Halim"), cell("4,000", { align: "right", mono: true, color: "#9A5B08" }), cell("6.00", { align: "right", mono: true }), cell("11 weeks", { align: "right", mono: true }))
+        ],
+        tableNote: "The deal is already signed off in both cases — this decision only concerns whether the cash goes out.",
+        panels: [
+          { title: "Risk on the Waiting Two", meta: "", bar: false,
+            rows: [
+              prow("Trust Score 64", "Hadramout Faisal", { detail: "One lapsed period, 150 Kg/month", dot: "#9A5B08" }),
+              prow("Trust Score 71", "Cilantro Maadi", { detail: "Steady, 60 Kg/month — slow payback", dot: "#2C5578" })
+            ] },
+          { title: "Deposits Already Out", meta: "5 deals", bar: false,
+            rows: [
+              prow("Fully Recovered", "2", { dot: "#1F5240" }),
+              prow("Recovering on Schedule", "2", { dot: "#1F5240" }),
+              prow("Behind Schedule", "1", { detail: "Shop collecting less than estimated", dot: "#9A5B08", valueColor: "#9A5B08" })
+            ] }
+        ]
+      },
+
+      settings_changes: {
+        title: "Settings Changes",
+        subtitle: "Pricing changes an admin proposed — they take effect only when you approve them",
+        kpis: [
+          kpi("Waiting", "3", "oldest 2 days", null, null, "30%", "amber"),
+          kpi("Ceiling effect", "+0.25", "EGP/kg if all approved", null, null, "40%", "mid"),
+          kpi("Agents affected", "4", "call centre, EG", null, null, "100%", "blue"),
+          kpi("Approved this month", "6", "2 rejected", null, null, "75%", "green")
+        ],
+        tableTitle: "Proposed Changes", tableLink: "Open Settings →",
+        cols: [{ label: "Setting", align: "left" }, { label: "Proposed By", align: "left" }, { label: "From", align: "right" }, { label: "To", align: "right" }, { label: "Reason Given", align: "left" }],
+        rows: [
+          row(cell("Role ceiling · call centre · EG", { color: "#10231C", bold: true }), cell("Admin"), cell("6.20", { align: "right", mono: true }), cell("6.45", { align: "right", mono: true, color: "#9A5B08" }), cell("Competitors at 6.40 in Cairo")),
+          row(cell("Opening-offer tier 200–300", { color: "#10231C", bold: true }), cell("Admin"), cell("5.90", { align: "right", mono: true }), cell("6.00", { align: "right", mono: true, color: "#9A5B08" }), cell("Too many instant refusals")),
+          row(cell("Role ceiling · ops manager · EG", { color: "#10231C", bold: true }), cell("Admin"), cell("6.30", { align: "right", mono: true }), cell("6.35", { align: "right", mono: true }), cell("Door-side requests reaching you too often"))
+        ],
+        tableNote: "Whoever proposes a pricing change can never be the one who makes it take effect.",
+        panels: [
+          { title: "What These Would Change", meta: "if approved", bar: false,
+            rows: [
+              prow("Escalations Avoided", "About 31/month", { detail: "Based on last month's hits at 6.20", dot: "#1F5240" }),
+              prow("Margin Effect", "−4% per kg", { detail: "At current volumes", dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Door-side Requests", "Fewer to you", { detail: "Ops manager rung would absorb more", dot: "#2C5578" })
+            ] },
+          { title: "Recent Decisions", meta: "this month", bar: false,
+            rows: [
+              prow("Approved", "6", { dot: "#1F5240" }),
+              prow("Rejected", "2", { detail: "Both raised a ceiling without evidence", dot: "#B3261E", valueColor: "#B3261E" })
+            ] }
+        ]
+      },
+
+      finance: {
+        title: "Finance",
+        subtitle: "No data source yet — this page shows only what other modules already record",
+        kpis: [
+          kpi("Cash with drivers", "84,200", "EGP on hand today", null, null, "70%", "mid"),
+          kpi("Driver shortfalls", "6,140", "EGP carried forward", null, null, "30%", "amber"),
+          kpi("Deposits pending", "2", "waiting on Senior Management", null, null, "20%", "amber"),
+          kpi("Invoices issued", "9", "this month", null, null, "45%", "blue")
+        ],
+        tableTitle: "What Exists Today", tableLink: "",
+        cols: [{ label: "Figure", align: "left" }, { label: "Where It Comes From", align: "left" }, { label: "Value", align: "right" }],
+        rows: [
+          row(cell("Cash float issued", { color: "#10231C", bold: true }), cell("Manifest cash float (MOD-200)"), cell("112,000 EGP", { align: "right", mono: true })),
+          row(cell("Cash returned", { color: "#10231C", bold: true }), cell("End-of-day reconciliation"), cell("27,800 EGP", { align: "right", mono: true })),
+          row(cell("Shortfall charges", { color: "#10231C", bold: true }), cell("Reconciliation against warehouse weight"), cell("6,140 EGP", { align: "right", mono: true, color: "#B3261E" })),
+          row(cell("Commercial invoices", { color: "#10231C", bold: true }), cell("Shipment invoices (MOD-600)"), cell("9 issued", { align: "right", mono: true })),
+          row(cell("P&L, ledgers, payroll", { color: "#63736A", bold: true }), cell("Not built — MOD-700 has no models yet"), cell("—", { align: "right", mono: true, color: "#63736A" }))
+        ],
+        tableNote: "Everything above is read from other modules. Nothing on this page is computed by a finance module, because there isn't one yet.",
+        panels: [
+          {
+            title: "Deposit Approvals", meta: "Senior Management only", bar: false,
+            rows: [
+              prow("Pending", "2", { detail: "Real cash leaving the business up front", dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Approved This Month", "5", { dot: "#1F5240" }),
+              prow("Rejected", "1", { dot: "#3A3E40" })
+            ]
+          },
+          {
+            // His own decisions are not figures to read — they live on his
+            // approvals screen, and this is the count so he knows to go there.
+            title: "Waiting On The Financial Manager", meta: "his own decisions", bar: false,
+            link: "manager-departments.dc.html", linkLabel: "Open his approvals →",
+            rows: [
+              prow("Price ceilings", "2", { detail: "Those negotiations are stopped until he answers", dot: "#B3261E", valueColor: "#B3261E" }),
+              prow("Tanks and vehicles", "3", { detail: "An asset cannot be used until he approves it", dot: "#9A5B08", valueColor: "#9A5B08" }),
+              prow("Loans against wages", "1", { detail: "1,000 EGP asked by Karim Hosny", dot: "#9A5B08" }),
+              prow("Final payments to release", "1", { detail: "15,000 USD, their lab cleared 15 Sep", dot: "#9A5B08" }),
+              prow("Zone moves", "2", { detail: "Two surveyors asking to change zone", dot: "#9A5B08" })
+            ]
+          }
+        ]
+      }
+    };
+
+    // The side menu deliberately holds what the top tabs don't: the
+    // cross-department queues and admin pages.
+    const detail = (title, meta, rows, note) => ({ title, meta, note: note || "", rows: rows.map(([label, value, color]) => ({ label, value, color: color || "#10231C" })) });
+
+    const DETAIL = {
+      survey: [
+        detail("Pre-survey sources", "this month", [["Surveyor walk-by", "188"], ["Call centre phone-in", "74"], ["Management assigned", "20"]]),
+        detail("Duplicate checks", "before survey", [["Checked, nothing found", "612"], ["Stopped as already recorded", "41", "#9A5B08"], ["Insisted it was different", "17", "#9A5B08"], ["Unchecked \u2014 no signal", "29", "#B3261E"]], "Unchecked surveys are re-checked at verification."),
+        detail("Deal agreed on site", "surveyor-priced", [["Surveys with a price", "96"], ["Average asking price", "5.92"], ["Later verified", "78", "#1F5240"], ["Above ceiling on arrival", "11", "#9A5B08"]])
+      ],
+      call_center: [
+        detail("Verification ticks", "fields marked wrong", [["Decision-maker phone", "14", "#9A5B08"], ["Outlet name / type", "8"], ["Street or area", "6"], ["Steward details", "4"]]),
+        detail("Tasks created", "open now", [["Call-backs", "87"], ["Obtain a new number", "23"], ["Re-survey (rework)", "19", "#9A5B08"], ["Competitor follow-up", "63"]]),
+        detail("Ceilings", "who approved what", [["Within agent ceiling", "188"], ["Escalated to manager", "31", "#9A5B08"], ["Escalated to senior mgmt", "6", "#B3261E"], ["Average approved price", "6.14"]])
+      ],
+      crm: [
+        detail("Trust score spread", "1,284 outlets", [["80 and above", "318", "#1F5240"], ["60 \u2013 79", "561"], ["Below 60", "243", "#9A5B08"], ["Not enough history", "162", "#63736A"]]),
+        detail("Chains", "multi-outlet owners", [["Chains", "14"], ["Outlets in a chain", "96"], ["Chain negotiations open", "3"]]),
+        detail("Re-verification due", "gated statuses", [["Verified over 90 days ago", "74", "#9A5B08"], ["Never collected since", "31", "#B3261E"], ["Re-verified this month", "22", "#1F5240"]])
+      ],
+      volumes: [
+        detail("Where gained volume came from", "+18.4 t", [["New deals closed", "+12.1 t", "#1F5240"], ["Renegotiated upward", "+3.7 t", "#1F5240"], ["Reactivated suppliers", "+2.6 t", "#1F5240"]]),
+        detail("Price effect", "per kg, weighted", [["Average agreed price", "6.08"], ["Last month", "5.97"], ["Ceiling headroom used", "88%", "#9A5B08"]], "A rising average price with rising volume is the outcome to aim for."),
+        detail("Collection reliability", "of won outlets", [["Collected within 7 days", "81%", "#1F5240"], ["Still never collected", "9", "#B3261E"], ["Sold elsewhere at least once", "14", "#9A5B08"]])
+      ],
+      operations: [
+        detail("Cash", "today", [["Float issued", "112,000"], ["Cash on hand", "84,200"], ["Returned and reconciled", "27,800"], ["Shortfalls carried", "6,140", "#B3261E"]]),
+        detail("Route efficiency", "today", [["Stops per manifest", "5.4"], ["Average kg per stop", "304"], ["Empty stops", "3", "#9A5B08"], ["Same-day additions", "3", "#9A5B08"]]),
+        detail("Door-side prices", "this month", [["Requests raised", "18"], ["Approved", "11", "#1F5240"], ["Refused \u2014 paid manifest rate", "7"], ["Average wait for an answer", "9 min"]])
+      ],
+      warehousing: [
+        detail("Filtration", "this month", [["Batches filtered", "31"], ["Average loss", "6.8%"], ["Tolerance", "8.0%"], ["Over tolerance", "3", "#B3261E"]]),
+        detail("Reservations", "against contracts", [["Reserved tons", "18.4 t"], ["Expiring in 7 days", "2", "#9A5B08"], ["Released back to stock", "1"]], "A reservation returns to available stock when it expires."),
+        detail("Contract matching", "available batches", [["Satisfy all parameters", "14", "#1F5240"], ["Fail one or more", "6", "#9A5B08"], ["Untested parameter", "2", "#B3261E"]])
+      ],
+      sales: [
+        detail("Documents outstanding", "across shipments", [["Certificate of quality", "2", "#9A5B08"], ["Weighbridge certificate", "1"], ["EUR.1 movement", "2", "#9A5B08"], ["ISCC certificate", "1"]], "Documents block only marking a shipment finished."),
+        detail("Buyers", "this year", [["Rotterdam BioFuels", "2,080 t"], ["Antwerp Green Oils", "1,240 t"], ["Valencia Renewables", "640 t"]]),
+        detail("Disputes", "open and recent", [["Spec disputes", "1", "#9A5B08"], ["Quantity disputes", "1", "#9A5B08"], ["Resolved in our favour", "3", "#1F5240"], ["Resolved for the buyer", "1"]])
+      ],
+      finance: [
+        detail("Driver balances", "carried forward", [["Drivers with a shortfall", "3", "#B3261E"], ["Largest balance", "2,900"], ["Recovered this month", "4,100", "#1F5240"]]),
+        detail("Deposits", "advance payments", [["Pending approval", "2", "#9A5B08"], ["Approved this month", "5"], ["Total advanced", "96,000"]]),
+        detail("Not built yet", "MOD-700", [["Ledgers", "\u2014", "#63736A"], ["P&L by entity", "\u2014", "#63736A"], ["Payroll / commissions", "\u2014", "#63736A"]], "These need a finance module; nothing here is estimated.")
+      ]
+    };
+
+    // ── Drill-down reports ────────────────────────────────────────────
+    // Anything on a page can be opened: a KPI, a table row, a panel line.
+    // Table rows open the entity that page is about; numbers open a
+    // "how this number is made" report.
+    const PEOPLE = {
+      "M. Fawzy": "surveyor", "R. Sobhy": "surveyor", "K. Nabil": "surveyor", "A. Mostafa": "surveyor", "Y. Gamal": "surveyor",
+      "N. Halim": "agent", "S. Adel": "agent", "H. Mounir": "agent", "L. Sameh": "agent",
+      "H. Saber": "driver", "A. Rady": "driver", "M. Ezz": "driver", "S. Kamal": "driver", "T. Osman": "driver"
+    };
+    const OUTLETS = ["Abou Tarek Downtown", "Al Nour Grill", "Zamalek Fish House", "Cilantro Maadi", "Koshary El Sayed", "Gad Mohandessin", "Bazooka Chicken", "Hadramout Faisal", "Bakery, Zamalek", "Fish shop, Dokki"];
+    const ZONES = ["Nasr City 3", "Zamalek 1", "Dokki 2", "Giza 4", "Faisal 2", "Mohandessin 3", "Maadi 1", "Downtown 1"];
+    // What a row is ABOUT, read from its own cells: a person opens that
+    // person, a shop opens the shop, an id opens that record. A row that
+    // is only a day or a label is not a subject, so it doesn't open.
+    const subjectOf = (cells, fallbackKind) => {
+      const parts = [];
+      (cells || []).forEach((v) => String(v).split(/\s·\s|,\s/).forEach((p) => parts.push(p.trim())));
+      for (const p of parts) if (PEOPLE[p]) return { kind: PEOPLE[p], name: p };
+      for (const p of parts) if (OUTLETS.indexOf(p) !== -1) return { kind: "outlet", name: p };
+      for (const p of parts) if (ZONES.indexOf(p) !== -1) return { kind: "zone", name: p };
+      for (const p of parts) {
+        if (/^W-\d+$/.test(p)) return { kind: "batch", name: p };
+        if (/^M-\d+$/.test(p)) return { kind: "manifest", name: p };
+        if (/^S-\d+$/.test(p)) return { kind: "shipment", name: p };
+      }
+      if (fallbackKind) return { kind: fallbackKind, name: String((cells || [])[0] || "") };
+      return null;
+    };
+    const ROW_KIND = {
+      overview: "zone", survey: "surveyor", call_center: "agent", crm: "zone",
+      volumes: "outlet", operations: "manifest", warehousing: "batch",
+      sales: "shipment", finance: "figure",
+      approvals: "approval", deals: "approval", deposits: "approval", settings_changes: "approval"
+    };
+    const openReport = (kind, name, cells) => () => {
+      this.setState((s) => {
+        const top = s.stack.length ? s.stack[s.stack.length - 1] : null;
+        const entry = { kind, name, cells: cells || [] };
+        // One figure opened from inside another figure is the same level of
+        // detail, so it replaces it rather than stacking another crumb.
+        const sameLevel = top && top.kind === "metric" && kind === "metric";
+        const duplicate = top && top.kind === kind && top.name === name;
+        if (duplicate) return s;
+        return { stack: sameLevel ? [...s.stack.slice(0, -1), entry] : [...s.stack, entry] };
+      });
+      window.scrollTo(0, 0);
+    };
+
+    const reportFor = (kind, name, cells) => {
+      // The report must agree with the row it was opened from, so its
+      // headline figures come from that row's own cells; secondary figures
+      // vary per subject rather than being one shared payload.
+      const fromRow = (i, fallback) => (cells && cells[i] !== undefined ? String(cells[i]) : fallback);
+      let seed = 0;
+      for (let i = 0; i < String(name).length; i++) seed = (seed * 31 + String(name).charCodeAt(i)) % 9973;
+      const vary = (base, spread) => Math.round(base + ((seed % 100) / 100 - 0.5) * 2 * spread);
+      const varyPct = (base, spread) => `${vary(base, spread)}%`;
+      const common = {
+        tableLink: "", tableNote: "",
+        panels: [], detail: []
+      };
+      if (kind === "agent") {
+        return { ...common,
+          title: name, subtitle: "Call-centre agent · full performance, rolling 30 days",
+          kpis: [
+            kpi("Verified this week", fromRow(1, "38"), "from the agents table", varyPct(6, 5), true, "62%", "green"),
+            kpi("Orders raised", fromRow(2, "61"), "this week", varyPct(9, 6), true, "72%", "green"),
+            kpi("Escalations", fromRow(3, "4"), "hit their ceiling", String(vary(2, 2)), false, "38%", "amber"),
+            kpi("Overdue call-backs", fromRow(4, "2"), "oldest " + vary(3, 2) + " days", "+" + vary(2, 1), false, "26%", "red")
+          ],
+          tableTitle: "Recent Calls",
+          cols: [{ label: "When", align: "left" }, { label: "Outlet", align: "left" }, { label: "Stage", align: "left" }, { label: "Outcome", align: "left" }, { label: "Result", align: "right" }],
+          rows: [
+            row(cell("today 18:02", { mono: true, wrap: false }), cell("Zamalek Fish House", { color: "#10231C", bold: true }), cell("Pre-supplier", { wrap: false }), cell("Arrange collection", { wrap: false }), cell("agreed 5.80", { align: "right", mono: true })),
+            row(cell("today 17:41", { mono: true, wrap: false }), cell("Cilantro Maadi", { color: "#10231C", bold: true }), cell("Pre-supplier", { wrap: false }), cell("Confirmed \u2014 dated", { wrap: false }), cell("order 240 Kg", { align: "right", mono: true, color: "#1F5240" })),
+            row(cell("today 17:20", { mono: true, wrap: false }), cell("Koshary El Sayed", { color: "#10231C", bold: true }), cell("Survey", { wrap: false }), cell("Verified", { wrap: false }), cell("\u2192 Verified", { align: "right", color: "#1F5240", bold: true })),
+            row(cell("today 16:55", { mono: true, wrap: false }), cell("Hadramout Faisal", { color: "#10231C", bold: true }), cell("Supplier", { wrap: false }), cell("Sold elsewhere", { wrap: false }), cell("streak 2", { align: "right", mono: true, color: "#9A5B08" })),
+            row(cell("today 16:30", { mono: true, wrap: false }), cell("Bazooka Chicken", { color: "#10231C", bold: true }), cell("Survey", { wrap: false }), cell("Busy \u2014 call back", { wrap: false }), cell("task tomorrow", { align: "right", mono: true }))
+          ],
+          tableNote: "Calls made is not recorded \u2014 these are logged outcomes, which is what the app guarantees exists for every call.",
+          panels: [
+            { title: "Outcome Mix", meta: "30 days", bar: true,
+              segments: [{ width: "29%", color: "#1F5240" }, { width: "34%", color: "#7CC79A" }, { width: "22%", color: "#2C5578" }, { width: "9%", color: "#9A5B08" }, { width: "6%", color: "#B3261E" }],
+              rows: [
+                prow("Verified", "118", { dot: "#1F5240", square: true }),
+                prow("Confirmed \u2014 collect", "142", { dot: "#7CC79A", square: true }),
+                prow("Busy / Call Back", "91", { dot: "#2C5578", square: true }),
+                prow("Sold Elsewhere", "38", { dot: "#9A5B08", square: true, valueColor: "#9A5B08" }),
+                prow("Won't Agree / Declined", "23", { dot: "#B3261E", square: true, valueColor: "#B3261E" })
+              ] },
+            { title: "Negotiations She Ran", meta: "30 days", bar: false,
+              rows: [
+                prow("Closed at or Under Ceiling", "19", { dot: "#1F5240" }),
+                prow("Escalated to a Manager", "7", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+                prow("Lost \u2014 wouldn't agree", "4", { dot: "#B3261E", valueColor: "#B3261E" }),
+                prow("Average Closed Price", "6.06", { detail: "Team average 6.08" })
+              ] }
+          ],
+          detail: [
+            detail("Quality flags", "about her work", [["Not-working-number (verifier)", "2", "#9A5B08"], ["Raised by her about surveyors", "6"]], "A verifier flag means she verified a number that later failed."),
+            detail("Response time", "median", [["New lead \u2192 first call", "6 h"], ["Call-back on the due day", "88%", "#1F5240"], ["Overdue over 3 days", "1", "#B3261E"]]),
+            detail("Volume she brought in", "30 days", [["Outlets won", "11", "#1F5240"], ["Estimated monthly volume", "+8.4 t", "#1F5240"], ["Collected from those", "5.1 t"]])
+          ]
+        };
+      }
+      if (kind === "status") {
+        return { ...common,
+          title: name, subtitle: "Status \u00b7 what it means and what moves an outlet in or out of it",
+          kpis: [
+            kpi("Outlets in it now", String(vary(180, 120)), "company-wide", null, null, "40%", "blue"),
+            kpi("Entered this month", String(vary(42, 25)), "moved into it", null, null, "35%", "mid"),
+            kpi("Left this month", String(vary(38, 22)), "moved on or out", null, null, "32%", "green"),
+            kpi("Average time in it", String(vary(11, 7)) + " days", "median across outlets", null, null, "45%", "amber")
+          ],
+          tableTitle: "How Outlets Move",
+          cols: [{ label: "Direction", align: "left" }, { label: "What Causes It", align: "left" }, { label: "Who Does It", align: "left" }],
+          rows: [
+            row(cell("Into this status", { color: "#10231C", bold: true }), cell("A survey submitted, or a call outcome that sets it"), cell("Surveyor or call centre")),
+            row(cell("Out, forward", { color: "#10231C", bold: true }), cell("Verified, price agreed, or a deal signed off"), cell("Call centre, then a manager")),
+            row(cell("Out, backward", { color: "#10231C", bold: true }), cell("A verification tick marked wrong \u2014 sent to Rework"), cell("Call centre")),
+            row(cell("Out, closed", { color: "#10231C", bold: true }), cell("Declined, closed down, or inactive"), cell("Call centre or the system"))
+          ],
+          tableNote: "The vocabulary itself is fixed in code \u2014 Settings only controls the order it is displayed in.",
+          panels: [
+            { title: "Where They Sit", meta: "by zone", bar: false,
+              rows: [
+                prow("Nasr City 3", String(vary(44, 20)), { dot: "#1F5240" }),
+                prow("Zamalek 1", String(vary(38, 18)), { dot: "#7CC79A" }),
+                prow("Dokki 2", String(vary(31, 16)), { dot: "#2C5578" }),
+                prow("Giza 4", String(vary(27, 14)), { dot: "#9A5B08" })
+              ] },
+            { title: "Oldest in This Status", meta: "worth chasing", bar: false,
+              rows: [
+                prow("Hadramout Faisal", String(vary(34, 12)) + " days", { dot: "#B3261E", valueColor: "#B3261E" }),
+                prow("Cilantro Maadi", String(vary(22, 10)) + " days", { dot: "#9A5B08" }),
+                prow("Koshary El Sayed", String(vary(16, 8)) + " days", { dot: "#3A3E40" })
+              ] }
+          ]
+        };
+      }
+      if (kind === "day") {
+        const who = String(name).split(" \u00b7 ")[0];
+        const when = String(name).split(" \u00b7 ")[1] || "that day";
+        return { ...common,
+          title: name, subtitle: "Everything " + who + " did on " + when,
+          kpis: [
+            kpi("Started", ["07:10", "07:25", "07:40", "08:05"][seed % 4], "first action of the day", null, null, "100%", "mid"),
+            kpi("Finished", ["17:40", "18:20", "19:05", "19:40"][seed % 4], "last action logged", null, null, "100%", "mid"),
+            kpi("Things logged", String(vary(12, 5)), "on " + when, null, null, "72%", "green"),
+            kpi("Time in the field", vary(8, 2) + "h", "between first and last", null, null, "80%", "blue")
+          ],
+          tableTitle: "Hour by Hour on " + when,
+          cols: [{ label: "Time", align: "left" }, { label: "What", align: "left" }, { label: "Where", align: "left" }, { label: "Result", align: "right" }],
+          rows: [
+            row(cell("08:05", { mono: true, wrap: false }), cell("GPS check-in", { color: "#10231C", bold: true }), cell("Nasr City 3"), cell("\u00b114 m", { align: "right", mono: true })),
+            row(cell("08:22", { mono: true, wrap: false }), cell("Survey submitted", { color: "#10231C", bold: true }), cell("Al Nour Grill"), cell("180 Kg", { align: "right", mono: true })),
+            row(cell("10:41", { mono: true, wrap: false }), cell("Survey submitted", { color: "#10231C", bold: true }), cell("Bazooka Chicken"), cell("310 Kg", { align: "right", mono: true })),
+            row(cell("13:02", { mono: true, wrap: false }), cell("Revisit closed", { color: "#10231C", bold: true }), cell("Hadramout Faisal"), cell("phone fixed", { align: "right" })),
+            row(cell("16:30", { mono: true, wrap: false }), cell("Survey submitted", { color: "#10231C", bold: true }), cell("Koshary El Sayed"), cell("90 Kg", { align: "right", mono: true }))
+          ],
+          tableNote: "Each line is an action the app recorded, not a self-reported timesheet \u2014 a shop here opens that shop.",
+          panels: [
+            { title: "What Came of It", meta: when, bar: false,
+              rows: [
+                prow("Verified Since", String(vary(3, 2)), { dot: "#1F5240" }),
+                prow("Still Unverified", String(vary(1, 1)), { dot: "#2C5578" }),
+                prow("Sent Back", String(vary(1, 1)), { detail: "Verification found something wrong", dot: "#9A5B08" })
+              ] },
+            { title: "Gaps in the Day", meta: "over 45 minutes", bar: false,
+              rows: [
+                prow("11:10 \u2013 12:55", "1h 45m", { detail: "No action logged", dot: "#9A5B08" }),
+                prow("14:20 \u2013 15:10", "50m", { detail: "No action logged", dot: "#3A3E40" })
+              ] }
+          ],
+          detail: [
+            detail("Zone", "where they worked", [["Zone", "Nasr City 3"], ["Stops or shops", String(vary(5, 2))], ["Distance between", vary(2, 1) + " km avg"]]),
+            detail("Quality that day", "", [["Duplicate warnings", String(vary(1, 1))], ["GPS accuracy", "\u00b1" + vary(14, 6) + " m"]]),
+            detail("Compared with their month", "", [["Their daily average", String(vary(5, 2))], ["This day", String(vary(6, 2))]])
+          ]
+        };
+      }
+      if (kind === "driver") {
+        return { ...common,
+          title: name, subtitle: "Driver · today's route, the cash they hold and what they owe",
+          kpis: [
+            kpi("Stops today", `${vary(6, 2)} / ${vary(7, 1)}`, "on their manifest", null, null, "82%", "blue"),
+            kpi("Collected today", vary(2100, 700).toLocaleString("en-US"), "kg logged at the door", varyPct(4, 8), true, "74%", "green"),
+            kpi("Cash on hand", vary(3200, 1500).toLocaleString("en-US"), "EGP of their float", null, null, "36%", "mid"),
+            kpi("Carried against them", vary(900, 900).toLocaleString("en-US"), "EGP from past shortfalls", null, null, "30%", "red")
+          ],
+          tableTitle: "Recent Stops",
+          cols: [{ label: "When", align: "left" }, { label: "Outlet", align: "left" }, { label: "Weight", align: "right" }, { label: "Paid", align: "right" }, { label: "Outcome", align: "left" }],
+          rows: [
+            row(cell("Today 16:30", { mono: true, wrap: false }), cell("Abou Tarek Downtown", { color: "#10231C", bold: true }), cell("410 Kg", { align: "right", mono: true }), cell("2,501", { align: "right", mono: true }), cell("Collected", { color: "#1F5240", bold: true, wrap: false })),
+            row(cell("Today 17:05", { mono: true, wrap: false }), cell("Zamalek Fish House", { color: "#10231C", bold: true }), cell("265 Kg", { align: "right", mono: true }), cell("1,617", { align: "right", mono: true }), cell("More than scheduled", { color: "#2C5578", bold: true, wrap: false })),
+            row(cell("Today 18:22", { mono: true, wrap: false }), cell("Al Nour Grill", { color: "#10231C", bold: true }), cell("—", { align: "right", mono: true }), cell("—", { align: "right", mono: true }), cell("Waiting on a price", { color: "#B3261E", bold: true, wrap: false })),
+            row(cell("9 Sep", { mono: true, wrap: false }), cell("Cilantro Maadi", { color: "#10231C", bold: true }), cell("0 Kg", { align: "right", mono: true }), cell("0", { align: "right", mono: true }), cell("No oil at all", { color: "#9A5B08", bold: true, wrap: false }))
+          ],
+          tableNote: "Weight is what they logged at the door; the warehouse weighing at the end of the day is what actually counts.",
+          panels: [
+            { title: "Reconciliations", meta: "last 30 days", bar: false,
+              rows: [
+                prow("Matched Exactly", String(vary(14, 6)), { dot: "#1F5240" }),
+                prow("Short", String(vary(3, 2)), { detail: "Charged at the day's average price", dot: "#B3261E", valueColor: "#B3261E" }),
+                prow("Surplus Flagged", String(vary(1, 1)), { detail: "Never credited to them", dot: "#9A5B08" })
+              ] },
+            { title: "Door-side Price Requests", meta: "last 30 days", bar: false,
+              rows: [
+                prow("Raised", String(vary(5, 3)), { dot: "#2C5578" }),
+                prow("Approved", String(vary(3, 2)), { dot: "#1F5240" }),
+                prow("Refused — Paid Manifest Rate", String(vary(2, 1)), { dot: "#3A3E40" })
+              ] }
+          ],
+          detail: [
+            detail("Vehicle and team", "", [["Vehicle", "TRK-0" + (1 + (seed % 7))], ["Team", "Team " + (1 + (seed % 6))], ["Role", "Main driver"]]),
+            detail("Quality flags", "about their deliveries", [["Over-tolerance batches", String(vary(1, 1)), "#9A5B08"], ["Quality rejections at the door", String(vary(2, 2))]], "A driver appearing across several over-tolerance batches is the only pattern worth acting on."),
+            detail("Cash discipline", "last 30 days", [["Floats returned on time", varyPct(92, 8), "#1F5240"], ["Outstanding balance", vary(900, 900).toLocaleString("en-US"), "#B3261E"]])
+          ]
+        };
+      }
+      if (kind === "surveyor") {
+        return { ...common,
+          title: name, subtitle: "Surveyor · full performance this month",
+          kpis: [
+            kpi("Captured", fromRow(2, fromRow(1, "142")), "in " + (cells && cells.length > 2 ? fromRow(1, "their zone") : "their zone"), varyPct(8, 6), true, "92%", "green"),
+            kpi("Verified of those", fromRow(3, "121"), "by the call centre", varyPct(4, 4), true, "85%", "green"),
+            kpi("Sent back (rework)", fromRow(4, "6"), "needs a second visit", String(vary(-1, 3)), false, "18%", "amber"),
+            kpi("Deal agreed on site", String(vary(18, 8)), "avg ask " + (5.8 + (seed % 30) / 100).toFixed(2), "+" + vary(4, 3), true, "45%", "mid")
+          ],
+          tableTitle: "Recent Surveys",
+          cols: [{ label: "Date", align: "left" }, { label: "Outlet", align: "left" }, { label: "Volume", align: "right" }, { label: "On-site Ask", align: "right" }, { label: "Status Now", align: "left" }],
+          rows: [
+            row(cell("11 Sep", { mono: true, wrap: false }), cell("Al Nour Grill", { color: "#10231C", bold: true }), cell("180 Kg", { align: "right", mono: true }), cell("5.80", { align: "right", mono: true }), cell("In verification", { color: "#2C5578", bold: true, wrap: false })),
+            row(cell("10 Sep", { mono: true, wrap: false }), cell("Bazooka Chicken", { color: "#10231C", bold: true }), cell("310 Kg", { align: "right", mono: true }), cell("5.95", { align: "right", mono: true }), cell("Verified", { color: "#1F5240", bold: true, wrap: false })),
+            row(cell("10 Sep", { mono: true, wrap: false }), cell("Hadramout Faisal", { color: "#10231C", bold: true }), cell("150 Kg", { align: "right", mono: true }), cell("\u2014", { align: "right", mono: true }), cell("Rework \u2014 phone wrong", { color: "#9A5B08", bold: true, wrap: false })),
+            row(cell("9 Sep", { mono: true, wrap: false }), cell("Gad Mohandessin", { color: "#10231C", bold: true }), cell("280 Kg", { align: "right", mono: true }), cell("6.10", { align: "right", mono: true }), cell("Negotiating", { color: "#1F5240", bold: true, wrap: false })),
+            row(cell("9 Sep", { mono: true, wrap: false }), cell("Koshary El Sayed", { color: "#10231C", bold: true }), cell("90 Kg", { align: "right", mono: true }), cell("\u2014", { align: "right", mono: true }), cell("Supplier", { color: "#1F5240", bold: true, wrap: false }))
+          ],
+          panels: [
+            { title: "Why Work Came Back", meta: "this month", bar: false,
+              rows: [
+                prow("Decision-maker Phone Wrong", "3", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+                prow("Nobody Could Be Reached", "2", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+                prow("Street or Area Wrong", "1", { dot: "#2C5578" })
+              ] },
+            { title: "In the Field", meta: "today", bar: false,
+              rows: [
+                prow("GPS Check-ins", "11", { detail: "Median accuracy ±14 m" }),
+                prow("Duplicate Stops", "2", { detail: "Shop already recorded nearby", dot: "#9A5B08" }),
+                prow("Idle over 2 Hours", "0", { dot: "#1F5240" })
+              ] }
+          ],
+          detail: [
+            detail("Zone", "assignment", [["Home zone", "Nasr City 3"], ["Since", "2 Aug"], ["Reassignment requests", "1"]]),
+            detail("Pay-relevant", "verified captures", [["Verified this month", "121", "#1F5240"], ["Awaiting verification", "15"], ["Rejected outright", "6", "#B3261E"]], "Pay triggers once the contact is confirmed real and the number works."),
+            detail("Volume brought in", "estimated monthly", [["From verified outlets", "+14.2 t", "#1F5240"], ["Of which now collecting", "+9.1 t"]])
+          ]
+        };
+      }
+      if (kind === "zone") {
+        return { ...common,
+          title: name, subtitle: "Zone · everything happening inside it",
+          kpis: [
+            kpi("Outlets", fromRow(1, "184"), fromRow(2, "41") + " active suppliers", "+" + vary(7, 5), true, "100%", "mid"),
+            kpi("Collected this month", (vary(320, 120) / 10).toFixed(1), "tonnes", varyPct(9, 7), true, "74%", "green"),
+            kpi("Lapsed", fromRow(3, "18"), "of this zone", "+" + vary(3, 2), false, "18%", "amber"),
+            kpi("Average trust score", fromRow(4, "74"), "company average 71", String(vary(2, 3)), true, "74%", "green")
+          ],
+          tableTitle: "Biggest Suppliers Here",
+          cols: [{ label: "Outlet", align: "left" }, { label: "Price", align: "right" }, { label: "Monthly Kg", align: "right" }, { label: "Last Collected", align: "left" }, { label: "Status", align: "left" }],
+          rows: [
+            row(cell("Abou Tarek Downtown", { color: "#10231C", bold: true }), cell("6.10", { align: "right", mono: true }), cell("420", { align: "right", mono: true }), cell("9 Sep", { wrap: false }), cell("Active supplier", { color: "#1F5240", bold: true, wrap: false })),
+            row(cell("Al Nour Grill", { color: "#10231C", bold: true }), cell("5.80", { align: "right", mono: true }), cell("180", { align: "right", mono: true }), cell("\u2014", { wrap: false }), cell("In verification", { color: "#2C5578", bold: true, wrap: false })),
+            row(cell("Gad Mohandessin", { color: "#10231C", bold: true }), cell("6.10", { align: "right", mono: true }), cell("280", { align: "right", mono: true }), cell("\u2014", { wrap: false }), cell("Pending sign-off", { color: "#9A5B08", bold: true, wrap: false })),
+            row(cell("Hadramout Faisal", { color: "#10231C", bold: true }), cell("\u2014", { align: "right", mono: true }), cell("150", { align: "right", mono: true }), cell("22 Aug", { wrap: false }), cell("Lapsed", { color: "#B3261E", bold: true, wrap: false }))
+          ],
+          panels: [
+            { title: "Stage Mix", meta: "184 outlets", bar: true,
+              segments: [{ width: "24%", color: "#2C5578" }, { width: "17%", color: "#9A5B08" }, { width: "29%", color: "#1F5240" }, { width: "22%", color: "#7CC79A" }, { width: "8%", color: "#3A3E40" }],
+              rows: [
+                prow("Pre-survey", "44", { dot: "#2C5578", square: true }),
+                prow("Surveyed, Unverified", "31", { dot: "#9A5B08", square: true }),
+                prow("Verified / Negotiating", "53", { dot: "#1F5240", square: true }),
+                prow("Supplier", "41", { dot: "#7CC79A", square: true }),
+                prow("Lapsed", "15", { dot: "#3A3E40", square: true })
+              ] },
+            { title: "Who Works Here", meta: "", bar: false,
+              rows: [
+                prow("Surveyor", "M. Fawzy", { detail: "Assigned since 2 Aug" }),
+                prow("Team", "Team 2", { detail: "2 vehicles, 3 drivers" }),
+                prow("Stops Today", "7 / 8", { dot: "#9A5B08" })
+              ] }
+          ],
+          detail: [
+            detail("Coverage", "streets on file", [["Streets", "38"], ["Outlets per street", "4.8"], ["Streets with no outlet yet", "6", "#9A5B08"]]),
+            detail("Competitors seen", "this year", [["Masria Oils", "14"], ["Delta Collect", "9"], ["Unnamed buyer", "6"]]),
+            detail("Prices here", "per kg", [["Average agreed", "6.02"], ["Highest approved", "6.40"], ["Company average", "6.08"]])
+          ]
+        };
+      }
+      if (kind === "outlet") {
+        return { ...common,
+          title: name, subtitle: "Outlet · its whole history with us",
+          kpis: [
+            kpi("Agreed price", "6.10", "EGP/kg", "+0.15", true, "88%", "green"),
+            kpi("Monthly volume", "420", "kg estimated", "+40", true, "70%", "mid"),
+            kpi("Collected all-time", "3.4", "tonnes", null, null, "64%", "green"),
+            kpi("Trust score", "78", "14 events of history", "+4", true, "78%", "green")
+          ],
+          tableTitle: "Account Transcript",
+          cols: [{ label: "When", align: "left" }, { label: "Event", align: "left" }, { label: "Detail", align: "left" }, { label: "By", align: "left" }],
+          rows: [
+            row(cell("9 Sep", { mono: true, wrap: false }), cell("Collected", { color: "#10231C", bold: true }), cell("410 Kg at 6.10 · paid in cash"), cell("H. Saber", { wrap: false })),
+            row(cell("6 Sep", { mono: true, wrap: false }), cell("Deal signed off", { color: "#10231C", bold: true }), cell("6.10, recurring, weekly Tuesdays"), cell("N. Halim", { wrap: false })),
+            row(cell("4 Sep", { mono: true, wrap: false }), cell("Price agreed", { color: "#10231C", bold: true }), cell("Shop asked 6.40, closed at 6.10"), cell("S. Adel", { wrap: false })),
+            row(cell("2 Sep", { mono: true, wrap: false }), cell("Verified", { color: "#10231C", bold: true }), cell("Contact and number confirmed"), cell("S. Adel", { wrap: false })),
+            row(cell("1 Sep", { mono: true, wrap: false }), cell("Survey submitted", { color: "#10231C", bold: true }), cell("GPS ±11 m · asked 6.20 on site"), cell("M. Fawzy", { wrap: false }))
+          ],
+          panels: [
+            { title: "Collections", meta: "last 6", bar: false,
+              rows: [
+                prow("9 Sep", "410 Kg", { detail: "As scheduled" }),
+                prow("2 Sep", "380 Kg", { detail: "Less oil than scheduled", dot: "#2C5578" }),
+                prow("26 Aug", "0 Kg", { detail: "Sold to a competitor", dot: "#B3261E", valueColor: "#B3261E" }),
+                prow("19 Aug", "440 Kg", { detail: "As scheduled" })
+              ] },
+            { title: "Contacts", meta: "", bar: false,
+              rows: [
+                prow("Decision Maker", "Hossam Farid", { detail: "+20 100 442 8817 · confirmed" }),
+                prow("Steward", "Not recorded", { detail: "Nobody named for handover", dot: "#9A5B08" }),
+                prow("WhatsApp", "Same as mobile")
+              ] }
+          ],
+          detail: [
+            detail("Agreement", "current terms", [["Deal type", "Recurring"], ["Frequency", "Weekly"], ["Preferred day", "Tuesday"], ["Term", "Verbal"]]),
+            detail("Quality", "as delivered", [["Oil type", "Soya"], ["Rejected on quality", "0", "#1F5240"], ["Reduced on quality", "1", "#9A5B08"]]),
+            detail("Risk", "trust score inputs", [["Sold elsewhere streak", "1", "#9A5B08"], ["Price asks in 6 months", "2"], ["Disputes", "0", "#1F5240"]])
+          ]
+        };
+      }
+      if (kind === "manifest") {
+        return { ...common,
+          title: name, subtitle: "Manifest · stop by stop, cash and reconciliation",
+          kpis: [
+            kpi("Stops done", fromRow(2, "6 / 7"), fromRow(1, "driver"), null, null, "86%", "blue"),
+            kpi("Collected", fromRow(3, "2,140 Kg"), "logged at the door", varyPct(-6, 6), false, "90%", "mid"),
+            kpi("Cash paid out", vary(11000, 4000).toLocaleString("en-US"), "EGP of the float", null, null, "82%", "green"),
+            kpi("Status", fromRow(4, "In progress"), "right now", null, null, "100%", "red")
+          ],
+          tableTitle: "Stops",
+          cols: [{ label: "Outlet", align: "left" }, { label: "Expected", align: "right" }, { label: "Accepted", align: "right" }, { label: "Paid", align: "right" }, { label: "Outcome", align: "left" }],
+          rows: [
+            row(cell("Abou Tarek Downtown", { color: "#10231C", bold: true }), cell("420", { align: "right", mono: true }), cell("410", { align: "right", mono: true }), cell("2,501", { align: "right", mono: true }), cell("Collected", { color: "#1F5240", bold: true, wrap: false })),
+            row(cell("Al Nour Grill", { color: "#10231C", bold: true }), cell("180", { align: "right", mono: true }), cell("\u2014", { align: "right", mono: true }), cell("\u2014", { align: "right", mono: true }), cell("Waiting on price", { color: "#B3261E", bold: true, wrap: false })),
+            row(cell("Zamalek Fish House", { color: "#10231C", bold: true }), cell("240", { align: "right", mono: true }), cell("265", { align: "right", mono: true, color: "#2C5578" }), cell("1,616", { align: "right", mono: true }), cell("More oil than scheduled", { color: "#2C5578", bold: true, wrap: false })),
+            row(cell("Cilantro Maadi", { color: "#10231C", bold: true }), cell("60", { align: "right", mono: true }), cell("0", { align: "right", mono: true }), cell("0", { align: "right", mono: true }), cell("No oil at all", { color: "#9A5B08", bold: true, wrap: false }))
+          ],
+          panels: [
+            { title: "Cash", meta: "today", bar: false,
+              rows: [
+                prow("Float Issued", "16,000", { detail: "Suggested from expected spend" }),
+                prow("Paid at the Door", "13,050"),
+                prow("Still on Hand", "2,950"),
+                prow("Reconciled", "Not yet", { dot: "#9A5B08" })
+              ] },
+            { title: "Driver", meta: "", bar: false,
+              rows: [
+                prow("Driver", "H. Saber", { detail: "Main · Team 2" }),
+                prow("Vehicle", "TRK-04"),
+                prow("Carried Shortfall", "1,200", { detail: "From 4 Sep reconciliation", dot: "#B3261E", valueColor: "#B3261E" })
+              ] }
+          ],
+          detail: [
+            detail("Reconciliation", "expected", [["Logged total", "2,140 Kg"], ["Warehouse weighed", "pending", "#63736A"], ["Batch linked", "none yet", "#63736A"]], "A surplus is never credited to the driver; a shortfall becomes a charge."),
+            detail("Same-day additions", "today", [["Requested", "1"], ["Approved", "1", "#1F5240"]]),
+            detail("Receipts", "issued", [["Printed at the door", "3"], ["Pending price decision", "1", "#B3261E"]])
+          ]
+        };
+      }
+      if (kind === "batch") {
+        return { ...common,
+          title: name, subtitle: "Batch · intake, filtration, quality and where it went",
+          kpis: [
+            kpi("Intake weight", fromRow(1, "4,120 Kg"), "WH-SCALE-" + (1 + (seed % 2)), null, null, "100%", "mid"),
+            kpi("Filtered output", fromRow(2, "3,610 Kg"), "after filtration", null, null, "88%", "green"),
+            kpi("Loss", fromRow(3, "12.4%"), "tolerance 8.0%", null, null, "100%", "red"),
+            kpi("State", (seed % 3 === 0 ? "Available" : seed % 3 === 1 ? "Reserved" : "Committed"), "inventory state", null, null, "50%", "blue")
+          ],
+          tableTitle: "Contributing Deliveries",
+          cols: [{ label: "Outlet", align: "left" }, { label: "Manifest", align: "left" }, { label: "Driver", align: "left" }, { label: "Quantity", align: "right" }],
+          rows: [
+            row(cell("Abou Tarek Downtown", { color: "#10231C", bold: true }), cell("M-812", { mono: true, wrap: false }), cell("H. Saber"), cell("410 Kg", { align: "right", mono: true })),
+            row(cell("Zamalek Fish House", { color: "#10231C", bold: true }), cell("M-812", { mono: true, wrap: false }), cell("H. Saber"), cell("265 Kg", { align: "right", mono: true })),
+            row(cell("Gad Mohandessin", { color: "#10231C", bold: true }), cell("M-813", { mono: true, wrap: false }), cell("A. Rady"), cell("380 Kg", { align: "right", mono: true })),
+            row(cell("Bazooka Chicken", { color: "#10231C", bold: true }), cell("M-813", { mono: true, wrap: false }), cell("A. Rady"), cell("310 Kg", { align: "right", mono: true }))
+          ],
+          tableNote: "Drivers are listed because an investigation starts from the actual inputs \u2014 no loss amount is attributed to any one of them.",
+          panels: [
+            { title: "Composite Quality", meta: "mass-weighted", bar: false,
+              rows: [
+                prow("FFA", "4.1", { detail: "Lab test · 10 Sep", dot: "#9A5B08" }),
+                prow("MI", "1.4", { detail: "Computed average" }),
+                prow("IV", "117", { detail: "Lab test · 10 Sep" }),
+                prow("Sulphur", "\u2014", { detail: "Not tested \u2014 counts as not satisfied", dot: "#B3261E", valueColor: "#B3261E" })
+              ] },
+            { title: "Contract Matching", meta: "open contracts", bar: false,
+              rows: [
+                prow("C-41 Rotterdam", "Satisfies", { dot: "#1F5240" }),
+                prow("C-39 Antwerp", "FFA over by 0.6", { dot: "#9A5B08", valueColor: "#9A5B08" }),
+                prow("C-44 Valencia", "Sulphur untested", { dot: "#B3261E", valueColor: "#B3261E" })
+              ] }
+          ],
+          detail: [
+            detail("Scale", "at intake", [["Scale", "WH-SCALE-1"], ["Last calibrated", "29 Aug"], ["Result", "Pass", "#1F5240"], ["Overdue at intake", "No", "#1F5240"]]),
+            detail("Timeline", "", [["Weighed in", "9 Sep 19:10"], ["Filtered", "10 Sep 08:40"], ["Reserved", "10 Sep 11:02"]]),
+            detail("Investigation", "over tolerance", [["Flagged", "10 Sep", "#B3261E"], ["Drivers appearing in others", "1", "#9A5B08"], ["Dispute opened", "Yes", "#9A5B08"]])
+          ]
+        };
+      }
+      if (kind === "shipment") {
+        return { ...common,
+          title: name, subtitle: "Shipment · weights, documents, invoice and holdback",
+          kpis: [
+            kpi("Net weight", fromRow(2, "980"), "tonnes to " + fromRow(1, "the buyer"), null, null, "100%", "mid"),
+            kpi("Invoice", ((parseFloat(String(fromRow(2, "980")).replace(/,/g, "")) * 1310) / 1e6).toFixed(2), "million USD", null, null, "100%", "green"),
+            kpi("Status", fromRow(3, "BOL issued"), "current stage", null, null, "70%", "blue"),
+            kpi("Outstanding docs", fromRow(4, "1"), "blocks finishing only", null, null, "25%", "amber")
+          ],
+          tableTitle: "Documents",
+          cols: [{ label: "Document", align: "left" }, { label: "Required", align: "left" }, { label: "Status", align: "left" }, { label: "Reference", align: "right" }],
+          rows: [
+            row(cell("Certificate of Quality", { color: "#10231C", bold: true }), cell("Required"), cell("Received", { color: "#1F5240", bold: true, wrap: false }), cell("CQ-1182", { align: "right", mono: true })),
+            row(cell("Weighbridge Certificate", { color: "#10231C", bold: true }), cell("Required"), cell("Received", { color: "#1F5240", bold: true, wrap: false }), cell("WB-4471", { align: "right", mono: true })),
+            row(cell("Bill of Lading (final)", { color: "#10231C", bold: true }), cell("Generated"), cell("Issued", { color: "#1F5240", bold: true, wrap: false }), cell("BOL-118F", { align: "right", mono: true })),
+            row(cell("EUR.1 Movement Certificate", { color: "#10231C", bold: true }), cell("Required \u2014 EU"), cell("Outstanding", { color: "#B3261E", bold: true, wrap: false }), cell("\u2014", { align: "right", mono: true })),
+            row(cell("Commercial Invoice", { color: "#10231C", bold: true }), cell("Generated"), cell("Issued", { color: "#1F5240", bold: true, wrap: false }), cell("INV-2291", { align: "right", mono: true }))
+          ],
+          tableNote: "An outstanding document blocks only marking this shipment finished \u2014 never loading or BOL issuance.",
+          panels: [
+            { title: "Weights", meta: "", bar: false,
+              rows: [
+                prow("Tare", "24,100 Kg"),
+                prow("Gross", "1,004,100 Kg"),
+                prow("Net", "980,000 Kg", { dot: "#1F5240" })
+              ] },
+            { title: "Deductions", meta: "entitled", bar: false,
+              rows: [
+                prow("FFA over Threshold", "0.6 over", { detail: "% of price per unit", dot: "#9A5B08" }),
+                prow("Deduction Value", "18,400", { detail: "USD", valueColor: "#9A5B08" }),
+                prow("Holdback Discrepancy", "Watch", { detail: "Raise it, don't absorb it", dot: "#9A5B08" })
+              ] }
+          ],
+          detail: [
+            detail("Contract", "C-41", [["Buyer", "Rotterdam BioFuels"], ["Price per ton", "1,310 USD"], ["Inspection", "Destination"], ["Holdback", "10%"]]),
+            detail("Linked batches", "committed", [["W-2291", "4.1 t"], ["W-2286", "3.9 t"], ["W-2274", "4.6 t"]]),
+            detail("Containers", "", [["Type", "ISO tank"], ["Count", "44"], ["Loading window", "6 \u2013 12 Sep"]])
+          ]
+        };
+      }
+      if (kind === "figure") {
+        return { ...common,
+          title: name, subtitle: "Where this figure comes from · no finance module computes it",
+          kpis: [
+            kpi("Current value", "84,200", "EGP", null, null, "70%", "mid"),
+            kpi("Source module", "MOD-200", "driver app", null, null, "100%", "blue"),
+            kpi("Last updated", "18:24", "today", null, null, "100%", "green"),
+            kpi("Confidence", "Recorded", "not estimated", null, null, "100%", "green")
+          ],
+          tableTitle: "How It Is Built Up",
+          cols: [{ label: "Component", align: "left" }, { label: "Source", align: "left" }, { label: "Value", align: "right" }],
+          rows: [
+            row(cell("Floats issued today", { color: "#10231C", bold: true }), cell("Manifest cash float"), cell("112,000", { align: "right", mono: true })),
+            row(cell("Paid at the door", { color: "#10231C", bold: true }), cell("Stop logs"), cell("−13,050", { align: "right", mono: true })),
+            row(cell("Returned and reconciled", { color: "#10231C", bold: true }), cell("End-of-day reconciliation"), cell("−27,800", { align: "right", mono: true })),
+            row(cell("Carried shortfalls", { color: "#10231C", bold: true }), cell("Driver balances"), cell("+6,140", { align: "right", mono: true, color: "#B3261E" }))
+          ],
+          panels: [
+            { title: "Who Holds It", meta: "5 drivers", bar: false,
+              rows: [
+                prow("H. Saber", "2,950"),
+                prow("A. Rady", "1,480"),
+                prow("M. Ezz", "3,110"),
+                prow("S. Kamal", "2,200")
+              ] }
+          ]
+        };
+      }
+      if (kind === "approval") {
+        return { ...common,
+          title: name, subtitle: "The decision · everything you need before answering",
+          kpis: [
+            kpi("Asked", "6.40", "EGP/kg", null, null, "100%", "amber"),
+            kpi("Your ceiling", "6.20", "EGP/kg", null, null, "88%", "mid"),
+            kpi("Zone average", "6.02", "EGP/kg agreed", null, null, "82%", "green"),
+            kpi("Waiting", "9 min", "driver at the counter", null, null, "100%", "red")
+          ],
+          tableTitle: "Back and Forth",
+          cols: [{ label: "When", align: "left" }, { label: "Who", align: "left" }, { label: "What Was Said", align: "left" }, { label: "Price", align: "right" }],
+          rows: [
+            row(cell("18:31", { mono: true, wrap: false }), cell("Shop", { color: "#10231C", bold: true }), cell("Won't go below this, driver still at the counter"), cell("6.40", { align: "right", mono: true, color: "#B3261E" })),
+            row(cell("18:28", { mono: true, wrap: false }), cell("You", { color: "#10231C", bold: true }), cell("Countered through the driver"), cell("6.00", { align: "right", mono: true, color: "#1F5240" })),
+            row(cell("18:24", { mono: true, wrap: false }), cell("Shop", { color: "#10231C", bold: true }), cell("Says a competitor offered more this morning"), cell("6.50", { align: "right", mono: true, color: "#9A5B08" })),
+            row(cell("18:22", { mono: true, wrap: false }), cell("Driver", { color: "#10231C", bold: true }), cell("Manifest rate refused at the door"), cell("5.80", { align: "right", mono: true }))
+          ],
+          tableNote: "Countering keeps the request open at your rung; approving completes the collection and prints the receipt.",
+          panels: [
+            { title: "This Shop", meta: "", bar: false,
+              rows: [
+                prow("Trust Score", "72", { detail: "One sold-elsewhere in 90 days", dot: "#9A5B08" }),
+                prow("Monthly Volume", "420 Kg", { detail: "Collected 9 times this year" }),
+                prow("Usual Price", "5.80", { detail: "Agreed 4 Sep, recurring weekly" }),
+                prow("Asked Before", "Twice", { detail: "In the last 6 months", dot: "#9A5B08" })
+              ] },
+            { title: "If You Say Yes", meta: "at 6.10", bar: false,
+              rows: [
+                prow("Cost of This Stop", "1,098 EGP", { detail: "180 Kg at your price" }),
+                prow("Versus Manifest Rate", "+54 EGP", { detail: "What the extra 0.30 costs", dot: "#9A5B08" }),
+                prow("Above Your Ceiling", "No", { detail: "6.20 is your limit", dot: "#1F5240" }),
+                prow("Sets a Precedent", "Zone average moves to 6.04", { detail: "Other shops hear about prices" })
+              ] }
+          ],
+          detail: [
+            detail("Who has touched it", "escalation path", [["Driver", "H. Saber"], ["Ops manager", "Passed — above their rung"], ["You", "Deciding now"]]),
+            detail("Options", "what each does", [["Approve", "Collection completes, receipt prints"], ["Counter", "Back to the shop, stays open"], ["Refuse", "Paid at manifest rate"]]),
+            detail("If it exceeds the ceiling", "rule", [["Manager", "Escalates to senior management"], ["Senior management", "Can approve — recorded as exceeded"], ["Driver", "Proceeds at the approved price"]])
+          ]
+        };
+      }
+      // metric: a number, panel line or detail line
+      const personName = String(name).split(" \u00b7 ")[0];
+      const personScoped = !!PEOPLE[personName];
+      // The clicked value IS the figure: everything else is derived from it,
+      // so the report can never contradict the cell that opened it.
+      const clicked = fromRow(0, String(name).split(" \u00b7 ").pop());
+      // A ratio is two numbers ("7 / 8"): the trend is the first, the second
+      // is the whole it is out of. Everything else is one number and a unit.
+      const ratio = /^\s*([\d,.]+)\s*\/\s*([\d,.]+)\s*$/.exec(String(clicked));
+      const numeric = ratio
+        ? parseFloat(ratio[1].replace(/,/g, ""))
+        : parseFloat(String(clicked).replace(/[^0-9.\-]/g, ""));
+      const outOf = ratio ? ratio[2].replace(/,/g, "") : "";
+      const unit = ratio ? "" : (String(clicked).replace(/[0-9.,\-\u2212+\s]/g, "") || "");
+      const hasNumber = !Number.isNaN(numeric);
+      const fmt = (n) => Number(n.toFixed(n < 10 ? 1 : 0)).toLocaleString("en-US");
+      const withUnit = (n) => {
+        if (!hasNumber) return String(clicked);
+        if (ratio) return `${fmt(n)} of ${outOf}`;
+        return `${fmt(n)}${unit ? (unit === "%" ? "%" : " " + unit) : ""}`;
+      };
+      const headline = ratio && hasNumber ? `${fmt(numeric)} of ${outOf}` : String(clicked);
+      const swing = (((seed % 21) - 10) || 7) / 100;
+      const prev = hasNumber ? numeric / (1 + swing) : 0;
+      const changePct = hasNumber && prev > 0 ? Math.round(((numeric - prev) / prev) * 100) : 0;
+      return { ...common,
+        title: name, subtitle: "Full report · how this number moved and what makes it up",
+        meta: "Figures for " + name,
+        kpis: [
+          kpi("This figure", headline, name, "", null, "82%", "green"),
+          kpi("The period before", hasNumber ? withUnit(prev) : "\u2014", "same length, ending 4 Sep", null, null, "73%", "mid"),
+          kpi("Change", (changePct >= 0 ? "+" : "\u2212") + Math.abs(changePct) + "%", "against the period before", null, null, "60%", "blue"),
+          kpi(ratio ? "Best so far" : "Best day", hasNumber ? (ratio ? `${outOf} of ${outOf}` : withUnit(numeric / (2.6 + (seed % 20) / 10))) : "\u2014", ratio ? "a full day, 3 Sep" : ["7 Sep", "8 Sep", "9 Sep", "10 Sep"][seed % 4], null, null, "100%", "green")
+        ],
+        tableTitle: personScoped ? personName + " \u00b7 day by day" : "Day by day",
+        cols: [{ label: "Day", align: "left" }, { label: String(name).split(" \u00b7 ").pop(), align: "right" }, { label: "Vs Previous Week", align: "right" }, { label: "Note", align: "left" }],
+        rows: (hasNumber ? [0.19, 0.22, 0.26, 0.17, 0.16] : []).map((share, idx) => {
+          const day = ["Thu 11 Sep", "Wed 10 Sep", "Tue 9 Sep", "Mon 8 Sep", "Sun 7 Sep"][idx];
+          const val = numeric * share;
+          const delta = Math.round(((share - 0.2) / 0.2) * 100);
+          return row(
+            cell(day, { color: "#10231C", bold: true, wrap: false }),
+            cell(withUnit(val), { align: "right", mono: true }),
+            cell((delta >= 0 ? "+" : "\u2212") + Math.abs(delta) + "%", { align: "right", mono: true, color: delta >= 0 ? "#1F5240" : "#B3261E" }),
+            cell(idx === 2 ? "Best day of the week" : idx === 4 ? "Weekend \u2014 fewer people working" : "\u2014")
+          );
+        }),
+        tableNote: hasNumber
+          ? "The days add up to the figure above. Tapping a day opens that day."
+          : "This figure has no daily history \u2014 it is a count of what exists right now.",
+        panels: [
+          personScoped
+            ? { title: "How " + personName + " built this up", meta: "last five days", bar: false,
+                rows: [
+                  prow("Thu 11 Sep", withUnit(numeric * 0.19), { dot: "#1F5240" }),
+                  prow("Wed 10 Sep", withUnit(numeric * 0.22), { dot: "#7CC79A" }),
+                  prow("Tue 9 Sep", withUnit(numeric * 0.26), { dot: "#2C5578" }),
+                  prow("Mon 8 Sep", withUnit(numeric * 0.17), { dot: "#9A5B08" }),
+                  prow("Sun 7 Sep", withUnit(numeric * 0.16), { dot: "#3A3E40" })
+                ] }
+            : { title: "Where It Sits", meta: "by zone", bar: true,
+                segments: [
+                  { width: "27%", color: "#1F5240" },
+                  { width: "23%", color: "#7CC79A" },
+                  { width: "21%", color: "#2C5578" },
+                  { width: "17%", color: "#9A5B08" },
+                  { width: "12%", color: "#3A3E40" }
+                ],
+                rows: [
+                  prow("Nasr City 3", withUnit(numeric * 0.27), { dot: "#1F5240", square: true }),
+                  prow("Zamalek 1", withUnit(numeric * 0.23), { dot: "#7CC79A", square: true }),
+                  prow("Dokki 2", withUnit(numeric * 0.21), { dot: "#2C5578", square: true }),
+                  prow("Giza 4", withUnit(numeric * 0.17), { dot: "#9A5B08", square: true }),
+                  prow("Faisal 2", withUnit(numeric * 0.12), { dot: "#3A3E40", square: true })
+                ] },
+          { title: "What This Figure Is", meta: "definition", bar: false,
+            rows: [
+              prow("Counted When", "As it happens", { detail: "Recorded by the app at the moment it happens, never typed in afterwards" }),
+              prow("Excludes", "Anything reworked", { detail: "A record sent back and resubmitted is not counted twice" }),
+              prow("Owned By", (PAGES[page] || PAGES.overview).title, { detail: "The department this number belongs to" })
+            ] }
+        ],
+        detail: [
+          detail("How it compares", "the same figure, other periods", [
+            ["The period before", hasNumber ? withUnit(prev) : "\u2014"],
+            ["Same period last month", hasNumber ? withUnit(numeric * 0.88) : "\u2014"],
+            ["Best period on record", hasNumber ? withUnit(numeric * 1.14) : "\u2014"]
+          ]),
+          detail("Who touches it", "roles involved", [
+            ["Recorded by", personScoped ? personName : "The field and call-centre apps"],
+            ["Reviewed by", "The call centre, then a manager"],
+            ["Changed by hand", "Never \u2014 only by a logged action", "#1F5240"]
+          ]),
+          detail("If it looks wrong", "where to check", [
+            ["Missing records", "A stop or survey not yet logged"],
+            ["Double counting", "Rework is excluded, so check status instead"],
+            ["Zone totals", "An outlet reassigned mid-period counts in its new zone"]
+          ])
+        ]
+      };
+    };
+
+    const stack = this.state.stack;
+    const report = stack.length ? stack[stack.length - 1] : null;
+    const embedded = page.indexOf("embed:") === 0;
+    const base = report ? reportFor(report.kind, report.name, report.cells || []) : { ...(PAGES[page] || PAGES.overview), detail: DETAIL[page] || [] };
+    const rowKind = report ? "metric" : ROW_KIND[page];
+    const live = {
+      ...base,
+      tableHref: base.tableLink && base.tableLink.indexOf("approvals screen") !== -1
+        ? "approvals-and-settings.dc.html"
+        : (base.tableLink && base.tableLink.indexOf("Settings") !== -1 ? "approvals-and-settings.dc.html" : "#"),
+      kpis: (base.kpis || []).map((k) => ({
+        ...k,
+        open: openReport("metric", (report && ["surveyor", "agent", "driver"].indexOf(report.kind) !== -1 ? report.name + " \u00b7 " : "") + k.label, [k.value, k.label])
+      })),
+      rows: (base.rows || []).map((r) => {
+        const values = r.cells.map((c) => c.value);
+        const person = report && ["surveyor", "agent", "driver"].indexOf(report.kind) !== -1 ? report.name : null;
+        const cells = r.cells.map((c) => {
+          const own = subjectOf([c.value], null);
+          const isDate = /^(Today|Yesterday|[A-Z][a-z]{2} )?\d{1,2} [A-Z][a-z]{2}|^[A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2}/.test(String(c.value));
+          const here = report ? report.kind + "|" + report.name : "page|" + page;
+          if (own && own.kind + "|" + own.name !== here) return { ...c, cursor: "pointer", open: openReport(own.kind, own.name, values) };
+          if (isDate && person) return { ...c, cursor: "pointer", open: openReport("day", person + " \u00b7 " + c.value, [person, c.value]) };
+          const plain = String(c.value).trim();
+          // A measure is a number, with or without a unit. A short phrase is
+          // a status. Anything longer is prose and doesn't drill.
+          const isMeasure = /^[\u2212+-]?[\d,]+(\.\d+)?\s*(kg|t|%|EGP|USD|min|m|h|days?|\/\s*\d+)?$/i.test(plain) || /^\d+\s*\/\s*\d+$/.test(plain);
+          const isStatus = !isMeasure && plain.length > 0 && plain.length <= 26 && plain !== "\u2014";
+          const root = report ? String(report.name).split(" \u00b7 ")[0] : (PAGES[page] || PAGES.overview).title;
+          if (isMeasure) {
+            const label = root + " \u00b7 " + plain;
+            if ("metric|" + label !== here) return { ...c, cursor: "pointer", open: openReport("metric", label, [plain]) };
+          } else if (isStatus) {
+            if ("status|" + plain !== here) return { ...c, cursor: "pointer", open: openReport("status", plain, [plain]) };
+          }
+          return { ...c, cursor: "default", open: undefined };
+        });
+        const anyCell = cells.some((c) => c.open);
+        const subject = anyCell ? null : subjectOf(values, report ? null : rowKind);
+        return {
+          ...r,
+          cells,
+          cursor: subject ? "pointer" : "default",
+          open: subject ? openReport(subject.kind, subject.name, values) : undefined
+        };
+      }),
+      panels: (base.panels || []).map((p) => ({
+        ...p,
+        rows: p.rows.map((r) => {
+          const subject = subjectOf([r.label, r.value], "metric");
+          const name = subject.name || r.label;
+          const here = report ? report.kind + "|" + report.name : "";
+          const target = subject.kind === "metric" && report ? report.name + " \u00b7 " + r.label : name;
+          return { ...r, open: subject.kind + "|" + target === here ? undefined : openReport(subject.kind, target, [r.value, r.label]) };
+        })
+      })),
+      detail: (base.detail || []).map((d) => ({
+        ...d,
+        rows: d.rows.map((r) => {
+          const subject = subjectOf([r.label, r.value], "metric");
+          const name = subject.name || r.label;
+          const here = report ? report.kind + "|" + report.name : "";
+          const target = subject.kind === "metric" && report ? report.name + " \u00b7 " + r.label : name;
+          return { ...r, open: subject.kind + "|" + target === here ? undefined : openReport(subject.kind, target, [r.value, r.label]) };
+        })
+      }))
+    };
+
+    // Same department dashboards for both roles (lib/roleTabs.ts gives
+    // senior_management the manager's tabs); senior adds only the queues
+    // and settings that role alone can act on.
+    const senior = this.state.role === "senior_management";
+    const NAV = [
+      // Grouped, because fifteen flat items is a pile rather than a menu.
+      // A group header carries no dot and no action.
+      ["Waiting On A Decision", "", "", false, "group"],
+      ["Finance Approvals", "#B3261E", "9", false, "href:manager-departments.dc.html"],
+      ["Door-Side Prices", "#B3261E", "2", false, "embed:door_price"],
+      ["Price Ceilings", "#9A5B08", "2", false, "embed:ceilings"],
+      ["Deal Sign-Offs", "#9A5B08", "5", false, "embed:deals"],
+      ["Deposits", "#9A5B08", "2", true, "embed:deposits"],
+      ["Settings Changes", "#9A5B08", "3", true, "embed:settings_changes"],
+      ["To Look Into", "", "", false, "group"],
+      ["Flags To Review", "#3A3E40", "2", false, "embed:supplier_flags"],
+      ["Disputes", "#B3261E", "2", false, "embed:disputes"],
+      ["People And Access", "", "", true, "group"],
+      ["Access Requests", "#2C5578", "4", true, "embed:access"],
+      ["Password Resets", "#2C5578", "3", true, "embed:password_resets"],
+      ["Teams", "#1F5240", "", false, ""],
+      ["Zones", "#1F5240", "", false, ""],
+      ["The Record", "", "", false, "group"],
+      ["Reports", "#2C5578", "", false, ""],
+      ["Audit Log", "#3A3E40", "", false, "embed:audit"],
+      ["Settings", "#3A3E40", "", true, "embed:settings"]
+    ].filter((r) => senior || !r[3]);
+
+    const TOP_TABS = [
+      ["overview", "Dashboard"],
+      ["survey", "Survey"],
+      ["call_center", "Call Centre"],
+      ["crm", "CRM"],
+      ["operations", "Operations"],
+      ["warehousing", "Warehousing"],
+      ["sales", "Sales"],
+      ["finance", "Finance"]
+    ];
+
+    // The company-wide chain: one step per module, in the order oil
+    // actually travels. `warn` marks the step where work is piling up.
+    const CHAIN = [
+      ["Pre-surveys waiting", "282", "shops", "61 assigned, 9 unassigned", "survey", false],
+      ["Surveyed, unverified", "231", "shops", "9 in verification today", "call_center", false],
+      ["Negotiating", "22", "leads", "3 waiting on your ceiling", "call_center", true],
+      ["Orders to collect", "41", "today", "14 manifests built", "operations", false],
+      ["Collected today", "9,420", "Kg", "31 of 38 stops done", "operations", false],
+      ["In the warehouse", "41.2", "t available", "3 batches over tolerance", "warehousing", true],
+      ["Shipped this month", "2,640", "t", "1 shipment loading", "sales", false]
+    ];
+
+    return {
+      page: live,
+      inReport: !!report,
+      backLabel: stack.length > 1 ? stack[stack.length - 2].name : (PAGES[page] || PAGES.overview).title,
+      reportCrumb: report ? [(PAGES[page] || PAGES.overview).title, ...stack.map((s) => s.name)].join(" \u2192 ") : "",
+      back: () => {
+        this.setState((s) => ({ stack: s.stack.slice(0, -1) }));
+        window.scrollTo(0, 0);
+      },
+      hasDetail: embedded ? false : (report ? (live.detail || []).length > 0 : page !== "overview"),
+      isOverview: page === "overview" && !report && !embedded,
+      // Overview reads: numbers → the chain → pipeline/flags → departments
+      // → zones table. Other pages keep their table beside the panels.
+      // One table section, positioned by flex order: last on the overview
+      // (the chain matters more), straight after the numbers elsewhere.
+      tableOrder: page === "overview" ? 6 : 3,
+      panelsOrder: page === "overview" ? 3 : 4,
+      panelCols: "repeat(2,minmax(0,1fr))",
+      chain: CHAIN.map(([stage, value, unit, note, target, warn]) => ({
+        stage, value, unit, note,
+        bg: warn ? "#FBF0DF" : "#FCFAF5",
+        border: warn ? "#9A5B08" : "#EFEBE1",
+        edge: warn ? "#9A5B08" : "#1F5240",
+        valueColor: warn ? "#9A5B08" : "#10231C",
+        noteColor: warn ? "#3A4A43" : "#63736A",
+        go: go(target)
+      })),
+      onShift: [
+        { count: "9", label: "Surveyors in the Field" },
+        { count: "5", label: "Drivers on Route" },
+        { count: "4", label: "Call-centre Agents" },
+        { count: "2", label: "Warehouse Staff" }
+      ],
+      shiftNote: "Idle over 2 h: 1 surveyor · no GPS: 1",
+      topTabs: TOP_TABS.map(([key, label]) => {
+        // Volumes is a CRM drill-down, so the CRM tab stays lit there.
+        const on = key === page || (page === "volumes" && key === "crm");
+        return {
+          label,
+          color: on ? "#1F5240" : "#55655D",
+          edge: on ? "#1F5240" : "transparent",
+          go: go(key)
+        };
+      }),
+      roleLabel: senior ? "Senior management" : "Manager",
+      roleNote: senior
+        ? "Every department dashboard a manager sees, plus deposits, settings changes and Settings itself."
+        : "Deposits, settings changes and Settings are hidden — only senior management can act on those.",
+      whoLine: this.state.who
+        ? this.state.who.name + (this.state.who.roleLabel ? " — " + this.state.who.roleLabel : "")
+        : (senior ? "Senior management" : "Manager"),
+      roleSwitch: [
+        { label: "Manager", weight: senior ? 400 : 600, color: senior ? "#55655D" : "#1F5240", pick: () => this.setState({ role: "manager" }) },
+        { label: "Senior Management", weight: senior ? 600 : 400, color: senior ? "#1F5240" : "#55655D", pick: () => this.setState({ role: "senior_management" }) }
+      ],
+      sideNav: NAV.map(([label, dot, badge, seniorOnly, key]) => {
+        const on = key && key === page;
+        const group = key === "group";
+        return {
+          label, dot, badge,
+          isGroup: group, isItem: !group,
+          bg: on ? "#EEF6F2" : "transparent",
+          color: on ? "#1F5240" : "#55655D",
+          weight: on ? 600 : 400,
+          badgeColor: badge ? "#B3261E" : "transparent",
+          go: key && key.indexOf("href:") === 0
+            ? () => { window.location.href = key.slice("href:".length); }
+            : key ? go(key) : () => {}
+        };
+      }),
+      // The queues and settings render inside this page as the child DC, so
+      // the senior view is one place: dashboards, drill-downs, queues and
+      // settings, with nothing living in another file.
+      // A guide to the tab you are on, because one of these pages carries more
+      // than anyone can take in at a glance.
+      onThisPageLabel: "On this page",
+      pageNav: (() => {
+        const p = PAGES[page] || PAGES.overview;
+        return [
+          ["The four figures", "om-kpis"],
+          [p.panels && p.panels.length ? p.panels[0].title : "", "om-panels"],
+          [p.tableTitle || "", "om-table"],
+        ];
+      })().filter((p) => p[0]).map(([label, id]) => ({
+        label,
+        go: () => {
+          const el = document.getElementById(id);
+          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 96, behavior: "smooth" });
+        },
+      })),
+      showDash: !embedded,
+      showEmbed: embedded,
+      embedArea: embedded ? page.slice("embed:".length) : "door_price",
+      role: this.state.role,
+      periods: ["Today", "Week", "Month"].map((label) => ({
+        label,
+        bg: period === label ? "#1F5240" : "#fff",
+        color: period === label ? "#fff" : "#55655D",
+        pick: () => this.setState({ period: label })
+      })),
+      deptCards: [
+        { key: "survey", title: "Survey", route: "/manager/survey", footnote: "", rows: [["Today", "48", "#10231C"], ["This week", "263", "#10231C"], ["This month", "1,042", "#10231C"], ["Verified of those", "839", "#1F5240"]] },
+        { key: "call_center", title: "Call Centre", route: "/manager/call-center", footnote: "Calls made: not recorded — only outcomes are.", rows: [["Orders today", "41", "#10231C"], ["This week", "228", "#10231C"], ["This month", "917", "#10231C"]] },
+        { key: "crm", title: "CRM", route: "/manager/crm", footnote: "", rows: [["Pre-survey", "282", "#2C5578"], ["Surveyed", "231", "#9A5B08"], ["Verified", "398", "#1F5240"], ["Supplier", "218", "#1F5240"]] },
+        { key: "volumes", title: "Volumes", route: "/manager/crm", footnote: "Negotiated volume is the estimated monthly volume of outlets won or lost.", rows: [["Gained in negotiation", "+18.4 t", "#1F5240"], ["Lost in negotiation", "−7.2 t", "#B3261E"], ["Net won this month", "+11.2 t", "#1F5240"], ["Collected vs last month", "+9%", "#1F5240"]] },
+        { key: "operations", title: "Operations", route: "/manager/operations", footnote: "", rows: [["Manifests today", "14", "#10231C"], ["Teams", "6", "#10231C"], ["Vehicles · drivers", "8 · 11", "#10231C"], ["Shops assigned", "412", "#10231C"]] },
+        { key: "warehousing", title: "Warehousing", route: "/manager/warehousing", footnote: "", rows: [["Available", "22", "#1F5240"], ["Reserved", "9", "#2C5578"], ["Committed", "5", "#3A3E40"], ["Over tolerance", "3", "#B3261E"]] },
+        { key: "sales", title: "Sales", route: "/manager/sales", footnote: "Loading 2 · loaded 1 · BOL issued 2", rows: [["Open contracts", "17", "#10231C"], ["Overdue holdbacks", "4", "#B3261E"], ["Open disputes", "2", "#9A5B08"]] },
+        { key: "finance", title: "Finance", route: "/manager/finance", footnote: "No finance module yet — figures come from other modules.", rows: [["Cash with drivers", "84,200", "#10231C"], ["Shortfalls", "6,140", "#B3261E"], ["Deposits pending", "2", "#9A5B08"]] }
+      ].map((d) => ({
+        title: d.title,
+        route: d.route,
+        footnote: d.footnote,
+        rows: d.rows.map(([label, value, color]) => ({ label, value, color })),
+        go: go(d.key)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

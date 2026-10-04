@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+  .num { font-family:"IBM Plex Mono",monospace; unicode-bidi:isolate; direction:ltr; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="width:100%;max-width:1400px;margin:0 auto;padding:0 0 44px;font-family:{{ face }};-webkit-font-smoothing:antialiased">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 20px;flex-wrap:wrap">
+      <a href="warehouse.dc.html" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;flex-shrink:0">
+        <img src="public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto">
+        Zeitco
+      </a>
+      <div style="display:flex;gap:1px;padding:0;flex:1 1 auto;min-width:520px;align-self:stretch;align-items:stretch">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+        <button type="button" onClick="{{ t.pick }}" style="border:0;border-bottom:2px solid {{ t.line }};background:transparent;padding:9px 13px 8px;font-family:inherit;font-size:13px;font-weight:600;color:{{ t.color }};white-space:nowrap;cursor:pointer">{{ t.label }}</button>
+      </sc-for>
+      </div>
+      <span style="font-size:12px;color:#63736A;flex:0 0 auto;white-space:nowrap">{{ L.crumbs }}</span>
+      <span style="flex:1;min-width:0"></span>
+      <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden;flex-shrink:0">
+        <sc-for list="{{ roles }}" as="r" hint-placeholder-count="3">
+          <button type="button" onClick="{{ r.pick }}" style="border:0;height:26px;padding:0 10px;background:{{ r.bg }};color:{{ r.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ r.label }}</button>
+        </sc-for>
+      </div>
+      <a href="login.dc.html" style="font-size:12px;font-weight:600;color:#55655D;white-space:nowrap;flex-shrink:0">{{ logoutWord }}</a>
+      <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden;flex-shrink:0">
+        <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+          <button type="button" onClick="{{ l.pick }}" style="border:0;height:26px;padding:0 10px;background:{{ l.bg }};color:{{ l.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ l.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+  </header>
+
+  <div style="padding:13px 20px 0">
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:11px">
+      <div style="min-width:0">
+        <h1 style="margin:0;font-size:19px;font-weight:700;color:#10231C">{{ L.title }}</h1>
+        <p style="margin:2px 0 0;font-size:12px;color:#63736A;text-wrap:pretty">{{ who.line }}</p>
+      </div>
+      <a href="warehouse.dc.html" style="font-size:12px;font-weight:600;flex-shrink:0">{{ L.backToWarehouse }}</a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#E4DFD4;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden;margin-bottom:11px">
+      <sc-for list="{{ figures }}" as="f" hint-placeholder-count="4">
+        <div style="background:#fff;padding:9px 13px 11px;min-width:0">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+          <div style="display:flex;align-items:baseline;gap:4px;margin-top:4px">
+            <span class="num" style="font-size:22px;font-weight:600;color:{{ f.color }};line-height:1">{{ f.value }}</span>
+            <span style="font-size:11px;color:#8A9188">{{ f.unit }}</span>
+          </div>
+          <div style="font-size:11px;color:#8A9188;margin-top:4px;text-wrap:pretty">{{ f.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ pending }}" hint-placeholder-val="{{ true }}">
+      <section style="background:#fff;border:1px solid #E8C9A0;border-radius:12px;padding:11px 15px 13px;margin-bottom:11px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#8A5B0B">{{ L.waiting }}</h2>
+          <span style="font-size:11px;color:#8A9188">{{ pendingNote }}</span>
+        </div>
+        <sc-for list="{{ pending }}" as="p" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 96px minmax(0,0.95fr);gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #F4F1EA">
+            <span style="min-width:0">
+              <span style="display:block;font-size:13px;font-weight:600;color:#10231C;text-wrap:pretty">{{ p.what }}</span>
+              <span style="display:block;font-size:11px;color:#8A9188;text-wrap:pretty">{{ p.who }}</span>
+            </span>
+            <span style="min-width:0;font-size:12px;color:#55655D;text-wrap:pretty">{{ p.why }}</span>
+            <span style="font-size:12px;color:{{ p.ageColor }};text-align:end">{{ p.when }}</span>
+            <span style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap">
+              <sc-if value="{{ p.canDecide }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ p.approve }}" style="min-height:30px;padding:5px 13px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ L.approve }}</button>
+                <button type="button" onClick="{{ p.refuse }}" style="min-height:30px;padding:5px 13px;border:1px solid #8A9188;border-radius:9px;background:#fff;color:#3A4A43;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ L.refuse }}</button>
+              </sc-if>
+              <sc-if value="{{ p.waiting }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:12px;font-weight:600;color:#8A5B0B;white-space:nowrap;text-align:end">{{ L.waitingFm }}</span>
+              </sc-if>
+              <sc-if value="{{ p.decided }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:12px;font-weight:600;color:{{ p.decidedColor }};white-space:nowrap;text-align:end">{{ p.decided }}</span>
+              </sc-if>
+            </span>
+          </div>
+        </sc-for>
+        <p style="margin:9px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.refuseNote }}</p>
+      </section>
+    </sc-if>
+
+    <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px;margin-bottom:11px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin-bottom:9px">
+        <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ listTitle }}</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+              <button type="button" onClick="{{ f.pick }}" style="border:1px solid {{ f.border }};border-radius:999px;height:26px;padding:0 11px;background:{{ f.bg }};color:{{ f.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ f.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ canAdd }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ toggleForm }}" style="border:0;border-radius:999px;height:28px;padding:0 14px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ addLabel }}</button>
+          </sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ showForm }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid #BFD8C9;background:#F6FAF7;border-radius:10px;padding:10px 12px 12px;margin-bottom:11px">
+          <h3 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#1F5240">{{ formTitle }}</h3>
+          <p style="margin:0 0 9px;font-size:11px;color:#63736A;text-wrap:pretty">{{ formNote }}</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(188px,1fr));gap:9px 11px">
+            <sc-for list="{{ formFields }}" as="f" hint-placeholder-count="6">
+              <label style="display:block;min-width:0">
+                <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                  <select onChange="{{ f.change }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 8px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                    <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2">
+                      <option value="{{ o }}">{{ o }}</option>
+                    </sc-for>
+                  </select>
+                </sc-if>
+                <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                  <input type="text" placeholder="{{ f.hint }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                </sc-if>
+                <span style="display:block;font-size:11px;color:#8A9188;margin-top:3px;text-wrap:pretty">{{ f.note }}</span>
+              </label>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">
+            <button type="button" onClick="{{ toggleForm }}" style="min-height:32px;padding:6px 15px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ submitLabel }}</button>
+            <button type="button" onClick="{{ toggleForm }}" style="min-height:32px;padding:6px 15px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ L.cancel }}</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="display:grid;grid-template-columns:{{ cols }};gap:9px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+        <sc-for list="{{ head }}" as="h" hint-placeholder-count="7">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:{{ h.align }};text-wrap:pretty">{{ h.label }}</span>
+        </sc-for>
+      </div>
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="10">
+        <div style="display:grid;grid-template-columns:{{ cols }};gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid #F4F1EA;background:{{ r.bg }}">
+          <span class="num" style="font-size:13px;font-weight:600;color:#10231C">{{ r.ref }}</span>
+          <span style="min-width:0">
+            <span style="display:block;font-size:12px;font-weight:600;color:{{ r.classColor }}">{{ r.className }}</span>
+            <span style="display:block;font-size:11px;color:#8A9188">{{ r.classNote }}</span>
+          </span>
+          <span style="min-width:0;font-size:13px;color:#55655D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.where }}</span>
+          <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ r.capacity }}</span>
+          <span style="min-width:0;font-size:12px;color:#55655D;text-wrap:pretty">{{ r.detail }}</span>
+          <span style="font-size:12px;font-weight:600;color:{{ r.standColor }};text-wrap:pretty">{{ r.standing }}</span>
+          <span style="text-align:end">
+            <sc-if value="{{ r.canEdit }}" hint-placeholder-val="{{ false }}">
+              <button type="button" style="min-height:28px;padding:4px 11px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ L.edit }}</button>
+            </sc-if>
+            <sc-if value="{{ r.readOnly }}" hint-placeholder-val="{{ true }}">
+              <span style="font-size:11px;color:#8A9188">{{ L.readOnly }}</span>
+            </sc-if>
+          </span>
+        </div>
+      </sc-for>
+      <p style="margin:9px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ listNote }}</p>
+    </section>
+
+    <section style="background:#F6F2E9;border:1px solid #EFEBE1;border-radius:12px;padding:11px 14px 13px">
+      <h2 style="margin:0 0 8px;font-size:14px;font-weight:700;color:#10231C">{{ L.rulesTitle }}</h2>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+          <p style="margin:0;font-size:12px;color:#3A4A43;text-wrap:pretty"><b style="color:#10231C">{{ r.head }}</b> {{ r.body }}</p>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:980},&quot;language&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ar&quot;,&quot;en&quot;],&quot;default&quot;:&quot;ar&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;},&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;manager&quot;,&quot;finance&quot;,&quot;keeper&quot;],&quot;default&quot;:&quot;manager&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;}}">
+const INK = "#10231C", GREEN = "#1F5240", RED = "#B3261E", AMBER = "#8A5B0B", MUTED = "#55655D", BLUE = "#2C5578", PURPLE = "#6B4E8A";
+
+// ref, class, warehouse index (null for a barrel), capacity, detail key, state,
+// vehicle (barrels only)
+const VESSELS = [
+  ["T1", "main", 0, 240, "finished", "in use", null],
+  ["T2", "main", 0, 240, "finished", "in use", null],
+  ["T3", "main", 0, 60, "filtration", "in use", null],
+  ["T4", "main", 0, 60, "filtration", "free", null],
+  ["T7", "main", 1, 120, "finished", "in use", null],
+  ["T8", "main", 1, 120, "finished", "in use", null],
+  ["IBC-14", "ibc", 0, 1, "buffer", "in use", null],
+  ["IBC-15", "ibc", 0, 1, "buffer", "in use", null],
+  ["IBC-16", "ibc", 0, 1, "buffer", "free", null],
+  ["IBC-31", "ibc", 1, 1, "buffer", "in use", null],
+  ["B-011", "barrel", 0, 200, "collection", "in use", "GHR 4471"],
+  ["B-012", "barrel", 0, 200, "collection", "in use", "GHR 4471"],
+  ["B-013", "barrel", 0, 200, "collection", "in use", "GHR 4471"],
+  ["B-021", "barrel", 0, 200, "collection", "in use", "BKM 8820"],
+  ["B-022", "barrel", 0, 200, "collection", "out", "BKM 8820"],
+  ["B-031", "barrel", 0, 200, "collection", "in use", "QNS 2214"],
+  ["B-032", "barrel", 0, 200, "collection", "in use", "QNS 2214"],
+  ["B-041", "barrel", 0, 200, "collection", "spare", null],
+];
+
+const WH = [
+  { en: "6th October", ar: "أكتوبر" },
+  { en: "Alexandria Yard", ar: "ساحة الإسكندرية" },
+  { en: "Shuwaikh", ar: "الشويخ" },
+];
+
+const T = {
+  en: {
+    crumbs: "Warehouse · Tank Registry",
+    title: "Tank Registry",
+    backToWarehouse: "← Back to the warehouse",
+    roles: { manager: "Warehouse manager", finance: "Financial manager", keeper: "Warehouse keeper" },
+    tabs: { all: "Everything", main: "Main Tanks", ibc: "IBCs", barrel: "Barrels" },
+    waiting: "Waiting On Approval",
+    approve: "Approve", refuse: "Refuse", waitingFm: "Waiting on the financial manager",
+    refuseNote: "A refusal needs a reason, and it stays on the request so the same one is not raised again next month with nothing learned.",
+    cancel: "Cancel", edit: "Edit", readOnly: "read only",
+    number: "Number", classCol: "Class", where: "Where", capacity: "Capacity", detail: "What It Is For", standing: "Standing",
+    classes: { main: "Main tank", ibc: "IBC", barrel: "Barrel" },
+    classNotes: { main: "fixed in the yard", ibc: "moved by forklift", barrel: "rides on a car" },
+    details: { finished: "finished oil", filtration: "filtration", buffer: "buffer", collection: "collection" },
+    states: { "in use": "In use", free: "Free", out: "Out of service", spare: "Spare, in the yard" },
+    figures: ["Main Tanks", "IBCs", "Barrels", "Requested"],
+    figNotes: ["fixed storage", "buffer storage", "on the cars", "waiting on approval"],
+    addVessel: "+ Add a vessel", requestVessel: "+ Request a vessel",
+    formAdd: "Add a vessel to the registry", formRequest: "Request a vessel",
+    formAddNote: "It exists in the registry the moment you save it, and the warehouse can start putting oil in it.",
+    formRequestNote: "This goes to the financial manager. Nothing appears in the registry until he approves it, so say why you need it.",
+    submitAdd: "Add it to the registry", submitRequest: "Send to the financial manager",
+    fields: { classCol: "Class", warehouse: "Warehouse", number: "Number", capacity: "Capacity", detail: "What it is for", vehicle: "Fitted to", tare: "Empty weight", why: "Why it is needed" },
+    hints: { number: "as painted on the side", capacity: "in tonnes, or Kg for a barrel", tare: "in Kg — the scale reads barrel plus oil", why: "one line the financial manager can act on" },
+    notes: { warehouse: "a barrel belongs to a car, not a yard", tare: "wrong here and every load is overstated" },
+    listAll: "Every Vessel", listMain: "Main Tanks", listIbc: "IBCs", listBarrel: "Barrels",
+    listNote: "Nothing is ever deleted — a vessel that is scrapped is marked out of service and keeps its number, so a weighing from last year still names something real.",
+    rulesTitle: "How This Works",
+    rules: [
+      ["A vessel is an asset, not a yard decision.", "The financial manager adds it to the registry. A warehouse manager or keeper can request one, and he approves — which is why this is its own screen rather than a button on the warehouse."],
+      ["Three classes, and they are not interchangeable.", "Main tanks are fixed in the yard, IBCs are moved by forklift and both hold stock. A barrel rides on a car and only ever collects — it never stores."],
+      ["A barrel's empty weight is a money figure.", "Every load is weighed as barrel plus oil, so an empty weight that is wrong by five kilos overstates or understates what a driver brought in, and he is charged the difference."],
+      ["Numbers are never reused.", "A scrapped vessel keeps its number and is marked out of service, so an old weighing still points at something."],
+    ],
+    scrapped: "Out of service · kept on the register",
+  },
+  ar: {
+    crumbs: "المخزن · سجل الخزانات",
+    title: "سجل الخزانات",
+    backToWarehouse: "→ العودة إلى المخزن",
+    roles: { manager: "مدير المخزن", finance: "المدير المالي", keeper: "أمين المخزن" },
+    tabs: { all: "الكل", main: "الخزانات الرئيسية", ibc: "أوعية IBC", barrel: "البراميل" },
+    waiting: "بانتظار الموافقة",
+    approve: "موافقة", refuse: "رفض", waitingFm: "بانتظار المدير المالي",
+    refuseNote: "الرفض يحتاج سبباً، ويبقى على الطلب حتى لا يُرفع الطلب نفسه الشهر القادم دون أن يتعلم أحد شيئاً.",
+    cancel: "إلغاء", edit: "تعديل", readOnly: "للعرض فقط",
+    number: "الرقم", classCol: "الفئة", where: "المكان", capacity: "السعة", detail: "الغرض", standing: "الوضع",
+    classes: { main: "خزان رئيسي", ibc: "IBC", barrel: "برميل" },
+    classNotes: { main: "ثابت في الساحة", ibc: "يُنقل برافعة", barrel: "يركب سيارة" },
+    details: { finished: "زيت جاهز", filtration: "ترشيح", buffer: "مؤقت", collection: "الجمع" },
+    states: { "in use": "قيد الاستخدام", free: "فارغ", out: "خارج الخدمة", spare: "احتياطي في الساحة" },
+    figures: ["الخزانات الرئيسية", "أوعية IBC", "البراميل", "مطلوب"],
+    figNotes: ["تخزين ثابت", "تخزين مؤقت", "على السيارات", "بانتظار الموافقة"],
+    addVessel: "+ إضافة وعاء", requestVessel: "+ طلب وعاء",
+    formAdd: "إضافة وعاء إلى السجل", formRequest: "طلب وعاء",
+    formAddNote: "يوجد في السجل لحظة حفظه، ويمكن للمخزن أن يبدأ بوضع الزيت فيه.",
+    formRequestNote: "هذا يذهب إلى المدير المالي. ولا يظهر شيء في السجل حتى يوافق، فاذكر سبب الحاجة إليه.",
+    submitAdd: "إضافته إلى السجل", submitRequest: "إرسال إلى المدير المالي",
+    fields: { classCol: "الفئة", warehouse: "المخزن", number: "الرقم", capacity: "السعة", detail: "الغرض", vehicle: "مركّب على", tare: "الوزن فارغاً", why: "سبب الحاجة" },
+    hints: { number: "كما هو مكتوب على جانبه", capacity: "بالطن، أو بالكجم للبرميل", tare: "بالكجم — الميزان يقرأ البرميل مع الزيت", why: "سطر واحد يستطيع المدير المالي البناء عليه" },
+    notes: { warehouse: "البرميل يتبع سيارة لا ساحة", tare: "الخطأ هنا يزيد كل حمولة أو ينقصها" },
+    listAll: "كل الأوعية", listMain: "الخزانات الرئيسية", listIbc: "أوعية IBC", listBarrel: "البراميل",
+    listNote: "لا يُحذف شيء أبداً — الوعاء المشطوب يُعلَّم خارج الخدمة ويحفظ رقمه، فوزنٌ من العام الماضي ما زال يشير إلى شيء حقيقي.",
+    rulesTitle: "كيف يعمل هذا",
+    rules: [
+      ["الوعاء أصل من الأصول لا قرار ساحة.", "المدير المالي هو من يضيفه إلى السجل. ولمدير المخزن أو أمينه أن يطلب، وهو يوافق — ولهذا هذه شاشة مستقلة لا زر في شاشة المخزن."],
+      ["ثلاث فئات وليست بديلاً عن بعضها.", "الخزانات الرئيسية ثابتة في الساحة، وأوعية IBC تُنقل برافعة، وكلتاهما تحمل مخزوناً. أما البرميل فيركب سيارة ويجمع فقط — ولا يخزّن أبداً."],
+      ["الوزن الفارغ للبرميل رقم مالي.", "كل حمولة تُوزن برميلاً مع زيت، فخطأ خمسة كيلوات في الوزن الفارغ يزيد أو ينقص ما أحضره السائق، وهو من يُحاسب على الفارق."],
+      ["الأرقام لا تُعاد أبداً.", "الوعاء المشطوب يحفظ رقمه ويُعلَّم خارج الخدمة، فالوزن القديم ما زال يشير إلى شيء."],
+    ],
+    scrapped: "خارج الخدمة · محفوظ في السجل",
+  },
+};
+
+const ROLES = ["manager", "finance", "keeper"];
+
+class Component extends DCLogic {
+  state = { lang: null, role: "manager", tab: "all", form: false, formClass: null, decided: {} };
+
+
+  // Opened from the access map as a particular role: the view starts as that
+  // person's, so the map's cells show what each of them actually sees.
+  __role() {
+    try {
+      const r = new URLSearchParams(window.location.search).get("role");
+      if (r && ["keeper","manager","finance"].indexOf(r) !== -1) this.setState({ role: r });
+    } catch (e) {}
+  }
+
+  componentDidMount() {
+    this.__role();
+    try {
+      const saved = localStorage.getItem("zeitco-lang");
+      if (saved === "ar" || saved === "en") this.setState({ lang: saved });
+    } catch (e) {}
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  get lang() { return this.state.lang || this.props.language || "ar"; }
+  tr(v) { return v && typeof v === "object" ? (v[this.lang] || v.en) : v; }
+  setLang(l) { try { localStorage.setItem("zeitco-lang", l); } catch (e) {} this.setState({ lang: l }); }
+
+  renderVals() {
+    const ar = this.lang === "ar", L = T[this.lang] || T.en;
+    const role = this.state.role, tab = this.state.tab;
+    const isFinance = role === "finance";
+    const list = VESSELS.filter((v) => tab === "all" || v[1] === tab);
+    const count = (c) => VESSELS.filter((v) => v[1] === c).length;
+    const formClass = this.state.formClass || L.classes.main;
+    const isBarrelForm = formClass === L.classes.barrel;
+    // One list of requests, so the headline figure above it cannot drift.
+    const PENDING = [
+      { what: ar ? "2 أوعية IBC — أكتوبر" : "2 IBCs — 6th October",
+        who: ar ? "طلبها محمود سليم، مدير العمليات" : "requested by M. Selim, operations manager",
+        why: ar ? "محلان كبيران يمليان وعاءً كل يومين ولا وعاء فارغ" : "two big shops fill a vessel every other day and nothing is free",
+        when: ar ? "منذ 3 أيام" : "3 days ago", ageColor: MUTED },
+      { what: ar ? "خزان رئيسي 120 طن — ساحة الإسكندرية" : "One 120 t main tank — Alexandria Yard",
+        who: ar ? "طلبها س. منصور، أمين المخزن" : "requested by S. Mansour, warehouse keeper",
+        why: ar ? "T7 و T8 ممتلئان قبل موعد الشحن" : "T7 and T8 are full before the shipment is due",
+        when: ar ? "منذ 9 أيام" : "9 days ago", ageColor: AMBER },
+      { what: ar ? "برميل بديل — الفريق 1" : "One replacement barrel — Team 1",
+        who: ar ? "طلبه طارق زكي، أمين المخزن" : "requested by T. Zaki, warehouse keeper",
+        why: ar ? "B-022 لحامه يرشح والفريق ناقص برميلاً منذ 11 سبتمبر" : "B-022's seam is leaking and the team has been a barrel short since 11 Sep",
+        when: ar ? "منذ يومين" : "2 days ago", ageColor: MUTED },
+    ].map((p, i) => {
+      const d = this.state.decided[i];
+      return Object.assign({}, p, {
+        canDecide: isFinance && !d,
+        waiting: !isFinance && !d,
+        decided: d === "ok" ? (ar ? "✓ مُعتمد — أُضيف للسجل" : "✓ Approved — added to the register")
+          : d === "no" ? (ar ? "مرفوض" : "Refused") : "",
+        decidedColor: d === "ok" ? GREEN : RED,
+        approve: () => this.setState({ decided: Object.assign({}, this.state.decided, { [i]: "ok" }) }),
+        refuse: () => this.setState({ decided: Object.assign({}, this.state.decided, { [i]: "no" }) }),
+      });
+    });
+
+    return {
+      dir: ar ? "rtl" : "ltr",
+      face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      L,
+      logoutWord: ar ? "تسجيل الخروج" : "Log out",
+      langs: [["en", "EN"], ["ar", "ع"]].map(([k, label]) => ({
+        label, pick: () => this.setLang(k),
+        bg: this.lang === k ? GREEN : "#fff", color: this.lang === k ? "#fff" : MUTED,
+      })),
+      roles: ROLES.map((k) => ({
+        label: L.roles[k], pick: () => this.setState({ role: k, form: false }),
+        bg: role === k ? GREEN : "#fff", color: role === k ? "#fff" : MUTED,
+      })),
+      who: {
+        line: isFinance
+          ? (ar ? "السجل من صلاحيتك: تضيف الأوعية وتوافق على ما يُطلب." : "The registry is yours: you add vessels and approve what is requested.")
+          : role === "manager"
+            ? (ar ? "تطلب الأوعية ويوافق عليها المدير المالي. وترى السجل كله." : "You request vessels and the financial manager approves them. You see the whole register.")
+            : (ar ? "ترى السجل ولا تضيف إليه. اطلب من مدير المخزن." : "You can read the register but not add to it — ask the warehouse manager."),
+      },
+      tabs: ["all", "main", "ibc", "barrel"].map((k) => ({
+        label: L.tabs[k], pick: () => this.setState({ tab: k }),
+        color: tab === k ? GREEN : MUTED, line: tab === k ? GREEN : "transparent",
+      })),
+      figures: [
+        { label: L.figures[0], value: String(count("main")), unit: ar ? "خزانات" : "tanks", color: BLUE, note: L.figNotes[0] },
+        { label: L.figures[1], value: String(count("ibc")), unit: ar ? "أوعية" : "totes", color: PURPLE, note: L.figNotes[1] },
+        { label: L.figures[2], value: String(count("barrel")), unit: ar ? "براميل" : "barrels", color: INK, note: L.figNotes[2] },
+        { label: L.figures[3], value: String(PENDING.length), unit: "", color: AMBER, note: L.figNotes[3] },
+      ],
+      pending: PENDING,
+      pendingNote: isFinance
+        ? (ar ? "قرارك" : "yours to decide")
+        : (ar ? PENDING.length + " طلبات" : PENDING.length + " requests"),
+
+      listTitle: tab === "all" ? L.listAll : tab === "main" ? L.listMain : tab === "ibc" ? L.listIbc : L.listBarrel,
+      listNote: L.listNote,
+      filters: ["all", "main", "ibc", "barrel"].map((k) => ({
+        label: L.tabs[k], pick: () => this.setState({ tab: k }),
+        bg: tab === k ? GREEN : "#fff", color: tab === k ? "#fff" : MUTED,
+        border: tab === k ? GREEN : "#8A9188",
+      })),
+      cols: "82px 106px minmax(0,1fr) 88px minmax(0,1fr) minmax(0,1.1fr) 88px",
+      head: [
+        { label: L.number, align: "start" },
+        { label: L.classCol, align: "start" },
+        { label: L.where, align: "start" },
+        { label: L.capacity, align: "end" },
+        { label: L.detail, align: "start" },
+        { label: L.standing, align: "start" },
+        { label: "", align: "end" },
+      ],
+      rows: list.map((v) => ({
+        ref: v[0],
+        className: L.classes[v[1]],
+        classColor: v[1] === "main" ? BLUE : v[1] === "ibc" ? PURPLE : INK,
+        classNote: L.classNotes[v[1]],
+        where: v[1] === "barrel" ? (v[6] || (ar ? "الساحة" : "the yard")) : this.tr(WH[v[2]]),
+        capacity: v[1] === "barrel" ? v[3] + (ar ? " كجم" : " Kg") : v[3] + (ar ? " طن" : " t"),
+        detail: L.details[v[4]],
+        standing: v[5] === "out" ? L.scrapped : L.states[v[5]],
+        standColor: v[5] === "out" ? RED : v[5] === "free" ? GREEN : v[5] === "spare" ? MUTED : INK,
+        bg: v[5] === "out" ? "#FDF6F4" : "transparent",
+        canEdit: isFinance, readOnly: !isFinance,
+      })),
+
+      showForm: this.state.form && role !== "keeper",
+      toggleForm: () => this.setState({ form: !this.state.form }),
+      canAdd: role !== "keeper",
+      addLabel: isFinance ? L.addVessel : L.requestVessel,
+      formTitle: isFinance ? L.formAdd : L.formRequest,
+      formNote: isFinance ? L.formAddNote : L.formRequestNote,
+      submitLabel: isFinance ? L.submitAdd : L.submitRequest,
+      formFields: (() => {
+        const f = [
+          { label: L.fields.classCol, isSelect: true, options: [L.classes.main, L.classes.ibc, L.classes.barrel],
+            note: "", change: (e) => this.setState({ formClass: e.target.value }) },
+        ];
+        if (isBarrelForm) {
+          f.push({ label: L.fields.vehicle, isSelect: true, options: ["GHR 4471", "BKM 8820", "QNS 2214", ar ? "غير مركّب" : "unfitted"], note: L.notes.warehouse });
+          f.push({ label: L.fields.number, isText: true, hint: L.hints.number, note: "" });
+          f.push({ label: L.fields.capacity, isText: true, hint: L.hints.capacity, note: "" });
+          f.push({ label: L.fields.tare, isText: true, hint: L.hints.tare, note: L.notes.tare });
+        } else {
+          f.push({ label: L.fields.warehouse, isSelect: true, options: WH.map((w) => this.tr(w)), note: "" });
+          f.push({ label: L.fields.number, isText: true, hint: L.hints.number, note: "" });
+          f.push({ label: L.fields.capacity, isText: true, hint: L.hints.capacity, note: "" });
+          f.push({ label: L.fields.detail, isSelect: true, options: [L.details.finished, L.details.filtration, L.details.buffer], note: "" });
+        }
+        if (!isFinance) f.push({ label: L.fields.why, isText: true, hint: L.hints.why, note: "" });
+        return f;
+      })(),
+
+      rules: L.rules.map((r) => ({ head: r[0], body: r[1] })),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

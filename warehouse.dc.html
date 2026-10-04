@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+  .num { font-family:"IBM Plex Mono",monospace; unicode-bidi:isolate; direction:ltr; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="width:100%;max-width:1400px;margin:0 auto;padding:0 0 44px;font-family:{{ face }};-webkit-font-smoothing:antialiased">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 20px;flex-wrap:wrap">
+      <a href="#" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;flex-shrink:0">
+        <img src="public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto">
+        Zeitco
+      </a>
+      <div style="display:flex;gap:1px;padding:0;flex:1 1 auto;min-width:520px;align-self:stretch;align-items:stretch">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="9">
+        <button type="button" onClick="{{ t.pick }}" style="border:0;border-bottom:2px solid {{ t.line }};background:transparent;padding:9px 13px 8px;font-family:inherit;font-size:13px;font-weight:600;color:{{ t.color }};white-space:nowrap;cursor:pointer">{{ t.label }}</button>
+      </sc-for>
+      </div>
+      <span style="font-size:12px;color:#63736A;flex:0 0 auto;white-space:nowrap">{{ L.warehouse }} · {{ who.scope }}</span>
+      <span style="flex:1;min-width:0"></span>
+      <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden;flex-shrink:0">
+        <sc-for list="{{ roles }}" as="r" hint-placeholder-count="3">
+          <button type="button" onClick="{{ r.pick }}" style="border:0;height:26px;padding:0 10px;background:{{ r.bg }};color:{{ r.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ r.label }}</button>
+        </sc-for>
+      </div>
+      <a href="login.dc.html" style="font-size:12px;font-weight:600;color:#55655D;white-space:nowrap;flex-shrink:0">{{ logoutWord }}</a>
+      <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden;flex-shrink:0">
+        <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+          <button type="button" onClick="{{ l.pick }}" style="border:0;height:26px;padding:0 10px;background:{{ l.bg }};color:{{ l.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ l.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+  </header>
+
+  <div style="padding:13px 20px 0">
+
+    <section style="background:#F1EEE6;border:1px solid #E4DFD4;border-radius:11px;padding:9px 13px 10px;margin-bottom:11px">
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:700;color:#10231C">{{ who.name }} · {{ who.label }}</span>
+        <span style="font-size:12px;color:#55655D;min-width:0;text-wrap:pretty">{{ who.line }}</span>
+      </div>
+    </section>
+
+    <sc-if value="{{ onToday }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:11px;align-items:start">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px;min-width:0">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin-bottom:3px">
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.expectedBack }}</h2>
+            <span style="font-size:11px;color:#8A9188">{{ today.note }}</span>
+          </div>
+          <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.todayNote }}</p>
+          <sc-for list="{{ today.trucks }}" as="t" hint-placeholder-count="4">
+            <div style="border:1px solid {{ t.border }};border-radius:11px;background:{{ t.bg }};padding:9px 12px 10px;margin-bottom:8px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                <span style="min-width:0">
+                  <span style="font-size:14px;font-weight:600;color:#10231C">{{ t.driver }}</span>
+                  <span class="num" style="font-size:12px;color:#8A9188;margin-inline-start:7px">{{ t.plate }}</span>
+                  <span style="font-size:12px;color:#8A9188;margin-inline-start:5px">{{ t.team }}</span>
+                </span>
+                <span style="font-size:12px;font-weight:600;color:{{ t.stateColor }};white-space:nowrap">{{ t.state }}</span>
+              </div>
+              <div style="font-size:11px;color:#8A9188;margin-top:2px">{{ t.progress }}</div>
+
+              <sc-if value="{{ t.barrels }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:74px 68px 72px 72px minmax(0,1.4fr) 92px;gap:9px;padding:8px 0 4px;border-bottom:1px solid #EFEBE1;margin-top:7px">
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.barrel }}</span>
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.declared }}</span>
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.weighed }}</span>
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.gap }}</span>
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.shopsInBarrel }}</span>
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end"></span>
+                </div>
+                <sc-for list="{{ t.barrels }}" as="k" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:74px 68px 72px 72px minmax(0,1.4fr) 92px;gap:9px;align-items:center;padding:6px 0;border-bottom:1px solid #F4F1EA">
+                    <span class="num" style="font-size:12px;font-weight:600;color:#10231C">{{ k.ref }}</span>
+                    <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ k.declared }}</span>
+                    <span class="num" style="font-size:13px;font-weight:600;color:#10231C;text-align:end">{{ k.weighed }}</span>
+                    <span class="num" style="font-size:13px;font-weight:600;color:{{ k.gapColor }};text-align:end">{{ k.gap }}</span>
+                    <span style="min-width:0;font-size:12px;color:{{ k.shopColor }};text-wrap:pretty">{{ k.shops }}</span>
+                    <span style="text-align:end">
+                      <button type="button" style="min-height:28px;padding:4px 11px;border:1px solid {{ k.btnBorder }};border-radius:8px;background:{{ k.btnBg }};color:{{ k.btnColor }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ k.action }}</button>
+                    </span>
+                  </div>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ t.late }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:7px 0 0;font-size:12px;color:#B3261E;text-wrap:pretty">{{ t.late }}</p>
+              </sc-if>
+            </div>
+          </sc-for>
+        </section>
+
+        <div style="display:flex;flex-direction:column;gap:11px;min-width:0">
+          <section style="border:1px solid #E8C9A0;background:#FDF6EA;border-radius:12px;padding:10px 12px 12px">
+            <h2 style="margin:0 0 3px;font-size:13px;font-weight:700;color:#8A5B0B">{{ L.heldBack }}</h2>
+            <p style="margin:0 0 8px;font-size:11px;color:#6B5326;text-wrap:pretty">{{ L.heldNote }}</p>
+            <sc-for list="{{ held }}" as="h" hint-placeholder-count="1">
+              <div style="border:1px solid #EADFC6;border-radius:9px;background:#fff;padding:7px 10px 8px;margin-bottom:6px">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+                  <span class="num" style="font-size:12px;font-weight:600;color:#10231C">{{ h.ref }}</span>
+                  <span class="num" style="font-size:12px;color:#55655D">{{ h.weight }}</span>
+                </div>
+                <div style="font-size:12px;color:#55655D;margin-top:2px;text-wrap:pretty">{{ h.why }}</div>
+                <div style="font-size:11px;color:#8A9188;margin-top:2px;text-wrap:pretty">{{ h.shop }}</div>
+                <div style="font-size:11px;font-weight:600;color:#8A5B0B;margin-top:3px">{{ h.state }}</div>
+              </div>
+            </sc-for>
+          </section>
+
+          <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:10px 12px 12px">
+            <h2 style="margin:0 0 8px;font-size:13px;font-weight:700;color:#10231C">{{ L.thisScale }}</h2>
+            <sc-for list="{{ scale }}" as="s" hint-placeholder-count="4">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid #F4F1EA">
+                <span style="font-size:12px;color:#55655D;min-width:0">{{ s.label }}</span>
+                <span class="num" style="font-size:13px;font-weight:600;color:#10231C;flex-shrink:0;text-align:end">{{ s.value }}</span>
+              </div>
+            </sc-for>
+            <p style="margin:8px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.scaleNote }}</p>
+          </section>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ onDash }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:#E4DFD4;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden;margin-bottom:11px">
+        <sc-for list="{{ dash.figures }}" as="f" hint-placeholder-count="5">
+          <div style="background:#fff;padding:9px 13px 11px;min-width:0">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-top:4px">
+              <span class="num" style="font-size:22px;font-weight:600;color:{{ f.color }};line-height:1">{{ f.value }}</span>
+              <span style="font-size:11px;color:#8A9188">{{ f.unit }}</span>
+            </div>
+            <div style="font-size:11px;color:#8A9188;margin-top:4px;text-wrap:pretty">{{ f.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:11px;align-items:start;margin-bottom:11px">
+        <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px;min-width:0">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px">
+            <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ dash.stockTitle }}</h2>
+            <span class="num" style="font-size:12px;color:#63736A">{{ dash.stockTotal }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 74px 62px 66px 88px;gap:9px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.warehouseCol }}</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.vessels }}</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.free }}</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.heldCol }}</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.inStock }}</span>
+          </div>
+          <sc-for list="{{ dash.stock }}" as="r" hint-placeholder-count="3">
+            <button type="button" onClick="{{ r.open }}" style="display:grid;grid-template-columns:minmax(0,1fr) 74px 62px 66px 88px;gap:9px;align-items:center;width:100%;text-align:start;border:0;border-bottom:1px solid #F4F1EA;background:transparent;padding:7px 0;font-family:inherit;cursor:pointer">
+              <span style="min-width:0">
+                <span style="display:block;font-size:13px;font-weight:500;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+                <span style="display:block;font-size:11px;color:#8A9188;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.note }}</span>
+              </span>
+              <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ r.vessels }}</span>
+              <span class="num" style="font-size:13px;color:#1F5240;text-align:end">{{ r.free }}</span>
+              <span class="num" style="font-size:13px;color:{{ r.heldColor }};text-align:end">{{ r.held }}</span>
+              <span class="num" style="font-size:14px;font-weight:600;color:#10231C;text-align:end">{{ r.stock }}</span>
+            </button>
+          </sc-for>
+        </section>
+
+        <div style="display:flex;flex-direction:column;gap:11px;min-width:0">
+          <section style="background:#fff;border:1px solid #E8C9A0;border-radius:12px;padding:11px 14px 12px">
+            <h2 style="margin:0 0 3px;font-size:14px;font-weight:700;color:#8A5B0B">{{ L.lossTitle }}</h2>
+            <p style="margin:0 0 8px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.lossSub }}</p>
+            <sc-for list="{{ dash.loss }}" as="l" hint-placeholder-count="3">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #F4F1EA">
+                <span style="min-width:0">
+                  <span style="display:block;font-size:12px;color:#55655D">{{ l.label }}</span>
+                  <span style="display:block;font-size:11px;color:#8A9188;text-wrap:pretty">{{ l.note }}</span>
+                </span>
+                <span class="num" style="font-size:15px;font-weight:600;color:#8A5B0B;flex-shrink:0">{{ l.value }}</span>
+              </div>
+            </sc-for>
+          </section>
+
+          <section style="background:#fff;border:1px solid #E8B4AE;border-radius:12px;padding:11px 14px 12px">
+            <h2 style="margin:0 0 3px;font-size:14px;font-weight:700;color:#8A2B20">{{ L.shortTitle }}</h2>
+            <p style="margin:0 0 8px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.shortSub }}</p>
+            <sc-for list="{{ dash.short }}" as="l" hint-placeholder-count="3">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #F4F1EA">
+                <span style="min-width:0">
+                  <span style="display:block;font-size:12px;color:#55655D">{{ l.label }}</span>
+                  <span style="display:block;font-size:11px;color:#8A9188;text-wrap:pretty">{{ l.note }}</span>
+                </span>
+                <span class="num" style="font-size:15px;font-weight:600;color:#8A2B20;flex-shrink:0">{{ l.value }}</span>
+              </div>
+            </sc-for>
+          </section>
+        </div>
+      </div>
+
+      <section style="border:1px solid #E8B4AE;background:#FDF4F2;border-radius:12px;padding:10px 13px 12px">
+        <h2 style="margin:0 0 8px;font-size:14px;font-weight:700;color:#8A2B20">{{ L.needsYou }}</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px">
+          <sc-for list="{{ dash.alerts }}" as="a" hint-placeholder-count="6">
+            <button type="button" onClick="{{ a.go }}" style="display:block;width:100%;text-align:start;border:1px solid #F0D9D5;border-radius:9px;background:#fff;padding:7px 10px 8px;font-family:inherit;cursor:pointer">
+              <span style="display:block;font-size:12px;font-weight:600;color:{{ a.color }};text-wrap:pretty">{{ a.what }}</span>
+              <span style="display:block;font-size:11px;color:#8A9188;margin-top:2px;text-wrap:pretty">{{ a.who }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onTanks }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.whatIsInEach }}</h2>
+          <span style="font-size:11px;color:#8A9188">{{ tanksNote }}</span>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.tanksSub }}</p>
+        <div style="display:grid;grid-template-columns:74px 84px minmax(0,1.2fr) 74px 62px 80px 56px 52px 48px 58px minmax(0,0.9fr);gap:8px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.vessel }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.classCol }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.whatIsInIt }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.stateCol }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.tonnes }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.full }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">FFA</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">M&amp;I</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">IV</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.sulph }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.testedCol }}</span>
+        </div>
+        <sc-for list="{{ tanks }}" as="t" hint-placeholder-count="10">
+          <div style="display:grid;grid-template-columns:74px 84px minmax(0,1.2fr) 74px 62px 80px 56px 52px 48px 58px minmax(0,0.9fr);gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #F4F1EA;background:{{ t.rowBg }}">
+            <span class="num" style="font-size:13px;font-weight:600;color:#10231C">{{ t.ref }}</span>
+            <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;color:{{ t.classColor }};background:{{ t.classBg }};justify-self:start;white-space:nowrap">{{ t.className }}</span>
+            <span style="min-width:0">
+              <span style="display:block;font-size:13px;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.contents }}</span>
+              <span style="display:block;font-size:11px;color:{{ t.sourceColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.source }}</span>
+            </span>
+            <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;color:{{ t.stateColor }};background:{{ t.stateBg }};justify-self:start;white-space:nowrap">{{ t.state }}</span>
+            <span class="num" style="font-size:13px;font-weight:600;color:#10231C;text-align:end">{{ t.tonnes }}</span>
+            <span style="min-width:0;display:flex;align-items:center;gap:6px">
+              <span style="flex:1;min-width:0;height:7px;border-radius:999px;background:#EFEBE1;overflow:hidden">
+                <span style="display:block;height:100%;width:{{ t.fullPct }};background:{{ t.fullColor }}"></span>
+              </span>
+              <span class="num" style="font-size:11px;color:#8A9188;flex-shrink:0">{{ t.fullPct }}</span>
+            </span>
+            <span class="num" style="font-size:13px;color:{{ t.ffaColor }};text-align:end">{{ t.ffa }}</span>
+            <span class="num" style="font-size:13px;color:{{ t.miColor }};text-align:end">{{ t.mi }}</span>
+            <span class="num" style="font-size:13px;color:{{ t.ivColor }};text-align:end">{{ t.iv }}</span>
+            <span class="num" style="font-size:13px;color:{{ t.sulColor }};text-align:end">{{ t.sul }}</span>
+            <span style="min-width:0;font-size:11px;color:{{ t.testedColor }};text-wrap:pretty">{{ t.tested }}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onRegistry }}" hint-placeholder-val="{{ false }}">
+      <section style="border:1px solid #E8C9A0;background:#FDF6EA;border-radius:12px;padding:11px 14px 12px;margin-bottom:11px">
+        <h2 style="margin:0;font-size:13px;font-weight:700;color:#8A5B0B">{{ L.registryOwnerTitle }}</h2>
+        <p style="margin:3px 0 0;font-size:12px;color:#6B5326;text-wrap:pretty">{{ L.registryOwnerNote }}</p>
+      </section>
+
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.tankRegistry }}</h2>
+          <a href="tank-registry.dc.html" style="font-size:12px;font-weight:600;flex-shrink:0">{{ L.openRegistry }}</a>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.registryNote }}</p>
+        <div style="display:grid;grid-template-columns:78px 104px minmax(0,1fr) 82px minmax(0,1fr) 88px minmax(0,1.1fr);gap:9px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.number }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.classCol }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.warehouseCol }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.capacity }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.whatItIsFor }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.inItNow }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.standing }}</span>
+        </div>
+        <sc-for list="{{ registry }}" as="r" hint-placeholder-count="10">
+          <div style="display:grid;grid-template-columns:78px 104px minmax(0,1fr) 82px minmax(0,1fr) 88px minmax(0,1.1fr);gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid #F4F1EA">
+            <span class="num" style="font-size:13px;font-weight:600;color:#10231C">{{ r.ref }}</span>
+            <span style="min-width:0">
+              <span style="display:block;font-size:12px;font-weight:600;color:{{ r.classColor }}">{{ r.className }}</span>
+              <span style="display:block;font-size:11px;color:#8A9188">{{ r.classNote }}</span>
+            </span>
+            <span style="min-width:0;font-size:13px;color:#55655D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.warehouse }}</span>
+            <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ r.capacity }}</span>
+            <span style="min-width:0;font-size:12px;color:#55655D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.purpose }}</span>
+            <span class="num" style="font-size:13px;font-weight:600;color:#10231C;text-align:end">{{ r.inIt }}</span>
+            <span style="min-width:0;font-size:12px;color:{{ r.standColor }};text-wrap:pretty">{{ r.standing }}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onBarrels }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.barrelRegistry }}</h2>
+          <a href="tank-registry.dc.html" style="font-size:12px;font-weight:600;flex-shrink:0">{{ L.openRegistry }}</a>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.barrelNote }}</p>
+        <div style="display:grid;grid-template-columns:84px 88px 96px minmax(0,1fr) 88px minmax(0,1.1fr);gap:9px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.number }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.capacity }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.emptyWeight }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.fittedTo }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.inService }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.lastIssued }}</span>
+        </div>
+        <sc-for list="{{ barrels }}" as="v" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:84px 88px 96px minmax(0,1fr) 88px minmax(0,1.1fr);gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid #F4F1EA;background:{{ v.rowBg }}">
+            <span class="num" style="font-size:13px;font-weight:600;color:#10231C">{{ v.ref }}</span>
+            <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ v.capacity }}</span>
+            <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ v.tare }}</span>
+            <span style="min-width:0;font-size:13px;color:#55655D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.vehicle }}</span>
+            <span style="font-size:12px;font-weight:600;color:{{ v.serviceColor }}">{{ v.service }}</span>
+            <span style="min-width:0;font-size:12px;color:#8A9188;text-wrap:pretty">{{ v.issued }}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onShipping }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px;margin-bottom:11px">
+        <h2 style="margin:0 0 3px;font-size:15px;font-weight:700;color:#10231C">{{ incomingTitle }}</h2>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ incomingNote }}</p>
+        <div style="display:grid;grid-template-columns:104px 84px 96px 120px 88px minmax(0,1fr) 106px;gap:9px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.container }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.kindCol }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.qtyOfCap }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.full }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.loadedFrom }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.orderAndArrival }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end"></span>
+        </div>
+        <sc-if value="{{ alloc }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #BFD8C9;background:#F6FAF7;border-radius:10px;padding:10px 12px 12px;margin-bottom:10px">
+            <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px">
+              <h3 style="margin:0;font-size:14px;font-weight:700;color:#1F5240">{{ alloc.title }}</h3>
+              <span style="font-size:11px;color:#63736A"><span class="num">{{ alloc.sub }}</span></span>
+            </div>
+            <sc-for list="{{ alloc.rows }}" as="r" hint-placeholder-count="1">
+              <div style="display:grid;grid-template-columns:64px 236px 86px minmax(0,1fr) 76px;gap:9px;align-items:center;padding:0 0 7px">
+                <span style="font-size:12px;font-weight:600;color:#63736A">{{ r.lineLabel }}</span>
+                <select onChange="{{ r.setSource }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 8px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                  <sc-for list="{{ r.sources }}" as="s" hint-placeholder-count="3">
+                    <option value="{{ s.label }}">{{ s.label }}</option>
+                  </sc-for>
+                </select>
+                <input type="text" value="{{ r.tonnes }}" onChange="{{ r.setTonnes }}" placeholder="{{ r.hint }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid {{ r.border }};border-radius:9px;padding:0 10px;background:{{ r.bg }};font-family:'IBM Plex Mono',monospace;font-size:13px;color:#10231C">
+                <span style="min-width:0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ r.note }}</span>
+                <span style="text-align:end">
+                  <sc-if value="{{ r.canRemove }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" onClick="{{ r.remove }}" style="min-height:30px;padding:4px 10px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#8A2B20;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ r.removeLabel }}</button>
+                  </sc-if>
+                </span>
+              </div>
+            </sc-for>
+
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:2px">
+              <button type="button" onClick="{{ alloc.add }}" style="min-height:30px;padding:5px 13px;border:1px dashed #1F5240;border-radius:9px;background:#fff;color:#1F5240;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ alloc.addLabel }}</button>
+              <span style="font-size:12px;color:#55655D">{{ alloc.totalLabel }} <b class="num" style="color:#10231C">{{ alloc.total }}</b> / <span class="num">{{ alloc.capacity }}</span></span>
+              <span style="font-size:12px;font-weight:600;color:{{ alloc.fillColor }}">{{ alloc.fillNote }}</span>
+            </div>
+            <p style="margin:7px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ alloc.addNote }}</p>
+
+            <sc-if value="{{ alloc.error }}" hint-placeholder-val="{{ false }}">
+              <div style="margin:9px 0 0;padding:9px 12px;border:1px solid #E8B4AE;background:#FDF4F2;border-radius:9px">
+                <p style="margin:0;font-size:12px;font-weight:600;color:#8A2B20;text-wrap:pretty">{{ alloc.error }}</p>
+                <p style="margin:2px 0 0;font-size:11px;color:#8A2B20;text-wrap:pretty">{{ alloc.blockedNote }}</p>
+              </div>
+            </sc-if>
+            <p style="margin:9px 0 0;font-size:11px;color:#8A9188;text-wrap:pretty">{{ alloc.note }}</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <button type="button" onClick="{{ alloc.trySave }}" style="min-height:32px;padding:6px 15px;border:0;border-radius:10px;background:{{ alloc.saveBg }};color:{{ alloc.saveColor }};font-family:inherit;font-size:13px;font-weight:600;cursor:{{ alloc.saveCursor }}">{{ alloc.save }}</button>
+              <button type="button" onClick="{{ alloc.close }}" style="min-height:32px;padding:6px 15px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ alloc.cancel }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-for list="{{ incoming }}" as="c" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:104px 84px 96px 120px 88px minmax(0,1fr) 106px;gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid #F4F1EA;background:{{ c.rowBg }}">
+            <span class="num" style="font-size:13px;font-weight:600;color:#10231C">{{ c.ref }}</span>
+            <span style="font-size:12px;font-weight:600;color:{{ c.kindColor }}">{{ c.kind }}</span>
+            <span class="num" style="font-size:13px;font-weight:600;color:{{ c.qtyColor }};text-align:end">{{ c.qtyOfCap }}</span>
+            <span style="min-width:0;display:flex;align-items:center;gap:7px">
+              <span style="flex:1;min-width:0;height:7px;border-radius:999px;background:#EFEBE1;overflow:hidden">
+                <span style="display:block;height:100%;width:{{ c.fillPct }};background:{{ c.stateColor }}"></span>
+              </span>
+              <span class="num" style="font-size:11px;color:#8A9188;flex-shrink:0">{{ c.fillPct }}</span>
+            </span>
+            <span class="num" style="font-size:13px;font-weight:600;color:{{ c.fromColor }}">{{ c.from }}</span>
+            <span style="min-width:0">
+              <span class="num" style="display:block;font-size:12px;color:#55655D">{{ c.order }}</span>
+              <span style="display:block;font-size:11px;color:#8A9188;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.arrived }}</span>
+            </span>
+            <span style="text-align:end">
+              <sc-if value="{{ c.canAllocate }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ c.open }}" style="min-height:28px;padding:4px 11px;border:0;border-radius:8px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ c.allocateLabel }}</button>
+              </sc-if>
+            </span>
+          </div>
+        </sc-for>
+      </section>
+
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px;margin-bottom:11px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ loadingTitle }}</h2>
+          <sc-if value="{{ canRaise }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ openRaise }}" style="border:0;border-radius:999px;height:28px;padding:0 14px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ L.raiseOrder }}</button>
+          </sc-if>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ loadingNote }}</p>
+
+        <sc-if value="{{ showRaise }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #BFD8C9;background:#F6FAF7;border-radius:10px;padding:10px 12px 12px;margin-bottom:10px">
+            <h3 style="margin:0 0 3px;font-size:14px;font-weight:700;color:#1F5240">{{ theForm.title }}</h3>
+            <p style="margin:0 0 9px;font-size:11px;color:#63736A;text-wrap:pretty">{{ theForm.note }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(186px,1fr));gap:9px 11px">
+              <sc-for list="{{ theForm.fields }}" as="f" hint-placeholder-count="5">
+                <label style="display:block;min-width:0">
+                  <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                  <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                    <select style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 8px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2">
+                        <option value="{{ o }}">{{ o }}</option>
+                      </sc-for>
+                    </select>
+                  </sc-if>
+                  <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                    <input type="text" placeholder="{{ f.hint }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                  </sc-if>
+                  <span style="display:block;font-size:11px;color:#8A9188;margin-top:3px;text-wrap:pretty">{{ f.note }}</span>
+                </label>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">
+              <button type="button" onClick="{{ closeForm }}" style="min-height:32px;padding:6px 15px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ theForm.submit }}</button>
+              <button type="button" onClick="{{ closeForm }}" style="min-height:32px;padding:6px 15px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ cancelLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-for list="{{ loading }}" as="o" hint-placeholder-count="3">
+          <div style="border:1px solid {{ o.border }};border-radius:11px;padding:9px 12px 11px;margin-bottom:9px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+              <span style="min-width:0">
+                <span class="num" style="font-size:14px;font-weight:600;color:#10231C">{{ o.ref }}</span>
+                <span class="num" style="font-size:12px;color:#8A9188;margin-inline-start:7px">{{ o.shipment }}</span>
+                <span style="font-size:13px;color:#55655D;margin-inline-start:7px">{{ o.client }}</span>
+              </span>
+              <span style="font-size:12px;font-weight:600;color:{{ o.stateColor }};white-space:nowrap">{{ o.state }}</span>
+            </div>
+            <div style="font-size:11px;color:#8A9188;margin-top:2px">{{ o.meta }}</div>
+            <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:6px">
+              <span style="font-size:12px;color:#55655D">{{ L.askedFor }} <b class="num" style="color:#10231C">{{ o.asked }}</b></span>
+              <span style="font-size:12px;color:#55655D">{{ L.allocated }} <b class="num" style="color:#10231C">{{ o.done }}</b></span>
+              <span style="font-size:12px;font-weight:600;color:{{ o.shortColor }}">{{ o.shortLabel }}</span>
+            </div>
+
+            <sc-if value="{{ o.empty }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:8px 0 0;font-size:12px;color:#55655D;text-wrap:pretty">{{ o.emptyNote }}</p>
+            </sc-if>
+
+            <sc-if value="{{ o.lines }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:110px 96px 76px 72px 84px;gap:9px;padding:8px 0 4px;border-bottom:1px solid #EFEBE1;margin-top:7px">
+                <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.container }}</span>
+                <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.kindCol }}</span>
+                <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.fromTank }}</span>
+                <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.tonnes }}</span>
+                <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.fill }}</span>
+              </div>
+              <sc-for list="{{ o.lines }}" as="k" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:110px 96px 76px 72px 84px;gap:9px;align-items:center;padding:6px 0;border-bottom:1px solid #F4F1EA">
+                  <span class="num" style="font-size:12px;font-weight:600;color:#10231C">{{ k.container }}</span>
+                  <span style="font-size:12px;font-weight:600;color:{{ k.kindColor }}">{{ k.kind }}</span>
+                  <span class="num" style="font-size:13px;color:#55655D">{{ k.from }}</span>
+                  <span class="num" style="font-size:13px;font-weight:600;color:#10231C;text-align:end">{{ k.tonnes }}</span>
+                  <span style="font-size:12px;color:{{ k.fullColor }}">{{ k.full }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <sc-if value="{{ o.canAllocate }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ o.openNext }}" style="min-height:30px;padding:5px 14px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ o.allocateNextLabel }}</button>
+              </sc-if>
+              <sc-if value="{{ o.canApprove }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ o.approve }}" style="min-height:30px;padding:5px 14px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ o.approveLabel }}</button>
+                <button type="button" onClick="{{ o.sendBack }}" style="min-height:30px;padding:5px 14px;border:1px solid #8A9188;border-radius:9px;background:#fff;color:#3A4A43;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ o.sendBackLabel }}</button>
+              </sc-if>
+              <sc-if value="{{ o.decided }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:12px;font-weight:600;color:{{ o.decidedColor }}">{{ o.decided }}</span>
+              </sc-if>
+              <sc-if value="{{ o.readOnly }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:11px;color:#8A9188">{{ o.readOnlyLabel }}</span>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.loadingAndGone }}</h2>
+          <span style="font-size:11px;color:#8A9188">{{ L.oneBol }}</span>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.shippingNote }}</p>
+        <sc-for list="{{ shipping }}" as="s" hint-placeholder-count="2">
+          <div style="border:1px solid {{ s.border }};border-radius:11px;background:#fff;padding:9px 12px 11px;margin-bottom:9px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+              <span style="min-width:0">
+                <span class="num" style="font-size:14px;font-weight:600;color:#10231C">{{ s.ref }}</span>
+                <span style="font-size:13px;color:#55655D;margin-inline-start:8px">{{ s.client }}</span>
+              </span>
+              <span style="font-size:12px;font-weight:600;color:{{ s.stateColor }}">{{ s.state }}</span>
+            </div>
+            <div style="font-size:11px;color:#8A9188;margin-top:2px">{{ s.meta }}</div>
+            <div style="display:grid;grid-template-columns:96px 64px minmax(0,1fr) 56px 52px 48px 58px;gap:9px;padding:8px 0 4px;border-bottom:1px solid #EFEBE1;margin-top:7px">
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.shippingTank }}</span>
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.tonnes }}</span>
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.drawnFrom }}</span>
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">FFA</span>
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">M&amp;I</span>
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">IV</span>
+              <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.sulph }}</span>
+            </div>
+            <sc-for list="{{ s.tanks }}" as="k" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:96px 64px minmax(0,1fr) 56px 52px 48px 58px;gap:9px;align-items:center;padding:6px 0;border-bottom:1px solid #F4F1EA">
+                <span class="num" style="font-size:12px;font-weight:600;color:#10231C">{{ k.ref }}</span>
+                <span class="num" style="font-size:13px;font-weight:600;color:#10231C;text-align:end">{{ k.tonnes }}</span>
+                <span class="num" style="min-width:0;font-size:12px;color:#55655D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.from }}</span>
+                <span class="num" style="font-size:13px;color:{{ k.ffaColor }};text-align:end">{{ k.ffa }}</span>
+                <span class="num" style="font-size:13px;color:{{ k.miColor }};text-align:end">{{ k.mi }}</span>
+                <span class="num" style="font-size:13px;color:{{ k.ivColor }};text-align:end">{{ k.iv }}</span>
+                <span class="num" style="font-size:13px;color:{{ k.sulColor }};text-align:end">{{ k.sul }}</span>
+              </div>
+            </sc-for>
+            <p style="margin:7px 0 0;font-size:11px;color:{{ s.noteColor }};text-wrap:pretty">{{ s.note }}</p>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onTransfers }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.transfers }}</h2>
+          <button type="button" onClick="{{ openTransferForm }}" style="border:0;border-radius:999px;height:28px;padding:0 14px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ L.startTransfer }}</button>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.transferNote }}</p>
+
+        <sc-if value="{{ showTransferForm }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #BFD8C9;background:#F6FAF7;border-radius:10px;padding:10px 12px 12px;margin-bottom:11px">
+            <h3 style="margin:0 0 3px;font-size:14px;font-weight:700;color:#1F5240">{{ theForm.title }}</h3>
+            <p style="margin:0 0 9px;font-size:11px;color:#63736A;text-wrap:pretty">{{ theForm.note }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(186px,1fr));gap:9px 11px">
+              <sc-for list="{{ theForm.fields }}" as="f" hint-placeholder-count="5">
+                <label style="display:block;min-width:0">
+                  <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                  <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                    <select style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 8px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2">
+                        <option value="{{ o }}">{{ o }}</option>
+                      </sc-for>
+                    </select>
+                  </sc-if>
+                  <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                    <input type="text" placeholder="{{ f.hint }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                  </sc-if>
+                  <span style="display:block;font-size:11px;color:#8A9188;margin-top:3px;text-wrap:pretty">{{ f.note }}</span>
+                </label>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">
+              <button type="button" onClick="{{ closeForm }}" style="min-height:32px;padding:6px 15px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ theForm.submit }}</button>
+              <button type="button" onClick="{{ closeForm }}" style="min-height:32px;padding:6px 15px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ cancelLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:88px minmax(0,1fr) minmax(0,1fr) 76px 76px 70px minmax(0,1fr);gap:9px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.ref }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.from }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.to }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.out }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.in }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.gap }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.standing }}</span>
+        </div>
+        <sc-for list="{{ transfers }}" as="t" hint-placeholder-count="2">
+          <div style="display:grid;grid-template-columns:88px minmax(0,1fr) minmax(0,1fr) 76px 76px 70px minmax(0,1fr);gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid #F4F1EA;background:{{ t.rowBg }}">
+            <span class="num" style="font-size:12px;color:#55655D">{{ t.ref }}</span>
+            <span style="min-width:0;font-size:13px;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.from }}</span>
+            <span style="min-width:0;font-size:13px;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.to }}</span>
+            <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ t.out }}</span>
+            <span class="num" style="font-size:13px;color:#55655D;text-align:end">{{ t.in }}</span>
+            <span class="num" style="font-size:13px;font-weight:600;color:{{ t.gapColor }};text-align:end">{{ t.gap }}</span>
+            <span style="min-width:0;font-size:12px;color:{{ t.standColor }};text-wrap:pretty">{{ t.standing }}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onWarehouses }}" hint-placeholder-val="{{ false }}">
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:3px">
+          <h2 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ L.warehouses }}</h2>
+          <button type="button" onClick="{{ openWarehouseForm }}" style="border:0;border-radius:999px;height:28px;padding:0 14px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ L.addWarehouse }}</button>
+        </div>
+        <p style="margin:0 0 10px;font-size:11px;color:#8A9188;text-wrap:pretty">{{ L.warehouseNote }}</p>
+
+        <sc-if value="{{ showWarehouseForm }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #BFD8C9;background:#F6FAF7;border-radius:10px;padding:10px 12px 12px;margin-bottom:11px">
+            <h3 style="margin:0 0 3px;font-size:14px;font-weight:700;color:#1F5240">{{ theForm.title }}</h3>
+            <p style="margin:0 0 9px;font-size:11px;color:#63736A;text-wrap:pretty">{{ theForm.note }}</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(186px,1fr));gap:9px 11px">
+              <sc-for list="{{ theForm.fields }}" as="f" hint-placeholder-count="7">
+                <label style="display:block;min-width:0">
+                  <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                  <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                    <select style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 8px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                      <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2">
+                        <option value="{{ o }}">{{ o }}</option>
+                      </sc-for>
+                    </select>
+                  </sc-if>
+                  <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                    <input type="text" placeholder="{{ f.hint }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                  </sc-if>
+                  <span style="display:block;font-size:11px;color:#8A9188;margin-top:3px;text-wrap:pretty">{{ f.note }}</span>
+                </label>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">
+              <button type="button" onClick="{{ closeForm }}" style="min-height:32px;padding:6px 15px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ theForm.submit }}</button>
+              <button type="button" onClick="{{ closeForm }}" style="min-height:32px;padding:6px 15px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ cancelLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-for list="{{ warehouses }}" as="w" hint-placeholder-count="3">
+          <div style="border:1px solid #E4DFD4;border-radius:11px;padding:9px 12px 11px;margin-bottom:9px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:700;color:#10231C">{{ w.name }}</span>
+              <span style="font-size:12px;color:{{ w.shipColor }}">{{ w.ship }}</span>
+            </div>
+            <div style="font-size:12px;color:#63736A;margin-top:2px">{{ w.meta }}</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px 14px;margin-top:9px;padding-top:8px;border-top:1px solid #EFEBE1">
+              <sc-for list="{{ w.facts }}" as="f" hint-placeholder-count="5">
+                <div style="min-width:0">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</div>
+                  <div style="font-size:14px;font-weight:600;color:{{ f.color }};margin-top:2px">{{ f.value }}</div>
+                  <div style="font-size:11px;color:#8A9188;margin-top:1px;text-wrap:pretty">{{ f.note }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ onSetup }}" hint-placeholder-val="{{ false }}">
+      <section style="border:1px solid #E8C9A0;background:#FDF6EA;border-radius:12px;padding:11px 14px 12px;margin-bottom:11px">
+        <h2 style="margin:0;font-size:13px;font-weight:700;color:#8A5B0B">{{ L.setupTitle }}</h2>
+        <p style="margin:3px 0 0;font-size:12px;color:#6B5326;text-wrap:pretty">{{ L.setupNote }}</p>
+      </section>
+
+      <section style="background:#fff;border:1px solid #E4DFD4;border-radius:12px;padding:11px 15px 13px">
+        <h2 style="margin:0 0 9px;font-size:15px;font-weight:700;color:#10231C">{{ L.settings }}</h2>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 130px minmax(0,1.5fr) 96px;gap:10px;padding:0 0 5px;border-bottom:1px solid #EFEBE1">
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.setting }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end">{{ L.now }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A">{{ L.whatItDoes }}</span>
+          <span style="font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-align:end"></span>
+        </div>
+        <sc-for list="{{ settings }}" as="s" hint-placeholder-count="5">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 130px minmax(0,1.5fr) 96px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #F4F1EA">
+            <span style="min-width:0;font-size:13px;font-weight:500;color:#10231C;text-wrap:pretty">{{ s.label }}</span>
+            <span style="font-size:14px;font-weight:600;color:#10231C;text-align:end">{{ s.value }}</span>
+            <span style="min-width:0;font-size:12px;color:#55655D;text-wrap:pretty">{{ s.note }}</span>
+            <span style="text-align:end">
+              <button type="button" style="min-height:28px;padding:4px 11px;border:1px solid #8A9188;border-radius:8px;background:#fff;color:#3A4A43;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ L.change }}</button>
+            </span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000},&quot;language&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ar&quot;,&quot;en&quot;],&quot;default&quot;:&quot;ar&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;},&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;keeper&quot;,&quot;ops&quot;,&quot;finance&quot;],&quot;default&quot;:&quot;keeper&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Screen&quot;}}">
+const INK = "#10231C", GREEN = "#1F5240", RED = "#B3261E", AMBER = "#8A5B0B", MUTED = "#55655D", BLUE = "#2C5578", PURPLE = "#6B4E8A";
+
+const LIMITS = { ffa: 5, mi: 2, iv: 65, sul: 40 };
+const TOLERANCE = 2;
+
+// Three classes of vessel, and they are not interchangeable:
+//   main   — the big fixed storage tanks in a yard
+//   ibc    — IBC totes, also storage, moved by forklift
+//   barrel — the numbered barrels on the cars that do the collecting
+// number, warehouse, class, capacity t, purpose, in it now t, one shop (1) or
+// mixed (0), source, FFA, M&I, IV, sulphur, tested (1) or estimate (0), state
+const TANKS = [
+  ["T1", 0, "main", 240, "finished", 186.4, 0, 41, 4.2, 1.3, 67, 29, 1, "available"],
+  ["T2", 0, "main", 240, "finished", 62.0, 0, 14, 4.4, 1.6, 66, 33, 0, "filling"],
+  ["T3", 0, "main", 60, "filtration", 41.2, 1, "El Prince Imbaba", 4.8, 1.8, 65, 37, 0, "filling"],
+  ["T4", 0, "main", 60, "filtration", 0, 0, 0, null, null, null, null, 0, "empty"],
+  ["IBC-14", 0, "ibc", 1.0, "buffer", 1.0, 1, "Abou Tarek Branch 3", 5.4, 2.3, 64, 44, 1, "held"],
+  ["IBC-15", 0, "ibc", 1.0, "buffer", 0.8, 1, "Hadramout Nasr City", 4.1, 1.2, 68, 27, 0, "filling"],
+  ["IBC-16", 0, "ibc", 1.0, "buffer", 0, 0, 0, null, null, null, null, 0, "empty"],
+  ["T7", 1, "main", 120, "finished", 96.0, 0, 22, 4.3, 1.4, 67, 31, 1, "reserved"],
+  ["T8", 1, "main", 120, "finished", 18.2, 0, 6, 4.0, 1.1, 69, 26, 0, "filling"],
+  ["IBC-31", 1, "ibc", 1.0, "buffer", 0.9, 1, "Bab El Hara Grill", 4.5, 1.5, 66, 32, 0, "filling"],
+];
+
+// number, capacity Kg, empty weight Kg, vehicle plate, team index, in service,
+// last issued to (name or null), note key
+const BARRELS = [
+  ["B-011", 200, 21, "GHR 4471", 0, 1, "S. Kamal", "today"],
+  ["B-012", 200, 21, "GHR 4471", 0, 1, "S. Kamal", "today"],
+  ["B-013", 200, 20, "GHR 4471", 0, 1, "S. Kamal", "today"],
+  ["B-021", 200, 21, "BKM 8820", 0, 1, "A. Sobhy", "today"],
+  ["B-022", 200, 21, "BKM 8820", 0, 0, null, "leak"],
+  ["B-031", 200, 22, "QNS 2214", 1, 1, "M. Ezz", "today"],
+  ["B-032", 200, 21, "QNS 2214", 1, 1, "M. Ezz", "today"],
+  ["B-041", 200, 20, null, null, 1, null, "yard"],
+];
+
+const T = {
+  en: {
+    warehouse: "Warehouse", allWarehouses: "all warehouses",
+    tabs: { today: "Today", dash: "Dashboard", tanks: "Tanks", registry: "Tank Registry", barrels: "Barrels", shipping: "Shipping", transfers: "Transfers", warehouses: "Warehouses", setup: "Set Up" },
+    roles: { keeper: "Warehouse keeper", manager: "Warehouse manager", ops: "Operations manager", finance: "Financial manager", senior: "Senior manager" },
+    loadingOrders: "Loading Orders",
+    incomingTanks: "Tanks Arriving To Be Loaded",
+    forOrder: "For", arrived: "Arrived", loadedFrom: "Loaded From", inIt: "In It",
+    qtyOfCap: "In It / Holds", orderAndArrival: "Order And Arrival",
+    raiseOrder: "+ Raise a loading order",
+    askedFor: "Asked for", allocated: "Allocated", container: "Container Or ISO Tank", kindCol: "Kind", fromTank: "From Tank", fill: "Fill",
+    expectedBack: "Expected Back Today",
+    todayNote: "Read from Build The Day, so a car that finished its stops and never arrived shows here rather than nowhere. Every barrel is weighed on its own as it comes off, and its empty weight comes from the barrel registry.",
+    barrel: "Barrel", declared: "Declared", weighed: "Weighed", gap: "Gap", shopsInBarrel: "Shops In That Barrel",
+    weighIt: "Weigh it", alreadyWeighed: "Weighed",
+    heldBack: "Held Back",
+    heldNote: "You can hold a vessel on the weighbridge if it looks wrong. A held vessel can only be blended into a large tank, and that needs a manager.",
+    thisScale: "This Warehouse's Scale",
+    scaleNote: "This scale takes money off drivers, so a reading overdue for calibration is flagged before it is used. Acknowledging one needs an operations manager.",
+    scaleRows: ["Scale", "Last calibrated", "Days since", "Overdue at"],
+    warehouseCol: "Warehouse", vessels: "Vessels", free: "Free", heldCol: "Held", inStock: "In Stock",
+    stockByWarehouse: "Stock By Warehouse", stockAt: "Stock At",
+    lossTitle: "Filtration Loss", lossSub: "What disappears in filtration. A process cost, nobody's debt.",
+    shortTitle: "Driver Shortfall", shortSub: "Oil a driver paid for that did not arrive. A debt he owes, charged off that evening's cash — never mixed with the figures above.",
+    needsYou: "Needs You",
+    whatIsInEach: "What Is In Each Vessel",
+    tanksSub: "One shop per vessel wherever the quantity allows, so a bad vessel can name a shop. A figure marked est. was recalculated by weight as oil went in — only a real lab test goes on a certificate.",
+    vessel: "Vessel", classCol: "Class", whatIsInIt: "What Is In It", stateCol: "State", tonnes: "Tonnes", full: "Full", sulph: "Sulph", testedCol: "Tested",
+    classes: { main: "Main tank", ibc: "IBC" },
+    classNotes: { main: "fixed in the yard", ibc: "moved by forklift" },
+    purposes: { finished: "finished oil", filtration: "filtration", buffer: "buffer" },
+    states: { empty: "Empty", filling: "Filling", available: "Available", reserved: "Reserved", held: "Held back" },
+    emptyVessel: "Empty", nothingInIt: "nothing in it", mixedShops: "mixed", shopsWord: "shops",
+    testedOn: "tested 19 Sep", estimate: "est. — recalculated by weight",
+    registryOwnerTitle: "This list is read only here",
+    registryOwnerNote: "The registry is kept on its own screen, because adding a vessel is the financial manager's decision rather than a yard one. Here you can see what exists; to add one, or to request one, open the registry.",
+    openRegistry: "Open the tank registry →",
+    approve: "Approve", refuse: "Refuse", waitingFm: "Waiting on the financial manager",
+    tankRegistry: "Tank Registry",
+    registryNote: "Two classes of vessel, both holding warehouse stock: the big main tanks fixed in the yard, and IBCs moved about by forklift. The barrels that ride on the cars are a third class with their own registry — they collect, they never store.",
+    number: "Number", capacity: "Capacity", whatItIsFor: "What It Is For", inItNow: "In It Now", standing: "Standing",
+    standHeld: "Held back — cannot join anything", standFree: "Free for the next intake",
+    barrelRegistry: "Barrel Registry",
+    barrelNote: "The numbered barrels that ride on the cars and do the collecting — a third class of vessel, kept in the registry but never used for storage. The scale reads barrel plus oil, so the empty weight has to be right or every load is overstated.",
+    emptyWeight: "Empty Weight", fittedTo: "Fitted To", inService: "In Service", lastIssued: "Last Issued To",
+    inServiceYes: "In service", inServiceNo: "Out",
+    issuedToday: "today", issuedLeak: "seam leaking, out since 11 Sep", issuedYard: "in the yard", unfitted: "unfitted · spare",
+    loadingAndGone: "Loading And Gone", oneBol: "One or more tanks under one bill of lading",
+    shippingNote: "A shipping tank is tested for real before it leaves, and that result is what Sales quotes and what the buyer's lab is compared against. Committed oil is no longer stock; the bill of lading clears it.",
+    shippingTank: "Shipping Tank", drawnFrom: "Drawn From", notDrawn: "not drawn",
+    transfers: "Transfers Between Warehouses", startTransfer: "+ Start a transfer",
+    transferNote: "Rare, but real. Weighed out at one yard and in at the other — a gap between the two is investigated, and it is neither a filtration loss nor a driver's shortfall.",
+    ref: "Ref", from: "From", to: "To", out: "Out", in: "In",
+    warehouses: "Warehouses", addWarehouse: "+ Add a warehouse",
+    warehouseNote: "A team belongs to an operations manager and works from one warehouse, and its cars always return there. Moving a team is a request the financial manager or senior manager approves — it happens once every few years.",
+    shipsDirect: "Ships direct", cannotShip: "Cannot ship from here", runBy: "run by",
+    unitOfTrade: "Unit of trade", unitNote: "never normalised to one global unit",
+    teamsDelivering: "Teams delivering", teamsNote: "their cars always return here", noTeams: "none", noTeamsNote: "nothing arrives here yet",
+    vesselsLabel: "Vessels", vesselsNote: "in the registry",
+    inStockLabel: "In stock", inStockNote: "summed from its vessels",
+    itsScale: "Its scale", overdueBy: "overdue —", days: "days", neverCalibrated: "never calibrated", calibrated: "calibrated",
+    setupTitle: "What these settings decide",
+    setupNote: "The filtration tolerance decides which vessels get flagged for investigation, and the calibration interval decides when a scale's reading stops being trusted to debit a driver. Changing either goes to senior management with a reason.",
+    settings: "Warehouse Settings", setting: "Setting", now: "Now", whatItDoes: "What It Does", change: "Change",
+    tanksWord: "tanks", ibcsWord: "IBCs",
+  },
+  ar: {
+    warehouse: "المخزن", allWarehouses: "كل المخازن",
+    tabs: { today: "اليوم", dash: "اللوحة", tanks: "الخزانات", registry: "سجل الخزانات", barrels: "البراميل", shipping: "الشحن", transfers: "التحويلات", warehouses: "المخازن", setup: "الإعداد" },
+    roles: { keeper: "أمين المخزن", manager: "مدير المخزن", ops: "مدير العمليات", finance: "المدير المالي", senior: "المدير العام" },
+    loadingOrders: "أوامر التحميل",
+    incomingTanks: "خزانات واصلة للتحميل",
+    forOrder: "للأمر", arrived: "الوصول", loadedFrom: "محمَّل من", inIt: "فيه",
+    qtyOfCap: "فيه / سعته", orderAndArrival: "الأمر والوصول",
+    raiseOrder: "+ رفع أمر تحميل",
+    askedFor: "المطلوب", allocated: "المخصَّص", container: "الحاوية أو خزان ISO", kindCol: "النوع", fromTank: "من خزان", fill: "الامتلاء",
+    expectedBack: "المتوقع عودته اليوم",
+    todayNote: "يُقرأ من بناء اليوم، فالسيارة التي أنهت محطاتها ولم تصل تظهر هنا لا في لا مكان. كل برميل يُوزن على حِدة عند نزوله، ووزنه الفارغ يأتي من سجل البراميل.",
+    barrel: "البرميل", declared: "المُعلن", weighed: "الموزون", gap: "الفارق", shopsInBarrel: "المحلات في البرميل",
+    weighIt: "وزنه", alreadyWeighed: "وُزن",
+    heldBack: "محجوز",
+    heldNote: "يمكنك حجز وعاء على الميزان إن بدا غير سليم. والوعاء المحجوز لا مصير له إلا الخلط في خزان كبير، وذلك يحتاج مديراً.",
+    thisScale: "ميزان هذا المخزن",
+    scaleNote: "هذا الميزان يخصم من أموال السائقين، فالقراءة المتأخرة عن المعايرة تُعلَّم قبل استخدامها. والإقرار بها يحتاج مدير عمليات.",
+    scaleRows: ["الميزان", "آخر معايرة", "الأيام منذها", "يتأخر عند"],
+    warehouseCol: "المخزن", vessels: "أوعية", free: "فارغة", heldCol: "محجوز", inStock: "المخزون",
+    stockByWarehouse: "المخزون حسب المخزن", stockAt: "مخزون",
+    lossTitle: "فاقد الترشيح", lossSub: "ما يضيع في الترشيح. تكلفة تشغيل لا دَين على أحد.",
+    shortTitle: "نقص السائق", shortSub: "زيت دفع السائق ثمنه ولم يصل. دَين عليه يُخصم من نقدية تلك الليلة — ولا يُخلط أبداً بالأرقام أعلاه.",
+    needsYou: "يحتاجك",
+    whatIsInEach: "ما في كل وعاء",
+    tanksSub: "محل واحد لكل وعاء حيث تسمح الكمية، فالوعاء السيئ يمكنه تسمية محل. والرقم المُعلَّم بـ est. أُعيد حسابه بالوزن كلما دخل زيت — والشهادة لا تحمل إلا تحليل مختبر حقيقي.",
+    vessel: "الوعاء", classCol: "الفئة", whatIsInIt: "ما فيه", stateCol: "الحالة", tonnes: "طن", full: "الامتلاء", sulph: "كبريت", testedCol: "التحليل",
+    classes: { main: "خزان رئيسي", ibc: "IBC" },
+    classNotes: { main: "ثابت في الساحة", ibc: "يُنقل برافعة" },
+    purposes: { finished: "زيت جاهز", filtration: "ترشيح", buffer: "مؤقت" },
+    states: { empty: "فارغ", filling: "يُملأ", available: "متاح", reserved: "محجوز لعقد", held: "محجوز" },
+    emptyVessel: "فارغ", nothingInIt: "لا شيء فيه", mixedShops: "مختلط", shopsWord: "محلاً",
+    testedOn: "حُلِّل 19 سبتمبر", estimate: "تقديري — أُعيد حسابه بالوزن",
+    registryOwnerTitle: "هذه القائمة للعرض فقط هنا",
+    registryOwnerNote: "السجل له شاشته الخاصة، لأن إضافة وعاء قرار المدير المالي لا قرار ساحة. هنا ترى ما هو موجود؛ وللإضافة أو الطلب افتح السجل.",
+    openRegistry: "افتح سجل الخزانات →",
+    approve: "موافقة", refuse: "رفض", waitingFm: "بانتظار المدير المالي",
+    tankRegistry: "سجل الخزانات",
+    registryNote: "فئتان من الأوعية تحملان مخزون المخزن: الخزانات الرئيسية الكبيرة الثابتة في الساحة، وأوعية IBC التي تُنقل برافعة. والبراميل التي تركب السيارات فئة ثالثة لها سجلها — تجمع ولا تخزّن.",
+    number: "الرقم", capacity: "السعة", whatItIsFor: "الغرض", inItNow: "فيه الآن", standing: "الوضع",
+    standHeld: "محجوز — لا ينضم إلى شيء", standFree: "فارغ للدفعة القادمة",
+    barrelRegistry: "سجل البراميل",
+    barrelNote: "البراميل المرقّمة التي تركب السيارات وتقوم بالجمع — فئة ثالثة من الأوعية، في السجل لكنها لا تُستخدم للتخزين. الميزان يقرأ البرميل مع الزيت، فالوزن الفارغ لا بد أن يكون صحيحاً وإلا زادت كل حمولة عن حقيقتها.",
+    emptyWeight: "الوزن فارغاً", fittedTo: "مركّب على", inService: "في الخدمة", lastIssued: "آخر من صُرف له",
+    inServiceYes: "في الخدمة", inServiceNo: "خارج",
+    issuedToday: "اليوم", issuedLeak: "اللحام يرشح، خارج الخدمة منذ 11 سبتمبر", issuedYard: "في الساحة", unfitted: "غير مركّب · احتياطي",
+    loadingAndGone: "يُحمَّل وما غادر", oneBol: "خزان أو أكثر ببوليصة شحن واحدة",
+    shippingNote: "خزان الشحن يُحلَّل فعلياً قبل مغادرته، وتلك النتيجة هي ما تقتبسه المبيعات وما يُقارن به مختبر المشتري. والزيت المُلتزم لم يبقَ مخزوناً؛ وبوليصة الشحن تصفّيه.",
+    shippingTank: "خزان الشحن", drawnFrom: "مسحوب من", notDrawn: "لم يُسحب",
+    transfers: "التحويلات بين المخازن", startTransfer: "+ بدء تحويل",
+    transferNote: "نادر لكنه واقع. يُوزن خارجاً من ساحة وداخلاً في الأخرى — والفارق بينهما يُحقَّق فيه، وهو ليس فاقد ترشيح ولا نقص سائق.",
+    ref: "الرقم", from: "من", to: "إلى", out: "خارجاً", in: "داخلاً",
+    warehouses: "المخازن", addWarehouse: "+ إضافة مخزن",
+    warehouseNote: "الفريق يتبع مدير عمليات ويعمل من مخزن واحد، وسياراته تعود إليه دائماً. ونقل فريق طلبٌ يوافق عليه المدير المالي أو المدير العام — ويحدث مرة كل بضع سنين.",
+    shipsDirect: "يشحن مباشرة", cannotShip: "لا يُشحن من هنا", runBy: "يديره",
+    unitOfTrade: "وحدة التعامل", unitNote: "لا تُوحَّد إلى وحدة عالمية واحدة",
+    teamsDelivering: "الفرق الموردة", teamsNote: "سياراتها تعود هنا دائماً", noTeams: "لا شيء", noTeamsNote: "لا يصل هنا شيء بعد",
+    vesselsLabel: "الأوعية", vesselsNote: "في السجل",
+    inStockLabel: "المخزون", inStockNote: "مجموع أوعيته",
+    itsScale: "ميزانه", overdueBy: "متأخر —", days: "يوماً", neverCalibrated: "لم يُعاير قط", calibrated: "عُويِر",
+    setupTitle: "ما تحدده هذه الإعدادات",
+    setupNote: "حد فاقد الترشيح يحدد أي الأوعية تُعلَّم للتحقيق، وفترة المعايرة تحدد متى تفقد قراءة الميزان أهليتها لخصم مال من سائق. وتغيير أي منهما يذهب للإدارة العليا مع سبب.",
+    settings: "إعدادات المخزن", setting: "الإعداد", now: "الآن", whatItDoes: "ماذا يفعل", change: "تغيير",
+    tanksWord: "خزانات", ibcsWord: "IBC",
+  },
+};
+
+const WAREHOUSES = [
+  { name: { en: "6th October", ar: "أكتوبر" }, city: { en: "Giza", ar: "الجيزة" }, country: { en: "Egypt", ar: "مصر" },
+    unit: { en: "Kg", ar: "كجم" }, head: "T. Zaki", teams: ["Team 1", "Team 2"], ship: 1, scale: "SCALE-01", cal: "8 Sep", ago: 6 },
+  { name: { en: "Alexandria Yard", ar: "ساحة الإسكندرية" }, city: { en: "Alexandria", ar: "الإسكندرية" }, country: { en: "Egypt", ar: "مصر" },
+    unit: { en: "Kg", ar: "كجم" }, head: "S. Mansour", teams: ["Team 3"], ship: 1, scale: "SCALE-02", cal: "1 Sep", ago: 13 },
+  { name: { en: "Shuwaikh", ar: "الشويخ" }, city: { en: "Kuwait City", ar: "مدينة الكويت" }, country: { en: "Kuwait", ar: "الكويت" },
+    unit: { en: "200 Kg barrels", ar: "براميل 200 كجم" }, head: "—", teams: [], ship: 0, scale: "SCALE-03", cal: null, ago: 0 },
+];
+
+const TEAMS = [{ en: "Team 1", ar: "الفريق 1" }, { en: "Team 2", ar: "الفريق 2" }, { en: "Team 3", ar: "الفريق 3" }];
+const DRIVERS = {
+  "S. Kamal": { en: "Sayed Kamal", ar: "سيد كمال" },
+  "A. Sobhy": { en: "Ahmed Sobhy", ar: "أحمد صبحي" },
+  "M. Ezz": { en: "Mostafa Ezz", ar: "مصطفى عز" },
+  "H. Saber": { en: "Hassan Saber", ar: "حسن صابر" },
+};
+const SHOPS = {
+  "El Prince Imbaba": { en: "El Prince Imbaba", ar: "محل الأمير إمبابة" },
+  "Abou Tarek Branch 3": { en: "Abou Tarek Branch 3", ar: "أبو طارق فرع 3" },
+  "Hadramout Nasr City": { en: "Hadramout Nasr City", ar: "حضرموت مدينة نصر" },
+  "Bab El Hara Grill": { en: "Bab El Hara Grill", ar: "باب الحارة مشويات" },
+};
+
+const ROLES = [
+  ["keeper", 0],
+  ["manager", 0],
+  ["ops", null],
+  ["finance", null],
+  ["senior", null],
+];
+
+// Empty containers and ISO tanks arriving at the yard to be loaded. They exist
+// before anything is put in them, which is why the keeper can see a number and
+// allocate a storage tank to it.
+// number, kind, capacity t, for which loading order, arrived, filled from (null
+// if not yet allocated), tonnes in it
+const INCOMING = [
+  ["FT-0418", "flexi", 24, "LO-0031", { en: "arrived 19 Sep", ar: "وصل 19 سبتمبر" }, "T7", 24.0],
+  ["FT-0419", "flexi", 24, "LO-0031", { en: "arrived 19 Sep", ar: "وصل 19 سبتمبر" }, "T7", 24.0],
+  ["FT-0420", "flexi", 24, "LO-0031", { en: "arrived 20 Sep", ar: "وصل 20 سبتمبر" }, "T8", 18.2],
+  ["FT-0421", "flexi", 24, "LO-0031", { en: "arrived today", ar: "وصل اليوم" }, null, 0],
+  ["FT-0422", "flexi", 24, "LO-0031", { en: "arrived today", ar: "وصل اليوم" }, null, 0],
+  ["ISO-88420", "iso", 24, "LO-0032", { en: "due 26 Sep", ar: "متوقع 26 سبتمبر" }, null, 0],
+  ["ISO-88421", "iso", 24, "LO-0032", { en: "due 26 Sep", ar: "متوقع 26 سبتمبر" }, null, 0],
+];
+
+// A loading order: the financial manager raises it, the warehouse allocates which
+// storage tank went into which container, the operations manager approves, and
+// the financial and senior managers can read it but not change it.
+// ref, shipment, client, tonnes asked, state, raised by, when, lines
+const LOADING = [
+  { ref: "LO-0031", shipment: "ZE-2026-0045", client: { en: "Neste, Rotterdam", ar: "نيستي، روتردام" },
+    asked: 240, state: "allocated", by: { en: "S. Wahba", ar: "سامي وهبة" }, when: { en: "raised 19 Sep", ar: "طُلب 19 سبتمبر" },
+    sails: { en: "loads 23 Sep", ar: "يُحمَّل 23 سبتمبر" },
+    lines: [
+      ["FT-0418", "flexi", "T7", 24.0, 1],
+      ["FT-0419", "flexi", "T7", 24.0, 1],
+      ["FT-0420", "flexi", "T8", 18.2, 0],
+    ] },
+  { ref: "LO-0030", shipment: "ZE-2026-0044", client: { en: "Argent Energy", ar: "أرجنت إنرجي" },
+    asked: 96, state: "approved", by: { en: "S. Wahba", ar: "سامي وهبة" }, when: { en: "raised 16 Sep", ar: "طُلب 16 سبتمبر" },
+    sails: { en: "loaded 19 Sep", ar: "حُمِّل 19 سبتمبر" },
+    lines: [
+      ["ISO-88412", "iso", "T1", 24.0, 1],
+      ["ISO-88413", "iso", "T1", 24.0, 1],
+      ["ISO-88414", "iso", "T2", 24.0, 1],
+      ["ISO-88415", "iso", "T2", 24.0, 1],
+    ] },
+  { ref: "LO-0032", shipment: "ZE-2026-0047", client: { en: "Greenergy, UK", ar: "جرينرجي، بريطانيا" },
+    asked: 192, state: "raised", by: { en: "S. Wahba", ar: "سامي وهبة" }, when: { en: "raised today", ar: "طُلب اليوم" },
+    sails: { en: "loads 28 Sep", ar: "يُحمَّل 28 سبتمبر" },
+    lines: [] },
+];
+
+class Component extends DCLogic {
+  state = { lang: null, role: "keeper", tab: "today", allocating: null, allocLines: [], decided: {}, form: null };
+
+  // One helper for the three short forms on this screen, so every green button
+  // opens something and closes the same way.
+  formDef(kind, ar, L) {
+    const f = (label, opts, hint, note) => ({
+      label, isSelect: !!opts, isText: !opts, options: opts || [], hint: hint || "", note: note || "",
+    });
+    if (kind === "raise") {
+      return {
+        title: ar ? "رفع أمر تحميل" : "Raise a loading order",
+        note: ar
+          ? "هذا يفتح الأمر للمخزن ليخصص الخزانات. ولا يُقفل شيء حتى يعتمد مدير العمليات التخصيص."
+          : "This opens the order for the warehouse to allocate tanks against. Nothing is locked until the operations manager approves the allocation.",
+        fields: [
+          f(ar ? "الشحنة" : "Shipment", ["ZE-2026-0047", "ZE-2026-0048", ar ? "شحنة جديدة" : "a new shipment"], "", ar ? "من المبيعات" : "from Sales"),
+          f(ar ? "العميل" : "Client", [ar ? "جرينرجي، بريطانيا" : "Greenergy, UK", ar ? "نيستي، روتردام" : "Neste, Rotterdam", ar ? "إيني ليفورنو" : "Eni Livorno"]),
+          f(ar ? "الكمية المطلوبة" : "Tonnes asked for", null, "192", ar ? "بالطن" : "in tonnes"),
+          f(ar ? "من المخزن" : "From which warehouse", WAREHOUSES.filter((w) => w.ship).map((w) => this.tr(w.name)), "", ar ? "المخازن التي تشحن مباشرة فقط" : "only the ones that ship direct"),
+          f(ar ? "شهر التحميل" : "Loading month", null, ar ? "سبتمبر" : "September", ar ? "كما في العقد" : "as the contract names it"),
+        ],
+        submit: ar ? "رفع الأمر للمخزن" : "Raise it for the warehouse",
+      };
+    }
+    if (kind === "warehouse") {
+      return {
+        title: ar ? "إضافة مخزن" : "Add a warehouse",
+        note: ar
+          ? "المخزن الجديد يحتاج ميزانه وسجل معايرته — فميزان مشترك يعني أن انحرافاً في ساحة يخصم من سائقي ساحة أخرى."
+          : "A new warehouse needs its own scale and calibration record — a shared one would let a drift at one yard debit drivers at another.",
+        fields: [
+          f(ar ? "الاسم" : "Name", null, ar ? "مثال: ساحة الإسكندرية" : "e.g. Alexandria Yard"),
+          f(ar ? "المدينة" : "City", null, ar ? "مثال: الإسكندرية" : "e.g. Alexandria"),
+          f(ar ? "البلد" : "Country", [ar ? "مصر" : "Egypt", ar ? "الكويت" : "Kuwait"], "", ar ? "يحدد وحدة التعامل" : "sets the unit of trade"),
+          f(ar ? "من يديره" : "Who runs it", ["T. Zaki", "S. Mansour", ar ? "لا أحد بعد" : "Nobody yet"]),
+          f(ar ? "الفرق الموردة" : "Teams delivering to it", [ar ? "الفريق 1" : "Team 1", ar ? "الفريق 2" : "Team 2", ar ? "الفريق 3" : "Team 3", ar ? "لا شيء بعد" : "None yet"], "", ar ? "سياراتها ستعود هنا دائماً" : "their cars will always return here"),
+          f(ar ? "يُشحن منه مباشرة" : "Can oil ship from here", [ar ? "نعم" : "Yes", ar ? "لا" : "No"]),
+          f(ar ? "ميزانه" : "Its scale", null, "SCALE-04", ar ? "لكل مخزن سجل معايرته" : "each warehouse keeps its own calibration record"),
+        ],
+        submit: ar ? "إرساله للموافقة" : "Submit for approval",
+      };
+    }
+    const vessels = TANKS.filter((t) => t[5] > 0 && t[13] !== "held");
+    return {
+      title: ar ? "بدء تحويل" : "Start a transfer",
+      note: ar
+        ? "يُوزن خارجاً هنا ويُوزن داخلاً في الساحة الأخرى. والفارق بين الوزنين يُحقَّق فيه — وهو ليس فاقد ترشيح ولا نقص سائق."
+        : "It is weighed out here and weighed in at the other yard. The gap between the two is investigated — it is neither a filtration loss nor a driver's shortfall.",
+      fields: [
+        f(ar ? "من مخزن" : "From warehouse", WAREHOUSES.map((w) => this.tr(w.name))),
+        f(ar ? "إلى مخزن" : "To warehouse", WAREHOUSES.map((w) => this.tr(w.name))),
+        f(ar ? "من وعاء" : "From which vessel", vessels.map((t) => t[0] + " · " + t[5].toFixed(1) + (ar ? " طن" : " t")), "", ar ? "ما فيه زيت فقط، والمحجوز لا يُحوَّل" : "only vessels with oil in them; a held one cannot move"),
+        f(ar ? "الوزن خارجاً" : "Weighed out", null, "24.0", ar ? "بالطن، على ميزان هذا المخزن" : "in tonnes, on this warehouse's scale"),
+        f(ar ? "السبب" : "Why", null, ar ? "تجميع قبل الشحن" : "consolidating before a shipment"),
+      ],
+      submit: ar ? "تسجيل الخروج" : "Record it leaving",
+    };
+  }
+
+
+  // Opened from the access map as a particular role: the view starts as that
+  // person's, so the map's cells show what each of them actually sees.
+  __role() {
+    try {
+      const r = new URLSearchParams(window.location.search).get("role");
+      if (r && ["keeper","ops","finance"].indexOf(r) !== -1) this.setState({ role: r });
+    } catch (e) {}
+  }
+
+  componentDidMount() {
+    this.__role();
+    try {
+      const saved = localStorage.getItem("zeitco-lang");
+      if (saved === "ar" || saved === "en") this.setState({ lang: saved });
+    } catch (e) {}
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  get lang() { return this.state.lang || this.props.language || "ar"; }
+  tr(v) { return v && typeof v === "object" ? (v[this.lang] || v.en) : v; }
+  setLang(l) { try { localStorage.setItem("zeitco-lang", l); } catch (e) {} this.setState({ lang: l }); }
+
+  renderVals() {
+    const ar = this.lang === "ar", L = T[this.lang] || T.en;
+    const tab = this.state.tab, role = this.state.role;
+    const roleDef = ROLES.filter((r) => r[0] === role)[0];
+    const mine = roleDef[1];
+    const t1 = (n) => n.toFixed(1);
+    const tt = (n) => t1(n) + (ar ? " طن" : " t");
+    const myTanks = TANKS.filter((t) => mine === null || t[1] === mine);
+
+    const stockOf = (i) => TANKS.filter((t) => t[1] === i).reduce((a, t) => a + t[5], 0);
+    const heldOf = (i) => TANKS.filter((t) => t[1] === i && t[13] === "held").reduce((a, t) => a + t[5], 0);
+    const totalStock = myTanks.reduce((a, t) => a + t[5], 0);
+    const totalHeld = myTanks.filter((t) => t[13] === "held").reduce((a, t) => a + t[5], 0);
+    const mainStock = myTanks.filter((t) => t[2] === "main").reduce((a, t) => a + t[5], 0);
+    const ibcStock = myTanks.filter((t) => t[2] === "ibc").reduce((a, t) => a + t[5], 0);
+
+    const q = (v, isIv, bad) => ({
+      value: v === null ? "—" : (isIv ? String(v) : v.toFixed(1)),
+      color: v === null ? "#8A9188" : bad ? RED : INK,
+    });
+
+    const TAB_KEYS = ["today", "dash", "tanks", "registry", "barrels", "shipping", "transfers", "warehouses", "setup"];
+    const allowed = role === "keeper"
+      ? ["today", "dash", "tanks", "registry", "barrels", "shipping"]
+      : role === "manager"
+        ? ["today", "dash", "tanks", "registry", "barrels", "shipping", "transfers"]
+        : TAB_KEYS;
+
+    const isFinance = role === "finance";
+    const isOps = role === "ops";
+    const isManager = role === "manager";
+    const isSenior = role === "senior";
+
+    return {
+      dir: ar ? "rtl" : "ltr",
+      face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      L,
+      logoutWord: ar ? "تسجيل الخروج" : "Log out",
+      langs: [["en", "EN"], ["ar", "ع"]].map(([k, label]) => ({
+        label, pick: () => this.setLang(k),
+        bg: this.lang === k ? GREEN : "#fff", color: this.lang === k ? "#fff" : MUTED,
+      })),
+      roles: ROLES.map(([k]) => ({
+        label: L.roles[k], pick: () => this.setState({ role: k, tab: "today" }),
+        bg: role === k ? GREEN : "#fff", color: role === k ? "#fff" : MUTED,
+      })),
+      who: {
+        name: role === "keeper" ? (ar ? "طارق زكي" : "T. Zaki")
+          : role === "manager" ? (ar ? "سعيد منصور" : "S. Mansour")
+          : role === "ops" ? (ar ? "محمود سليم" : "M. Selim")
+          : role === "finance" ? (ar ? "سامي وهبة" : "S. Wahba")
+          : (ar ? "نادر حليم" : "N. Halim"),
+        label: L.roles[role],
+        scope: mine === null ? L.allWarehouses : this.tr(WAREHOUSES[mine].name),
+        line: role === "keeper"
+          ? (ar ? "ترى أكتوبر وحده. تزن السيارات، وتسجل الترشيح وفاقده، وتحمّل الخزانات الواصلة وتخصص لكل منها الخزان الذي حُمِّل منه. أما اعتماد التخصيص فلمدير العمليات، وإضافة وعاء للسجل فللمدير المالي."
+               : "You see 6th October only. You weigh the cars in, record filtration and its loss, and load the arriving tanks — allocating which storage tank each was loaded from. Approving that allocation is the operations manager's, and adding a vessel to the registry is the financial manager's.")
+          : role === "manager"
+            ? (ar ? "تدير المخزن: تخصص أي خزان يدخل في أي حاوية على أمر التحميل، وتطلب الأوعية من المدير المالي. ولا تعتمد تخصيصك بنفسك — مدير العمليات من يعتمده."
+                 : "You run the warehouse: you allocate which tank goes into which container on a loading order, and you request vessels from the financial manager. You do not approve your own allocation — the operations manager does.")
+          : role === "ops"
+            ? (ar ? "ترى كل المخازن وتقارن بينها. تعتمد تخصيص التحميل، وتُقرّ الميزان المتأخر، وتوافق على خلط وعاء محجوز."
+                 : "You see every warehouse and can compare them. You approve a loading allocation, acknowledge an overdue scale and approve blending a held vessel away.")
+          : role === "finance"
+            ? (ar ? "ترفع أوامر التحميل وتملك السجل: أنت من يضيف الخزانات والبراميل ويوافق على ما يُطلب. وتقرأ التخصيص ولا تُعدِّله."
+                 : "You raise loading orders and own the registry: you add tanks and barrels and approve what is requested. You read an allocation, you do not change it.")
+            : (ar ? "ترى كل شيء في كل مخزن، وأوامر التحميل وتخصيصها. للعرض — القرارات لأصحابها."
+                 : "You see everything in every warehouse, and every loading order with its allocation. Read only — the decisions belong to the people who make them."),
+      },
+      tabs: TAB_KEYS.filter((k) => allowed.indexOf(k) >= 0).map((k) => ({
+        label: L.tabs[k], pick: () => this.setState({ tab: k }),
+        color: tab === k ? GREEN : MUTED, line: tab === k ? GREEN : "transparent",
+      })),
+      onToday: tab === "today", onDash: tab === "dash", onTanks: tab === "tanks",
+      onRegistry: tab === "registry", onBarrels: tab === "barrels",
+      onShipping: tab === "shipping", onTransfers: tab === "transfers",
+      onWarehouses: tab === "warehouses", onSetup: tab === "setup",
+
+      today: {
+        note: ar ? "6 سيارات خرجت الصباح · 4 عادت" : "6 cars out this morning · 4 back",
+        trucks: [
+          { driver: this.tr(DRIVERS["S. Kamal"]), plate: "GHR 4471", team: this.tr(TEAMS[0]),
+            state: ar ? "يُوزن الآن" : "Weighing now", stateColor: BLUE,
+            progress: ar ? "وُزن 2 من 3 براميل · 22 محطة" : "2 of 3 barrels weighed · 22 stops",
+            border: "#BCCFE0", bg: "#F8FAFC", late: "",
+            barrels: [
+              { ref: "B-011", declared: "1,040", weighed: "1,034", gap: "−6", gapColor: AMBER,
+                shops: this.tr(SHOPS["El Prince Imbaba"]) + (ar ? " وحده" : " only"), shopColor: GREEN,
+                action: L.alreadyWeighed, btnBg: "#EEF6F2", btnColor: GREEN, btnBorder: "#BFD8C9" },
+              { ref: "B-012", declared: "980", weighed: "902", gap: "−78", gapColor: RED,
+                shops: ar ? "الكزاز، باب الحارة، و2 آخرون" : "Kazaz, Bab El Hara, 2 more", shopColor: AMBER,
+                action: L.alreadyWeighed, btnBg: "#EEF6F2", btnColor: GREEN, btnBorder: "#BFD8C9" },
+              { ref: "B-013", declared: "640", weighed: "—", gap: "—", gapColor: "#8A9188",
+                shops: this.tr(SHOPS["Hadramout Nasr City"]) + (ar ? " وحده" : " only"), shopColor: GREEN,
+                action: L.weighIt, btnBg: GREEN, btnColor: "#fff", btnBorder: GREEN },
+            ] },
+          { driver: this.tr(DRIVERS["A. Sobhy"]), plate: "BKM 8820", team: this.tr(TEAMS[0]),
+            state: ar ? "انتهى" : "Done", stateColor: GREEN,
+            progress: ar ? "برميلان · 1,812 كجم وُزنت · لا فارق" : "2 barrels · 1,812 Kg weighed in · no gap",
+            border: "#E4DFD4", bg: "#fff", late: "",
+            barrels: [
+              { ref: "B-021", declared: "1,120", weighed: "1,120", gap: ar ? "لا شيء" : "none", gapColor: GREEN,
+                shops: this.tr(SHOPS["Abou Tarek Branch 3"]) + (ar ? " وحده" : " only"), shopColor: GREEN,
+                action: L.alreadyWeighed, btnBg: "#EEF6F2", btnColor: GREEN, btnBorder: "#BFD8C9" },
+              { ref: "B-022", declared: "692", weighed: "692", gap: ar ? "لا شيء" : "none", gapColor: GREEN,
+                shops: ar ? "كشري أبو عماد، و1 آخر" : "Koshary Abou Emad, 1 more", shopColor: MUTED,
+                action: L.alreadyWeighed, btnBg: "#EEF6F2", btnColor: GREEN, btnBorder: "#BFD8C9" },
+            ] },
+          { driver: this.tr(DRIVERS["M. Ezz"]), plate: "QNS 2214", team: this.tr(TEAMS[1]),
+            state: ar ? "على البوابة" : "At the gate", stateColor: AMBER,
+            progress: ar ? "لم يُوزن شيء · 19 محطة مسجَّلة" : "Nothing weighed yet · 19 stops logged",
+            border: "#E8C9A0", bg: "#FDFAF3", late: "",
+            barrels: [
+              { ref: "B-031", declared: "1,180", weighed: "—", gap: "—", gapColor: "#8A9188",
+                shops: ar ? "تبالي الهرم وحده" : "Tabali Haram only", shopColor: GREEN,
+                action: L.weighIt, btnBg: GREEN, btnColor: "#fff", btnBorder: GREEN },
+              { ref: "B-032", declared: "590", weighed: "—", gap: "—", gapColor: "#8A9188",
+                shops: ar ? "3 محلات" : "3 shops", shopColor: AMBER,
+                action: L.weighIt, btnBg: GREEN, btnColor: "#fff", btnBorder: GREEN },
+            ] },
+          { driver: this.tr(DRIVERS["H. Saber"]), plate: "LMK 3390", team: this.tr(TEAMS[1]),
+            state: ar ? "لم يصل" : "Not arrived", stateColor: RED,
+            progress: ar ? "أنهى آخر محطة 15:40" : "Finished his last stop at 15:40",
+            barrels: null, border: "#E8B4AE", bg: "#FDF6F4",
+            late: ar ? "ساعتان منذ آخر محطة وهو ليس على البوابة. ومدير العمليات يرى الأمر نفسه على شاشته."
+                     : "Two hours since his last stop and he is not at the gate. The operations manager can see the same thing on his own screen." },
+        ],
+      },
+      held: [
+        { ref: "IBC-14", weight: "1.0" + (ar ? " طن" : " t"),
+          why: ar ? "بدا مائياً على الميزان والمختبر أعطاه 5.4% حموضة و2.3% رطوبة وشوائب"
+                  : "Looked watery on the weighbridge and the lab put it at 5.4% FFA, 2.3% M&I",
+          shop: this.tr(SHOPS["Abou Tarek Branch 3"]) + (ar ? " — زيت محل واحد، فهو يسمّيه" : " — one shop's oil, so it names them"),
+          state: ar ? "خلطه في T1 يحتاج مديراً" : "Blending it into T1 needs a manager" },
+      ],
+      scale: L.scaleRows.map((label, i) => ({ label, value: ["SCALE-01", ar ? "8 سبتمبر" : "8 Sep", "6", ar ? "14 يوماً" : "14 days"][i] })),
+
+      dash: (() => {
+        const idx = mine === null ? WAREHOUSES.map((w, i) => i) : [mine];
+        const rows = idx.map((i) => {
+          const w = WAREHOUSES[i];
+          const ts = TANKS.filter((t) => t[1] === i);
+          return {
+            label: this.tr(w.name),
+            note: this.tr(w.city) + " · " + (w.teams.length ? w.teams.map((t, n) => this.tr(TEAMS[["Team 1", "Team 2", "Team 3"].indexOf(t)])).join(", ") : L.noTeamsNote),
+            vessels: ts.filter((t) => t[2] === "main").length + " + " + ts.filter((t) => t[2] === "ibc").length,
+            free: String(ts.filter((t) => t[13] === "empty").length),
+            held: heldOf(i) ? t1(heldOf(i)) : "—",
+            heldColor: heldOf(i) ? RED : "#8A9188",
+            stock: t1(stockOf(i)),
+            open: () => this.setState({ tab: "tanks" }),
+          };
+        });
+        return {
+          stockTitle: mine === null ? L.stockByWarehouse : L.stockAt + " " + this.tr(WAREHOUSES[mine].name),
+          stockTotal: tt(rows.reduce((a, r) => a + parseFloat(r.stock), 0)),
+          stock: rows,
+          figures: [
+            { label: L.inStock, value: t1(totalStock), unit: ar ? "طن" : "t", color: INK,
+              note: ar ? "مجموع سجل الخزانات" : "summed from the tank registry" },
+            { label: ar ? "في الخزانات الرئيسية" : "In Main Tanks", value: t1(mainStock), unit: ar ? "طن" : "t", color: INK,
+              note: ar ? "الخزانات الكبيرة الثابتة" : "the big fixed tanks" },
+            { label: ar ? "في أوعية IBC" : "In IBCs", value: t1(ibcStock), unit: ar ? "طن" : "t", color: PURPLE,
+              note: ar ? "مؤقت، يُنقل برافعة" : "buffer, moved by forklift" },
+            { label: L.heldBack, value: totalHeld ? t1(totalHeld) : "—", unit: ar ? "طن" : "t", color: totalHeld ? RED : "#8A9188",
+              note: totalHeld ? (ar ? "IBC واحد بانتظار مدير" : "1 IBC, waiting on a manager") : (ar ? "لا شيء محجوز" : "nothing held") },
+            { label: ar ? "شُحن هذا الشهر" : "Shipped This Month", value: "336.0", unit: ar ? "طن" : "t", color: "#3A3E40",
+              note: ar ? "شحنتان غادرتا، وواحدة تُحمَّل" : "2 gone, 1 loading" },
+          ],
+          loss: [
+            { label: ar ? "المُرشَّح هذا الشهر" : "Filtered in this month", value: "462.7", note: ar ? "الناتج بعد الترشيح" : "output, after filtration" },
+            { label: ar ? "الفاقد في الترشيح" : "Lost in filtration", value: "9.4",
+              note: ar ? "1.9% مقابل حد " + TOLERANCE + "%" : "1.9% against a " + TOLERANCE + "% tolerance" },
+            { label: ar ? "أوعية فوق الحد" : "Vessels over tolerance", value: "1",
+              note: ar ? "تُعلَّم للتحقيق لا تُمنع — ولا يُحمَّل الفاقد على أحد" : "flagged for investigation, not blocked — no loss is charged to anyone" },
+          ],
+          short: [
+            { label: ar ? "ما أعلنه السائقون" : "Declared by drivers", value: "492.3", note: ar ? "ما قالت السيارات إنها أحضرته" : "what the cars said they brought" },
+            { label: ar ? "الناقص عند الوصول" : "Short on arrival", value: "6.3",
+              note: ar ? "يُحمَّل بالسعر الذي دفعه، من نقدية تلك الليلة — بلا تهاون" : "charged at the price he paid, off that evening's cash — no tolerance" },
+            { label: ar ? "براميل ناقصة اليوم" : "Barrels short today", value: "1",
+              note: ar ? "B-012 بـ78 كجم — أربعة محلات فيه، فهو يضيّق الدائرة ولا يسمّي واحداً" : "B-012, 78 Kg — four shops in it, so it narrows but does not name one" },
+          ],
+          alerts: [
+            { what: ar ? "IBC-14 محجوز عند 5.4% حموضة — زيت محل واحد" : "IBC-14 is held back at 5.4% FFA — one shop's oil",
+              who: ar ? "خلطه في T1 يحتاج مدير عمليات" : "blending it into T1 needs an operations manager",
+              color: RED, go: () => this.setState({ tab: "tanks" }) },
+            { what: ar ? "البرميل B-012 جاء ناقصاً 78 كجم" : "Barrel B-012 came in 78 Kg short",
+              who: ar ? "أربعة محلات في ذلك البرميل · يُحمَّل على سيد كمال الليلة" : "four shops in that barrel · charged to S. Kamal tonight",
+              color: RED, go: () => this.setState({ tab: "today" }) },
+            { what: ar ? "حسن صابر أنهى 15:40 وليس على البوابة" : "Hassan Saber finished at 15:40 and is not at the gate",
+              who: ar ? "ساعتان ولم يُوزن شيء" : "two hours, and nothing weighed in",
+              color: RED, go: () => this.setState({ tab: "today" }) },
+            { what: ar ? "ميزان الإسكندرية عُويِر آخر مرة منذ 13 يوماً" : "Alexandria's scale was last calibrated 13 days ago",
+              who: ar ? "يتأخر عند 14 — وبعدها لا تخصم قراءته من سائق" : "overdue at 14 — after that its readings cannot debit a driver",
+              color: AMBER, go: () => this.setState({ tab: "warehouses" }) },
+            { what: ar ? "البرميل B-022 خارج الخدمة منذ 11 سبتمبر" : "Barrel B-022 has been out of service since 11 Sep",
+              who: ar ? "اللحام يرشح · الفريق 1 ناقص برميلاً" : "seam leaking · Team 1 is a barrel short",
+              color: AMBER, go: () => this.setState({ tab: "barrels" }) },
+            { what: ar ? "الكويت لا معايرة ميزان مسجَّلة لها" : "Kuwait has no scale calibration on record",
+              who: ar ? "لا يمكن وزن شيء هناك بعد" : "nothing can be weighed in there yet",
+              color: AMBER, go: () => this.setState({ tab: "warehouses" }) },
+          ],
+        };
+      })(),
+
+      tanksNote: mine === null
+        ? WAREHOUSES.length + " " + (ar ? "مخازن" : "warehouses") + " · " + TANKS.length + " " + (ar ? "أوعية" : "vessels")
+        : this.tr(WAREHOUSES[mine].name) + " · " + myTanks.length + " " + (ar ? "أوعية" : "vessels"),
+      tanks: myTanks.map((t) => {
+        const pct = Math.round((t[5] / t[3]) * 100);
+        const ffa = q(t[8], false, t[8] !== null && t[8] > LIMITS.ffa);
+        const mi = q(t[9], false, t[9] !== null && t[9] > LIMITS.mi);
+        const iv = q(t[10], true, t[10] !== null && t[10] < LIMITS.iv);
+        const sul = q(t[11], true, t[11] !== null && t[11] > LIMITS.sul);
+        return {
+          ref: t[0],
+          className: L.classes[t[2]], classColor: t[2] === "main" ? BLUE : PURPLE,
+          classBg: t[2] === "main" ? "#E8EEF4" : "#EFEAF5",
+          contents: t[5] ? t1(t[5]) + (ar ? " طن " : " t of ") + L.purposes[t[4]] : L.emptyVessel,
+          source: t[5] === 0 ? "—" : (t[6] ? this.tr(SHOPS[t[7]]) : L.mixedShops + " — " + t[7] + " " + L.shopsWord),
+          sourceColor: t[6] ? GREEN : "#8A9188",
+          state: L.states[t[13]],
+          stateColor: t[13] === "held" ? RED : t[13] === "available" ? GREEN : t[13] === "reserved" ? AMBER : t[13] === "filling" ? BLUE : MUTED,
+          stateBg: t[13] === "held" ? "#FBE9E7" : t[13] === "available" ? "#EAF2EC" : t[13] === "reserved" ? "#FBF0DF" : t[13] === "filling" ? "#E8EEF4" : "#F1EEE6",
+          tonnes: t[5] ? t1(t[5]) : "—",
+          fullPct: pct + "%",
+          fullColor: pct > 90 ? AMBER : t[13] === "held" ? RED : GREEN,
+          ffa: ffa.value, ffaColor: ffa.color, mi: mi.value, miColor: mi.color,
+          iv: iv.value, ivColor: iv.color, sul: sul.value, sulColor: sul.color,
+          tested: t[8] === null ? L.nothingInIt : t[12] ? L.testedOn : L.estimate,
+          testedColor: t[8] === null ? "#8A9188" : t[12] ? GREEN : AMBER,
+          rowBg: t[13] === "held" ? "#FDF6F4" : "transparent",
+        };
+      }),
+
+      registry: myTanks.map((t) => ({
+        ref: t[0],
+        className: L.classes[t[2]], classColor: t[2] === "main" ? BLUE : PURPLE, classNote: L.classNotes[t[2]],
+        warehouse: this.tr(WAREHOUSES[t[1]].name),
+        capacity: (t[2] === "ibc" ? t[3].toFixed(1) : String(t[3])) + (ar ? " طن" : " t"),
+        purpose: L.purposes[t[4]],
+        inIt: t[5] ? t1(t[5]) + (ar ? " طن" : " t") : L.emptyVessel,
+        standing: t[13] === "held" ? L.standHeld : t[13] === "empty" ? L.standFree : L.states[t[13]],
+        standColor: t[13] === "held" ? RED : t[13] === "empty" ? GREEN : MUTED,
+      })),
+
+      barrels: BARRELS.map((v) => ({
+        ref: v[0],
+        capacity: v[1] + (ar ? " كجم" : " Kg"),
+        tare: v[2] + (ar ? " كجم" : " Kg"),
+        vehicle: v[3] ? v[3] + " · " + this.tr(TEAMS[v[4]]) : L.unfitted,
+        service: v[5] ? L.inServiceYes : L.inServiceNo,
+        serviceColor: v[5] ? GREEN : RED,
+        issued: v[7] === "leak" ? L.issuedLeak : v[7] === "yard" ? L.issuedYard : this.tr(DRIVERS[v[6]]) + ", " + L.issuedToday,
+        rowBg: v[5] ? "transparent" : "#FDF6F4",
+      })),
+
+      incomingTitle: L.incomingTanks,
+      incomingNote: role === "keeper" || isManager
+        ? (ar ? "الخزانات الفارغة الواصلة للتحميل. لكل واحد رقمه قبل أن يدخله زيت، وأنت من يخصص الخزان الذي يُحمَّل منه."
+             : "The empty tanks arriving to be loaded. Each one has its number before any oil goes in, and you are the one who allocates the storage tank it is loaded from.")
+        : (ar ? "الخزانات الفارغة الواصلة للتحميل. المخزن يخصص لكل منها خزاناً، ومدير العمليات يعتمد."
+             : "The empty tanks arriving to be loaded. The warehouse allocates a storage tank to each, and the operations manager approves."),
+      incoming: INCOMING.map((c) => ({
+        ref: c[0],
+        kind: c[1] === "iso" ? (ar ? "خزان ISO" : "ISO tank") : (ar ? "خزان مرن" : "Flexitank"),
+        kindColor: c[1] === "iso" ? PURPLE : BLUE,
+        capacity: c[2] + (ar ? " طن" : " t"),
+        qtyOfCap: t1(c[6]) + " / " + t1(c[2]),
+        qtyColor: c[6] ? INK : "#8A9188",
+        fillPct: Math.round((c[6] / c[2]) * 100) + "%",
+        order: c[3],
+        arrived: this.tr(c[4]),
+        from: c[5] || "—",
+        fromColor: c[5] ? INK : "#8A9188",
+        stateColor: c[5] ? (c[6] >= c[2] ? GREEN : AMBER) : "#E4DFD4",
+        canAllocate: (role === "keeper" || isManager) && !c[5],
+        allocateLabel: ar ? "تخصيص خزان" : "Allocate a tank",
+        open: () => this.setState({ allocating: c[0], allocLines: [{ from: null, tonnes: "" }] }),
+        rowBg: c[5] ? "transparent" : "#FDFAF3",
+      })),
+
+      // The allocation form opens at the top of the section and names the tank it
+      // is filling, so it reads the same however it was opened — from a row in
+      // the list or from the loading order below.
+      alloc: (() => {
+        const ref = this.state.allocating;
+        if (!ref) return null;
+        const c = INCOMING.filter((x) => x[0] === ref)[0];
+        if (!c) return null;
+        // Only vessels with oil in them, in this keeper's own warehouse, can be
+        // drawn from — and a held one cannot be loaded at all.
+        const sources = TANKS.filter((t) => (mine === null || t[1] === mine) && t[5] > 0 && t[13] !== "held");
+        const lines = this.state.allocLines.length ? this.state.allocLines : [{ from: null, tonnes: "" }];
+        const opts = sources.map((t) => ({
+          label: t[0] + " · " + t1(t[5]) + (ar ? " طن " : " t ") + L.purposes[t[4]],
+          value: t[0],
+        }));
+        const setLine = (i, key, v) => {
+          const next = lines.map((l, n) => (n === i ? Object.assign({}, l, { [key]: v }) : l));
+          this.setState({ allocLines: next });
+        };
+        const total = lines.reduce((a, l) => a + (parseFloat(l.tonnes) || 0), 0);
+        // One tank may be drawn from twice across different containers, so each
+        // line is checked against what its own source actually holds.
+        const rows = lines.map((l, i) => {
+          const t = sources.filter((s) => s[0] === l.from)[0] || sources[0];
+          const avail = t ? t[5] : 0;
+          const want = parseFloat(l.tonnes) || 0;
+          return {
+            sources: opts,
+            value: t ? t[0] + " · " + t1(t[5]) + (ar ? " طن " : " t ") + L.purposes[t[4]] : "",
+            setSource: (e) => setLine(i, "from", e.target.value.split(" · ")[0]),
+            tonnes: l.tonnes,
+            setTonnes: (e) => setLine(i, "tonnes", e.target.value),
+            hint: t1(Math.max(0, Math.min(avail, c[2] - (total - want)))),
+            // A line is flagged if it empties its own tank past what it holds, or
+            // if it is the one that pushed the container past its capacity.
+            border: want > avail + 0.001 || (total > c[2] + 0.001 && want > 0) ? "#B3261E" : "#8A9188",
+            bg: want > avail + 0.001 || (total > c[2] + 0.001 && want > 0) ? "#FDF4F2" : "#fff",
+            note: t
+              ? (ar ? t1(avail) + " طن في " + t[0] + " · " + (t[12] ? L.testedOn : L.estimate)
+                   : t1(avail) + " t in " + t[0] + " · " + (t[12] ? L.testedOn : L.estimate))
+              : (ar ? "لا وعاء فيه زيت هنا" : "nothing here has oil in it"),
+            over: want > avail + 0.001,
+            overNote: t && want > avail + 0.001
+              ? (ar ? t[0] + " فيه " + t1(avail) + " طن فقط" : "only " + t1(avail) + " t in " + t[0])
+              : "",
+            canRemove: lines.length > 1,
+            remove: () => this.setState({ allocLines: lines.filter((x, n) => n !== i) }),
+            removeLabel: ar ? "إزالة" : "Remove",
+            lineLabel: (ar ? "من " : "From ") + (i + 1),
+          };
+        });
+        const overCap = total > c[2] + 0.001;
+        const shortOf = c[2] - total;
+        return {
+          ref: c[0],
+          title: (ar ? "تحميل " : "Loading ") + c[0],
+          sub: (c[1] === "iso" ? (ar ? "خزان ISO" : "ISO tank") : (ar ? "خزان مرن" : "Flexitank"))
+            + " · " + c[2] + (ar ? " طن سعة · للأمر " : " t capacity · for ") + c[3],
+          rows,
+          addLabel: ar ? "+ خزان آخر" : "+ Another tank",
+          add: () => this.setState({ allocLines: lines.concat([{ from: null, tonnes: "" }]) }),
+          addNote: ar
+            ? "إن لم يكفِ خزان واحد، أضف آخر — والخزان الواصل يُحمَّل من أكثر من خزان، وكلها تُسجَّل."
+            : "If one tank does not fill it, add another — an arriving tank can be loaded from several, and every one is recorded.",
+          totalLabel: ar ? "المحمَّل" : "Loaded",
+          total: t1(total),
+          capacity: t1(c[2]),
+          fillNote: overCap
+            ? (ar ? c[0] + " سعته " + t1(c[2]) + " طن فقط — أنقص " + t1(total - c[2]) + " طن."
+                 : c[0] + " holds only " + t1(c[2]) + " t — take out " + t1(total - c[2]) + " t.")
+            : shortOf > 0.05
+              ? (ar ? "ناقص " + t1(shortOf) + " طن حتى يمتلئ" : t1(shortOf) + " t short of full")
+              : (ar ? "ممتلئ" : "Full"),
+          fillColor: overCap ? RED : shortOf > 0.05 ? AMBER : GREEN,
+          // Over capacity stops the loading being recorded at all — it is the one
+          // mistake that would otherwise reach the bill of lading.
+          error: overCap
+            ? (ar ? "أكثر من سعة الخزان. " + c[0] + " يحمل " + t1(c[2]) + " طناً وأنت خصصت " + t1(total) + " — أنقص " + t1(total - c[2]) + " طناً قبل التسجيل."
+                 : "Beyond the tank's capacity. " + c[0] + " holds " + t1(c[2]) + " t and you have allocated " + t1(total) + " — take out " + t1(total - c[2]) + " t before this can be recorded.")
+            : rows.filter((r) => r.over).length
+              ? (ar ? "لا يوجد هذا القدر في الخزان: " : "There is not that much in the tank: ") + rows.filter((r) => r.over).map((r) => r.overNote).join(" · ")
+              : "",
+          blocked: overCap || rows.filter((r) => r.over).length > 0,
+          saveBg: overCap || rows.filter((r) => r.over).length > 0 ? "#E4DFD4" : GREEN,
+          saveColor: overCap || rows.filter((r) => r.over).length > 0 ? "#8A9188" : "#fff",
+          saveCursor: overCap || rows.filter((r) => r.over).length > 0 ? "not-allowed" : "pointer",
+          blockedNote: overCap
+            ? (ar ? "لا يمكن التسجيل حتى تصحيح الكمية." : "It cannot be recorded until the quantity is corrected.")
+            : "",
+          note: ar
+            ? "التحميل يخرج الزيت من الخزانات ويثبته على هذا الرقم. ولا يُقفل حتى يعتمده مدير العمليات، وبعدها تقتبسه المبيعات كما هو."
+            : "Loading takes the oil out of the storage tanks and pins it to this number. It is not locked until the operations manager approves it, and after that Sales quotes it as it stands.",
+          save: ar ? "تسجيل التحميل" : "Record the loading",
+          cancel: ar ? "إلغاء" : "Cancel",
+          close: () => this.setState({ allocating: null, allocLines: [] }),
+          // The save does nothing while it is over capacity, rather than being
+          // hidden — the keeper needs to see why it will not go through.
+          trySave: () => {
+            if (overCap || rows.filter((r) => r.over).length) return;
+            this.setState({ allocating: null, allocLines: [] });
+          },
+        };
+      })(),
+      loadingTitle: L.loadingOrders,
+      loadingNote: isFinance
+        ? (ar ? "أنت من يرفع أمر التحميل. ومدير المخزن يخصص الخزانات، ومدير العمليات يوافق — وأنت تقرأ بعدها ولا تُعدِّل."
+             : "You raise the loading order. The warehouse manager allocates the tanks and the operations manager approves — after that you read it, you do not change it.")
+        : isManager
+          ? (ar ? "المدير المالي رفع الأمر وأنت تخصص: أي خزان دخل في أي حاوية أو خزان ISO برقمه. ثم يوافق مدير العمليات."
+               : "The financial manager raised the order and you allocate it: which storage tank went into which container or ISO tank, by number. Then the operations manager approves.")
+          : isOps
+            ? (ar ? "أنت من يوافق على التخصيص. لا شيء يُحمَّل قبل موافقتك، لأن الأرقام هنا هي ما تقتبسه المبيعات."
+                 : "You approve the allocation. Nothing loads before you do, because these numbers are what Sales quotes.")
+            : (ar ? "للعرض فقط. المدير المالي يرفع، ومدير المخزن يخصص، ومدير العمليات يوافق."
+                 : "Read only. The financial manager raises it, the warehouse manager allocates it, the operations manager approves."),
+      canRaise: isFinance,
+      openRaise: () => this.setState({ form: this.state.form === "raise" ? null : "raise" }),
+      openWarehouseForm: () => this.setState({ form: this.state.form === "warehouse" ? null : "warehouse" }),
+      openTransferForm: () => this.setState({ form: this.state.form === "transfer" ? null : "transfer" }),
+      closeForm: () => this.setState({ form: null }),
+      showRaise: this.state.form === "raise",
+      showWarehouseForm: this.state.form === "warehouse",
+      showTransferForm: this.state.form === "transfer",
+      theForm: this.state.form ? this.formDef(this.state.form, ar, L) : null,
+      cancelLabel: ar ? "إلغاء" : "Cancel",
+      loading: LOADING.map((o) => {
+        const done = o.lines.reduce((a, l) => a + l[3], 0);
+        const short = o.asked - done;
+        const st = o.state;
+        return {
+          ref: o.ref, shipment: o.shipment, client: this.tr(o.client),
+          asked: t1(o.asked), done: t1(done),
+          short: short > 0.05 ? t1(short) : null,
+          shortLabel: short > 0.05
+            ? (ar ? "ناقص " + t1(short) + " طن" : t1(short) + " t still to allocate")
+            : (ar ? "مخصَّص بالكامل" : "fully allocated"),
+          shortColor: short > 0.05 ? AMBER : GREEN,
+          meta: this.tr(o.when) + " · " + this.tr(o.by) + " · " + this.tr(o.sails),
+          state: st === "raised" ? (ar ? "مرفوع، بانتظار التخصيص" : "Raised, waiting on allocation")
+            : st === "allocated" ? (ar ? "مخصَّص، بانتظار مدير العمليات" : "Allocated, waiting on the operations manager")
+            : (ar ? "مُعتمد" : "Approved"),
+          stateColor: st === "approved" ? GREEN : st === "allocated" ? AMBER : BLUE,
+          border: st === "approved" ? "#BFD8C9" : st === "allocated" ? "#E8C9A0" : "#BCCFE0",
+          empty: !o.lines.length,
+          emptyNote: ar ? "لم يُخصَّص شيء بعد. مدير المخزن هو من يبدأ." : "Nothing allocated yet — the warehouse manager starts it.",
+          lines: o.lines.map((l) => ({
+            container: l[0],
+            kind: l[1] === "iso" ? (ar ? "خزان ISO" : "ISO tank") : (ar ? "خزان مرن" : "Flexitank"),
+            kindColor: l[1] === "iso" ? PURPLE : BLUE,
+            from: l[2],
+            tonnes: t1(l[3]),
+            full: l[4] ? (ar ? "ممتلئ" : "Full") : (ar ? "جزئي" : "Part filled"),
+            fullColor: l[4] ? GREEN : AMBER,
+          })),
+          // Only the role that owns the step gets the button. The keeper does the
+          // loading, so he allocates too — he just cannot approve it. The button
+          // opens the same form as the incoming list, on the next tank of this
+          // order that has nothing in it.
+          canAllocate: (isManager || role === "keeper") && st !== "approved"
+            && INCOMING.filter((c) => c[3] === o.ref && !c[5]).length > 0,
+          openNext: () => {
+            const next = INCOMING.filter((c) => c[3] === o.ref && !c[5])[0];
+            if (next) this.setState({ allocating: next[0], allocLines: [{ from: null, tonnes: "" }] });
+          },
+          allocateNextLabel: (() => {
+            const next = INCOMING.filter((c) => c[3] === o.ref && !c[5])[0];
+            return next
+              ? (ar ? "تحميل " + next[0] : "Load " + next[0])
+              : (ar ? "لا خزان فارغ" : "nothing empty");
+          })(),
+          canApprove: isOps && st === "allocated" && !this.state.decided[o.ref],
+          approveLabel: ar ? "اعتماد التخصيص" : "Approve the allocation",
+          sendBackLabel: ar ? "إعادته لمدير المخزن" : "Send it back",
+          approve: () => this.setState({ decided: Object.assign({}, this.state.decided, { [o.ref]: "ok" }) }),
+          sendBack: () => this.setState({ decided: Object.assign({}, this.state.decided, { [o.ref]: "back" }) }),
+          decided: this.state.decided[o.ref] === "ok"
+            ? (ar ? "✓ اعتمدته — الأرقام مقفلة الآن" : "✓ You approved it — the numbers are locked now")
+            : this.state.decided[o.ref] === "back"
+              ? (ar ? "أُعيد لمدير المخزن" : "Sent back to the warehouse manager")
+              : "",
+          decidedColor: this.state.decided[o.ref] === "ok" ? GREEN : AMBER,
+          readOnly: !isManager && !isOps && role !== "keeper",
+          readOnlyLabel: st === "approved"
+            ? (ar ? "مُعتمد — الأرقام مقفلة" : "approved — the numbers are locked")
+            : (ar ? "للعرض فقط" : "read only"),
+        };
+      }),
+
+      shipping: [
+        { ref: "ZE-2026-0045", client: ar ? "نيستي، روتردام" : "Neste, Rotterdam",
+          state: ar ? "يُحمَّل" : "Loading", stateColor: AMBER,
+          meta: ar ? "10 خزانات مرنة · 240 طن · يُحمَّل 23 سبتمبر · بوليصة واحدة" : "10 flexitanks · 240 t · loads 23 Sep · one bill of lading",
+          border: "#E8C9A0", noteColor: RED,
+          note: ar ? "خزانان لم يُملآ والشحنة تُحمَّل بعد يومين — ناقص 48 طناً." : "Two tanks still to fill and it loads in two days — 48 t short.",
+          tanks: [
+            { ref: "FT-0418", tonnes: "24.0", from: "T7", ffa: "3.9", ffaColor: INK, mi: "1.2", miColor: INK, iv: "68", ivColor: INK, sul: "29", sulColor: INK },
+            { ref: "FT-0419", tonnes: "24.0", from: "T7", ffa: "4.3", ffaColor: INK, mi: "1.9", miColor: AMBER, iv: "65", ivColor: AMBER, sul: "36", sulColor: AMBER },
+            { ref: "FT-0420", tonnes: "—", from: L.notDrawn, ffa: "—", ffaColor: "#8A9188", mi: "—", miColor: "#8A9188", iv: "—", ivColor: "#8A9188", sul: "—", sulColor: "#8A9188" },
+          ] },
+        { ref: "ZE-2026-0042", client: ar ? "أوليكو، بريطانيا" : "Olleco, UK",
+          state: ar ? "وصلت ومختبرهم يفحصها" : "Arrived, their lab has it", stateColor: BLUE,
+          meta: ar ? "6 خزانات مرنة · 144 طن · أبحرت 12 سبتمبر" : "6 flexitanks · 144 t · sailed 12 Sep",
+          border: "#BCCFE0", noteColor: "#8A9188",
+          note: ar ? "أرقامنا على شهادة الجودة. وأي خصم يُناقش خزاناً بخزان مقابل نتيجتهم." : "Our figures are on the quality certificate. Any discount is argued tank by tank against their result.",
+          tanks: [
+            { ref: "FT-0412", tonnes: "24.0", from: "T1", ffa: "4.1", ffaColor: INK, mi: "1.4", miColor: INK, iv: "67", ivColor: INK, sul: "31", sulColor: INK },
+            { ref: "FT-0413", tonnes: "24.0", from: "T1", ffa: "4.6", ffaColor: AMBER, mi: "1.7", miColor: INK, iv: "66", ivColor: INK, sul: "34", sulColor: INK },
+          ] },
+      ],
+
+      transfers: [
+        { ref: "TR-0007", from: this.tr(WAREHOUSES[0].name), to: this.tr(WAREHOUSES[1].name),
+          out: "48.0", in: "47.6", gap: "−0.4", gapColor: AMBER,
+          standing: ar ? "الفارق تحت التحقيق — وهو ليس فاقداً ولا نقصاً" : "Gap under investigation — neither a loss nor a shortfall",
+          standColor: AMBER, rowBg: "#FDFAF3" },
+        { ref: "TR-0006", from: this.tr(WAREHOUSES[0].name), to: this.tr(WAREHOUSES[1].name),
+          out: "24.0", in: "24.0", gap: ar ? "لا شيء" : "none", gapColor: GREEN,
+          standing: ar ? "مُغلق" : "Closed", standColor: MUTED, rowBg: "transparent" },
+      ],
+
+      warehouses: WAREHOUSES.map((w, i) => ({
+        name: this.tr(w.name),
+        ship: w.ship ? L.shipsDirect : L.cannotShip,
+        shipColor: w.ship ? GREEN : MUTED,
+        meta: this.tr(w.city) + " · " + this.tr(w.country) + " · " + L.runBy + " " + w.head,
+        facts: [
+          { label: L.unitOfTrade, value: this.tr(w.unit), color: INK, note: L.unitNote },
+          { label: L.teamsDelivering,
+            value: w.teams.length ? w.teams.map((t) => this.tr(TEAMS[["Team 1", "Team 2", "Team 3"].indexOf(t)])).join(", ") : L.noTeams,
+            color: w.teams.length ? INK : AMBER,
+            note: w.teams.length ? L.teamsNote : L.noTeamsNote },
+          { label: L.vesselsLabel,
+            value: TANKS.filter((t) => t[1] === i && t[2] === "main").length + " " + L.tanksWord + ", " + TANKS.filter((t) => t[1] === i && t[2] === "ibc").length + " " + L.ibcsWord,
+            color: INK, note: L.vesselsNote },
+          { label: L.inStockLabel, value: tt(stockOf(i)), color: INK, note: L.inStockNote },
+          { label: L.itsScale, value: w.scale, color: INK,
+            note: w.ago >= 14 ? L.overdueBy + " " + w.ago + " " + L.days : !w.cal ? L.neverCalibrated : L.calibrated + " " + (ar ? "1 سبتمبر" : w.cal) },
+        ],
+      })),
+
+      settings: [
+        { label: ar ? "حد فاقد الترشيح" : "Filtration loss tolerance", value: TOLERANCE + "%",
+          note: ar ? "الوعاء فوقه يُعلَّم للتحقيق ولا يُمنع، ولا يُحمَّل فاقده على سائق" : "a vessel over it is flagged for investigation, never blocked, and no loss is charged to a driver" },
+        { label: ar ? "فترة معايرة الميزان" : "Scale calibration interval", value: ar ? "14 يوماً" : "14 days",
+          note: ar ? "بعدها تُعلَّم القراءة قبل استخدامها في خصم من أحد" : "after this a reading is flagged before it is used to debit anyone" },
+        { label: ar ? "انتهاء الحجز" : "Reservation expiry", value: ar ? "7 أيام" : "7 days",
+          note: ar ? "الحجز المهجور يعيد الزيت إلى المتاح بدل أن يأكل المخزون بهدوء" : "an abandoned reservation returns the oil to available instead of quietly eating stock" },
+        { label: ar ? "محل واحد لكل وعاء" : "One shop per vessel", value: ar ? "مُفضَّل" : "Preferred",
+          note: ar ? "الهدف حيث تسمح الكمية — سهل في IBC أو برميل، ونادر في خزان رئيسي" : "the aim wherever the quantity allows — easy in an IBC or a barrel, rarely possible in a main tank" },
+        { label: ar ? "من يضيف وعاءً للسجل" : "Who adds a vessel", value: ar ? "المدير المالي" : "Financial manager",
+          note: ar ? "ولمدير العمليات أن يطلب — فالوعاء أصل من الأصول" : "an operations manager may request one — a vessel is an asset, not a yard decision" },
+      ],
+    };
+  }
+}
+
+</script>
+</body>
+</html>

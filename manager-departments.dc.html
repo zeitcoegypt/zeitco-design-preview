@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#FAF6EE; color:#3A4A43; font-family:"IBM Plex Sans",sans-serif; }
+  a { color:#1F5240; text-decoration:none; }
+  a:hover { color:#2E6B54; }
+</style>
+</helmet>
+<div dir="{{ dir }}" style="width:100%;max-width:1400px;margin:0 auto;background:#FAF6EE;font-family:{{ face }};-webkit-font-smoothing:antialiased;color:#3A4A43;padding-bottom:44px">
+
+  <header style="background:#fff;border-bottom:1px solid #E4DFD4;position:sticky;top:0;z-index:5">
+    <div style="display:flex;align-items:center;gap:14px;padding:11px 20px;flex-wrap:wrap">
+      <a href="#" style="display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#0E6530;flex-shrink:0">
+        <img src="public/brand/zeitco-drop.svg" alt="" height="26" style="display:block;width:auto;flex-shrink:0">
+        Zeitco
+      </a>
+      <div style="display:flex;gap:1px;padding:0;flex:1 1 auto;min-width:520px;align-self:stretch;align-items:stretch">
+      <sc-for list="{{ topTabs }}" as="tab" hint-placeholder-count="8">
+        <button type="button" onClick="{{ tab.go }}" style="border:0;border-bottom:2px solid {{ tab.edge }};background:transparent;padding:9px 13px 8px;font-family:inherit;font-size:13px;font-weight:600;color:{{ tab.color }};white-space:nowrap;cursor:pointer">{{ tab.label }}</button>
+      </sc-for>
+      </div>
+      <span style="font-size:12px;color:#63736A;flex:1;min-width:0">{{ view.crumb }}</span>
+      <span style="font-size:12px;color:#63736A;white-space:nowrap">{{ todayLine }}</span>
+      <div style="display:flex;border:1px solid #8A9188;border-radius:8px;overflow:hidden;flex-shrink:0">
+        <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+          <button type="button" onClick="{{ l.pick }}" style="border:0;height:26px;padding:0 10px;background:{{ l.bg }};color:{{ l.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ l.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+  </header>
+
+  <div style="padding:13px 20px 0">
+
+    <a href="manager-dashboard-v2.dc.html" style="display:inline-block;padding:0 0 9px;font-size:12px;font-weight:600;color:#1F5240">{{ dashWord }}</a>
+
+    <section style="background:#F1EEE6;border:1px solid #E4DFD4;border-radius:11px;padding:9px 13px 10px;margin-bottom:11px">
+      <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:700;color:#10231C">{{ whoName }}</span>
+        <span style="font-size:12px;color:#55655D;min-width:0;text-wrap:pretty">{{ whoLine }}</span>
+      </div>
+    </section>
+
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:#E4DFD4;border:1px solid #E4DFD4;border-radius:12px;overflow:hidden;margin-bottom:11px">
+      <sc-for list="{{ figures }}" as="f" hint-placeholder-count="5">
+        <button type="button" onClick="{{ f.go }}" style="display:block;width:100%;text-align:start;border:0;background:{{ f.bg }};padding:9px 13px 11px;font-family:inherit;min-width:0;cursor:pointer">
+          <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;text-wrap:pretty">{{ f.label }}</span>
+          <span style="display:flex;align-items:baseline;gap:4px;margin-top:4px">
+            <span class="num" style="font-size:22px;font-weight:600;color:{{ f.color }};line-height:1">{{ f.value }}</span>
+            <span style="font-size:11px;color:#8A9188">{{ f.unit }}</span>
+          </span>
+          <span style="display:block;font-size:11px;color:#8A9188;margin-top:4px;text-wrap:pretty">{{ f.note }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">
+      <sc-for list="{{ side }}" as="s" hint-placeholder-count="4">
+        <button type="button" onClick="{{ s.go }}" style="border:1px solid {{ s.border }};border-radius:999px;height:28px;padding:0 12px;background:{{ s.bg }};color:{{ s.color }};font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ s.label }}</button>
+      </sc-for>
+    </div>
+
+    <div style="min-width:0">
+
+      <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ back }}" style="border:0;background:transparent;padding:0 0 10px;font-family:inherit;font-size:12px;font-weight:600;color:#1F5240;cursor:pointer">{{ backWord }}</button>
+      </sc-if>
+
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:4px">
+        <h1 style="margin:0;font-size:15px;font-weight:700;color:#10231C">{{ view.heading }}</h1>
+        <sc-if value="{{ showHistoryToggle }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ toggleHistory }}" style="border:0;background:transparent;padding:0;font-family:inherit;font-size:12px;font-weight:600;color:#1F5240;cursor:pointer">{{ historyLabel }}</button>
+        </sc-if>
+      </div>
+      <p style="margin:0 0 12px;font-size:12px;color:#55655D;max-width:70ch;text-wrap:pretty">{{ view.description }}</p>
+
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="3">
+          <section style="border:1px solid #E4DFD4;background:#fff;border-radius:12px;padding:11px 15px 13px">
+
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px">
+              <h2 style="margin:0;font-size:14px;font-weight:700;color:#10231C">{{ b.title }}</h2>
+              <sc-if value="{{ b.isPeriod }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:2px;flex-wrap:wrap;border:1px solid #E4DFD4;border-radius:10px;padding:3px">
+                  <sc-for list="{{ periods }}" as="p" hint-placeholder-count="5">
+                    <button type="button" onClick="{{ p.pick }}" style="border:0;border-radius:7px;padding:5px 10px;font-family:inherit;font-size:11px;font-weight:600;background:{{ p.bg }};color:{{ p.color }};cursor:pointer">{{ p.label }}</button>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.hasAction }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ b.action }}" style="border:1px solid #8A9188;border-radius:7px;height:32px;padding:0 12px;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#3A4A43;cursor:pointer">{{ b.actionLabel }}</button>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ b.hint }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:-6px 0 10px;font-size:11px;color:#63736A;text-wrap:pretty">{{ b.hint }}</p>
+            </sc-if>
+
+            <sc-if value="{{ b.form }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #BFD8C9;background:#F6FAF7;border-radius:10px;padding:10px 12px 12px;margin:0 0 10px">
+                <h3 style="margin:0;font-size:13px;font-weight:700;color:#1F5240">{{ b.form.title }}</h3>
+                <p style="margin:3px 0 9px;font-size:11px;color:#63736A;text-wrap:pretty">{{ b.form.note }}</p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px 11px">
+                  <sc-for list="{{ b.form.fields }}" as="f" hint-placeholder-count="4">
+                    <label style="display:block;min-width:0">
+                      <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                      <input type="text" placeholder="{{ f.hint }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:9px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                    </label>
+                  </sc-for>
+                </div>
+                <button type="button" onClick="{{ b.form.send }}" style="margin-top:11px;min-height:30px;padding:5px 14px;border:0;border-radius:9px;background:#1F5240;color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer">{{ b.form.save }}</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isChips }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+                <span style="border-radius:999px;background:#FDF3DF;color:#8A5B0B;padding:3px 10px;font-size:13px;font-weight:600">{{ openWord }}: {{ b.openCount }}</span>
+                <sc-for list="{{ b.chips }}" as="c" hint-placeholder-count="4">
+                  <span style="font-size:12px;color:#55655D">{{ c.label }}: {{ c.count }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isFigure }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:#10231C;line-height:1">{{ b.figure }}</span>
+                <span style="font-size:13px;color:#55655D">{{ b.figureLabel }}</span>
+              </div>
+              <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px">
+                <sc-for list="{{ b.breakdown }}" as="d" hint-placeholder-count="4">
+                  <span style="font-size:12px;color:#55655D">{{ d.label }}: <b style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:{{ d.color }}">{{ d.value }}</b></span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isFunnel }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0 0 10px;font-size:12px;color:#55655D"><b style="font-family:'IBM Plex Mono',monospace;color:#10231C">{{ b.funnelTotal }}</b> · {{ b.funnelNote }}</p>
+              <div style="display:flex;height:26px;width:100%;overflow:hidden;border-radius:7px;background:#EFEBE1">
+                <sc-for list="{{ b.segs }}" as="g" hint-placeholder-count="6">
+                  <div style="width:{{ g.pct }};background:{{ g.bg }}"></div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 20px;margin-top:12px">
+                <sc-for list="{{ b.segs }}" as="g" hint-placeholder-count="6">
+                  <div style="display:flex;align-items:center;gap:7px;font-size:12px;min-width:0">
+                    <span style="width:8px;height:8px;border-radius:2px;flex-shrink:0;background:{{ g.bg }}"></span>
+                    <span style="color:#3A4A43;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.label }}</span>
+                    <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-weight:600;color:#10231C">{{ g.count }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isStats }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 28px">
+                <sc-for list="{{ b.stats }}" as="st" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:4px 0;font-size:12px;border-bottom:1px solid #EFEBE1">
+                    <span style="color:#55655D;min-width:0">{{ st.label }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:{{ st.color }};flex-shrink:0">{{ st.value }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isTiles }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+                <sc-for list="{{ b.tiles }}" as="tl" hint-placeholder-count="4">
+                  <div style="text-align:center;border-radius:8px;background:#F6F2E9;padding:10px 6px">
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#10231C;line-height:1.2">{{ tl.value }}</div>
+                    <div style="font-size:11px;color:#55655D;margin-top:2px;text-wrap:pretty">{{ tl.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isRows }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:8px;padding:9px 12px" style-hover="border-color:#1F5240">
+                    <div style="min-width:0">
+                      <div style="font-size:13px;font-weight:500;color:#10231C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div>
+                      <sc-if value="{{ r.job }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:12px;color:#63736A;margin-top:1px">{{ r.job }}</div>
+                      </sc-if>
+                      <div style="font-size:12px;color:#55655D;margin-top:1px">{{ r.sub }}</div>
+                      <sc-if value="{{ r.person }}" hint-placeholder-val="{{ false }}">
+                        <a href="hr.dc.html" style="display:inline-block;font-size:12px;font-weight:600;color:#1F5240;margin-top:3px">{{ r.personLabel }}</a>
+                      </sc-if>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                      <sc-if value="{{ r.badge }}" hint-placeholder-val="{{ false }}">
+                        <span style="border-radius:999px;padding:3px 10px;font-size:11px;font-weight:600;background:{{ r.badgeBg }};color:{{ r.badgeColor }};white-space:nowrap">{{ r.badge }}</span>
+                      </sc-if>
+                      <sc-if value="{{ r.hasActions }}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{ r.approve }}" style="height:32px;padding:0 12px;border:0;border-radius:7px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ r.approveLabel }}</button>
+                        <button type="button" onClick="{{ r.decline }}" style="height:32px;padding:0 12px;border:1px solid #8A9188;border-radius:7px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ r.declineLabel }}</button>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isTeams }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+                <sc-for list="{{ b.teams }}" as="tm" hint-placeholder-count="3">
+                  <div style="border:1px solid #EFEBE1;border-radius:10px;padding:12px 14px 13px">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px">
+                      <h3 style="margin:0;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#63736A">{{ tm.name }}</h3>
+                      <button type="button" onClick="{{ tm.open }}" style="border:0;background:transparent;padding:0;font-family:inherit;font-size:12px;font-weight:600;color:#1F5240;cursor:pointer">{{ openTeamWord }}</button>
+                    </div>
+                    <p style="margin:0 0 6px;font-size:12px;color:#55655D">{{ opsManagerWord }} <span style="color:#10231C;font-weight:500">{{ tm.manager }}</span></p>
+                    <sc-for list="{{ tm.stats }}" as="st" hint-placeholder-count="6">
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:3px 0;font-size:12px">
+                        <span style="color:#55655D;min-width:0">{{ st.label }}</span>
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:{{ st.color }};flex-shrink:0">{{ st.value }}</span>
+                      </div>
+                    </sc-for>
+                    <p style="margin:8px 0 0;padding-top:8px;border-top:1px solid #EFEBE1;font-size:11px;color:#63736A">{{ tm.footnote }}</p>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isForm }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px">
+                <sc-for list="{{ b.fields }}" as="f" hint-placeholder-count="6">
+                  <label style="display:block;min-width:0">
+                    <span style="display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#63736A;margin-bottom:4px">{{ f.label }}</span>
+                    <input type="text" placeholder="{{ f.placeholder }}" style="width:100%;box-sizing:border-box;height:32px;border:1px solid #8A9188;border-radius:10px;padding:0 10px;background:#fff;font-family:inherit;font-size:13px;color:#10231C">
+                  </label>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:14px">
+                <button type="button" style="height:32px;padding:0 16px;border:0;border-radius:10px;background:#1F5240;color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ createWord }}</button>
+                <button type="button" style="height:32px;padding:0 16px;border:1px solid #8A9188;border-radius:10px;background:#fff;color:#3A4A43;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ clearWord }}</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ b.isNA }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px dashed #8A9188;background:#F6F2E9;border-radius:8px;padding:10px 12px;font-size:11px;font-style:italic;color:#63736A;text-wrap:pretty">{{ b.naLabel }}</div>
+            </sc-if>
+
+            <sc-if value="{{ b.note }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:10px 0 0;padding-top:8px;border-top:1px solid #EFEBE1;font-size:11px;color:#63736A;text-wrap:pretty">{{ b.note }}</p>
+            </sc-if>
+
+            <sc-if value="{{ b.linkLabel }}" hint-placeholder-val="{{ false }}">
+              <a href="{{ b.linkHref }}" style="display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:#1F5240">{{ b.linkLabel }}</a>
+            </sc-if>
+
+          </section>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startDept&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;callCenter&quot;,&quot;crm&quot;,&quot;operations&quot;,&quot;survey&quot;,&quot;warehousing&quot;,&quot;sales&quot;,&quot;finance&quot;],&quot;default&quot;:&quot;callCenter&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Department&quot;},&quot;showHints&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Department&quot;}}">
+const GREEN = "#1F5240", INK = "#10231C", NEG = "#B3261E";
+
+const BADGE = {
+  "In verification": ["#FDF3DF", "#8A5B0B"],
+  "Submitted": ["#E9F0F7", "#2B5C8A"],
+  "Submitted – deal agreed on site": ["#EEF6F2", "#1F5240"],
+  "Rework": ["#FBE9E7", "#9A3B22"],
+  "Pre-survey: Open": ["#F1EEE6", "#55655D"],
+  "Pre-survey: Failed": ["#FBE9E7", "#9A3B22"],
+  "Active Supplier": ["#EEF6F2", "#1F5240"],
+  "Lapsed Supplier": ["#F1EEE6", "#55655D"],
+  "Declined": ["#FBE9E7", "#9A3B22"],
+  "Scheduled": ["#E9F0F7", "#2B5C8A"],
+  "On a manifest": ["#EEF6F2", "#1F5240"],
+  "Awaiting date": ["#FDF3DF", "#8A5B0B"],
+  "Loading": ["#FDF3DF", "#8A5B0B"],
+  "In transit": ["#E9F0F7", "#2B5C8A"],
+  "Delivered": ["#EEF6F2", "#1F5240"],
+  "Documents pending": ["#FBE9E7", "#9A3B22"],
+  "Calibrated": ["#EEF6F2", "#1F5240"],
+  "Overdue": ["#FBE9E7", "#9A3B22"],
+};
+
+// A row about a person carries his job, because a name on its own does not say
+// what he does, and a link to his record.
+const person = (name, job, sub, badge) =>
+  Object.assign(row(name, sub, badge), { job, person: true, personLabel: "Open his record →" });
+
+const row = (name, sub, badge) => {
+  const b = BADGE[badge] || ["#F1EEE6", "#55655D"];
+  return { name, sub, badge, badgeBg: b[0], badgeColor: b[1], border: "#EFEBE1", bg: "#fff",
+    hasActions: false, declineLabel: "Decline" };
+};
+const stat = (label, value, color) => ({ label, value, color: color || INK });
+
+const DEPTS = [
+  // Retired: the department tabs below are superseded by each area's own screen —
+  // operations-day, cc-manager, warehouse, sales, supplier-list. Only Finance
+  // survives, because the financial manager has no other screen, and driver
+  // assignment and zone approvals moved onto it rather than being lost.
+  { key: "callCenter", label: "Call Center", title: "Call Centre · Financial Manager's View",
+    description: "What the call centre is carrying right now — who is waiting on a call, every open follow-up task and the collection orders placed.",
+    items: [
+      { key: "verificationQueue", label: "Verification Queue" },
+      { key: "followUpTasks", label: "Follow-up Tasks" },
+      { key: "collectionOrders", label: "Collection Orders" },
+    ] },
+  { key: "crm", label: "CRM", title: "CRM",
+    description: "The supplier book and how leads move through it. The lists here are the two slices the Outlets page doesn't already give a manager.",
+    items: [
+      { key: "allOutlets", label: "All Outlets", link: "outlet-page-v2.dc.html" },
+      { key: "activeSuppliers", label: "Active Suppliers" },
+      { key: "lapsedDeclined", label: "Lapsed / Declined" },
+      { key: "dealApprovals", label: "Deal Approvals", link: "approvals-and-settings.dc.html" },
+      { key: "priceApprovals", label: "Price Approvals", link: "approvals-and-settings.dc.html" },
+    ] },
+  { key: "operations", label: "Operations", title: "Operations",
+    description: "Teams, the day on the road and what came back. A team is an operations manager plus his vehicles, drivers and shops.",
+    items: [
+      { key: "teams", label: "Teams" },
+      { key: "todaysManifests", label: "Today's Manifests" },
+      { key: "driverAssignment", label: "Driver Assignment" },
+      { key: "reconciliation", label: "Reconciliation" },
+    ] },
+  { key: "survey", label: "Survey", title: "Survey",
+    description: "Everything still moving through the survey stage, who covers which zone, and the month's target.",
+    items: [
+      { key: "allSurveys", label: "All Surveys" },
+      { key: "zoneAssignments", label: "Zone Assignments" },
+      { key: "newPreLead", label: "New Pre-Survey" },
+      { key: "bySurveyor", label: "By Surveyor" },
+      { key: "surveyTargets", label: "Survey Targets" },
+    ] },
+  { key: "warehousing", label: "Warehousing", title: "Warehousing",
+    description: "The two things a manager owns in the warehouse: that the scales are calibrated, and that filtration loss stays inside tolerance.",
+    items: [
+      { key: "batches", label: "Batches", link: "warehouse.dc.html" },
+      { key: "scaleCalibration", label: "Scale Calibration" },
+      { key: "overToleranceReport", label: "Over-Tolerance Report" },
+    ] },
+  { key: "sales", label: "Sales", title: "Sales",
+    description: "Contracts, holdbacks and disputes each have their own page. Shipments have no list of their own, so they are shown here.",
+    items: [
+      { key: "contracts", label: "Contracts", link: "sales.dc.html" },
+      { key: "shipments", label: "Shipments" },
+      { key: "holdbacks", label: "Holdbacks", link: "sales.dc.html" },
+      { key: "disputes", label: "Disputes", link: "sales.dc.html" },
+    ] },
+  { key: "finance", label: "Finance", title: "Finance",
+    description: "The financial manager's own work. Everything here either spends money, commits an asset, or releases a payment — so it is his to decide, and what exceeds his own limit carries on to senior management.",
+    items: [
+      { key: "priceCeilings", label: "Price Ceilings" },
+      { key: "assetRequests", label: "Tanks and Vehicles" },
+      { key: "driverAssignment", label: "Driver Assignment" },
+      { key: "zoneAssignments", label: "Zone Assignments" },
+      { key: "wageLoans", label: "Loans Against Wages" },
+      { key: "finalPayments", label: "Final Payments" },
+      { key: "costPerKg", label: "Cost Per Kg" },
+    ] },
+];
+
+const TEAMS = [
+  { id: "t1", name: "Team 1", manager: "Sherif Adel", vehicles: 4, drivers: 6, shops: 128,
+    manifests: 3, kgToday: "1,240.0", kgMonth: "18,940.0", avg: "31.40 EGP", balances: "1,850.00 EGP" },
+  { id: "t2", name: "Team 2", manager: "Mostafa Labib", vehicles: 3, drivers: 5, shops: 96,
+    manifests: 2, kgToday: "860.0", kgMonth: "13,220.0", avg: "30.90 EGP", balances: "0.00 EGP" },
+  { id: "t3", name: "Team 3", manager: "Ahmed Zaki", vehicles: 3, drivers: 4, shops: 74,
+    manifests: 2, kgToday: "0.0", kgMonth: "9,610.0", avg: null, balances: "640.00 EGP" },
+];
+
+// Arabic for everything this screen owns: its chrome, its navigation, every
+// section heading, hint and note, and the whole Finance tab — the financial
+// manager's own work. Proper nouns (names, plates, ZE- refs) stay as they are.
+const AR = {
+  "Log out": "تسجيل الخروج",
+  "Sunday 21 September": "الأحد 21 سبتمبر",
+  "financial manager": "المدير المالي",
+  "Call Center": "مركز الاتصال",
+  "Call Centre · Financial Manager's View": "مركز الاتصال · عرض المدير المالي", CRM: "العملاء", Operations: "العمليات", Survey: "المساحة",
+  Warehousing: "المخازن", Sales: "المبيعات", Finance: "المالية", Teams: "الفرق",
+  "Verification Queue": "طابور التحقق", "Follow-up Tasks": "مهام المتابعة", "Collection Orders": "أوامر التحصيل",
+  "All Outlets ↗": "كل المحلات ↗", "Active Suppliers": "الموردون النشطون", "Lapsed / Declined": "متوقف / مرفوض",
+  "Deal Approvals ↗": "موافقات الاتفاقات ↗", "Price Approvals ↗": "موافقات الأسعار ↗",
+  "Today's Manifests": "بيانات اليوم", "Driver Assignment": "إسناد السائقين", Reconciliation: "التسوية",
+  "All Surveys": "كل المساحات", "Zone Assignments": "إسناد المناطق", "New Pre-Survey": "قبل المسح جديد",
+  "By Surveyor": "حسب المساح", "Survey Targets": "أهداف المساحة",
+  "Batches ↗": "الدفعات ↗", "Scale Calibration": "معايرة الميزان", "Over-Tolerance Report": "تقرير تجاوز الحد",
+  "Contracts ↗": "العقود ↗", Shipments: "الشحنات", "Holdbacks ↗": "المحتجز ↗", "Disputes ↗": "الخلافات ↗",
+  "Price Ceilings": "سقوف الأسعار", "Tanks and Vehicles": "الخزانات والسيارات",
+  "Loans Against Wages": "السلف على الأجور", "Final Payments": "الدفعات النهائية", "Cost Per Kg": "التكلفة للكجم",
+  Approve: "موافقة", Decline: "رفض", Waiting: "بانتظار", Senior: "الإدارة العليا", Ready: "جاهز",
+  Repaying: "يسدّد", Open: "مفتوح", "Send up": "إرسال للأعلى", "Assign 6.35": "تحديد 6.35",
+  "Raise the final invoice": "إصدار الفاتورة النهائية", "Add Vehicle": "إضافة سيارة", Cancel: "إلغاء",
+  "Add a vehicle": "إضافة سيارة", "Send to the financial manager": "إرسال إلى المدير المالي",
+  Plate: "رقم اللوحة", Team: "الفريق", "Main driver": "السائق الأساسي", Capacity: "السعة",
+  "e.g. CAI-4490": "مثال CAI-4490", "which team it belongs to": "لأي فريق تتبع",
+  "who normally drives it": "من يقودها عادةً", Kg: "كجم",
+  "The financial manager's own work. Everything here either spends money, commits an asset, or releases a payment — so it is his to decide, and what exceeds his own limit carries on to senior management.":
+    "عمل المدير المالي نفسه. كل ما هنا يصرف مالاً أو يرتبط بأصل أو يُفرج عن دفعة — فهو قراره، وما يتجاوز حدّه يصعد إلى الإدارة العليا.",
+  "A negotiator who logs above his ceiling stops there and the request comes here. Nothing can be logged on that negotiation until you answer.":
+    "المفاوض الذي يسجّل فوق سقفه يتوقف هناك ويأتي الطلب إلى هنا. ولا شيء يُسجَّل على ذلك التفاوض حتى تجيب.",
+  "You decide up to your own 6.50 limit. Anything above it you can only pass upward, and the negotiation record shows which rung it went to.":
+    "تقرر حتى حدّك 6.50. وما فوقه لا تملك إلا تمريره للأعلى، وسجل التفاوض يبيّن إلى أي درجة صُعِّد.",
+  "A vessel or a vehicle is an asset, so the registry is yours. An operations manager or a keeper can only request one.":
+    "الوعاء أو السيارة أصل من الأصول، فالسجل سجلّك. ومدير العمليات أو أمين المخزن لا يملك إلا الطلب.",
+  "Approving writes it into the registry. Until then it sits in the yard's list marked as waiting on you, and cannot be put on a day or filled.":
+    "الموافقة تكتبه في السجل. وحتى ذلك يبقى في قائمة الساحة معلَّماً بانتظارك، ولا يُوضع على يوم ولا يُملأ.",
+  "Senior management decides every loan, whatever the size. You see them because the money leaves your accounts and the balance is carried against wages.":
+    "الإدارة العليا تقرر كل سلفة، أي كان مقدارها. وتراها أنت لأن المال يخرج من حساباتك والرصيد يُحمَّل على الأجور.",
+  "A leaver's balance does not disappear — Omar Shaker's 800 stays until it is written off, which is a decision, not an oversight.":
+    "رصيد من ترك العمل لا يختفي — الـ800 الخاصة بعمر شاكر تبقى حتى تُشطب، والشطب قرار لا إغفال.",
+  "The last 2.5 to 10 per cent of a shipment, held until the buyer's lab clears. Raising the final invoice is what claims it.":
+    "آخر 2.5 إلى 10 بالمئة من الشحنة، محتجزة حتى يُصفّي مختبر المشتري. وإصدار الفاتورة النهائية هو ما يطالب بها.",
+  "Only the first can be claimed today. The other two are waiting on a laboratory, not on anybody here.":
+    "الأولى وحدها يمكن المطالبة بها اليوم. والأخريان بانتظار مختبر لا بانتظار أحد هنا.",
+  "EGP a Kg paid to the shops, this month": "ج.م للكجم مدفوعة للمحلات هذا الشهر",
+  Ceiling: "السقف", "Highest paid": "أعلى مدفوع", "Lowest paid": "أقل مدفوع", "Paid out": "المصروف",
+  "This is what collection costs before processing, transport and freight. The full cost of a tonne sold sits on the shipment in Sales, and overhead is not in either figure until Finance itself is built.":
+    "هذه تكلفة التحصيل قبل المعالجة والنقل والشحن. أما التكلفة الكاملة للطن المبيع فهي على الشحنة في المبيعات، والمصروفات العامة ليست في أي من الرقمين حتى تُبنى المالية نفسها.",
+  "Open Sales →": "افتح المبيعات ←", "View All Outlets →": "اعرض كل المحلات ←",
+  "Open in Outlets →": "افتح في المحلات ←", "Open the Full Manifest Board →": "افتح لوحة البيانات ←",
+  "A vehicle is an asset, so this goes to the financial manager to approve — the same as adding a tank. It cannot be put on a day until he does.":
+    "السيارة أصل من الأصول، فهذا يذهب للمدير المالي ليوافق — كإضافة خزان. ولا تُوضع على يوم حتى يوافق.",
+
+  // Department descriptions and section hints — the two most prominent lines on
+  // every page, so they cannot be left in English inside an RTL container.
+  "What the call centre is carrying right now — who is waiting on a call, every open follow-up task and the collection orders placed.":
+    "ما يحمله مركز الاتصال الآن — من ينتظر مكالمة، وكل مهمة متابعة مفتوحة، وأوامر التحصيل الصادرة.",
+  "The supplier book and how leads move through it. The lists here are the two slices the Outlets page doesn't already give a manager.":
+    "دفتر الموردين وكيف يتحرك العملاء المحتملون فيه. والقائمتان هنا هما ما لا تعطيه صفحة المحلات للمدير أصلاً.",
+  "Teams, the day on the road and what came back. A team is an operations manager plus his vehicles, drivers and shops.":
+    "الفرق، ويوم الطريق، وما عاد منه. والفريق هو مدير عمليات مع سياراته وسائقيه ومحلاته.",
+  "Everything still moving through the survey stage, who covers which zone, and the month's target.":
+    "كل ما يتحرك في مرحلة المساحة، ومن يغطي أي منطقة، وهدف الشهر.",
+  "The two things a manager owns in the warehouse: that the scales are calibrated, and that filtration loss stays inside tolerance.":
+    "الأمران اللذان يملكهما المدير في المخزن: أن تكون الموازين معايَرة، وأن يبقى فاقد الترشيح داخل الحد.",
+  "Contracts, holdbacks and disputes each have their own page. Shipments have no list of their own, so they are shown here.":
+    "العقود والمحتجز والخلافات لكل منها صفحته. أما الشحنات فلا قائمة لها، فتُعرض هنا.",
+  "Outlets waiting on a verification call.": "محلات بانتظار مكالمة تحقق.",
+  "Every open follow-up task, across every outlet and owner.":
+    "كل مهمة متابعة مفتوحة، في كل محل ولكل مسؤول.",
+  "Recent collection orders placed.": "أوامر التحصيل الصادرة حديثاً.",
+  "A team is an operations manager plus his vehicles, drivers and shops — not an area. Shops are assigned to a team one at a time, so one team can hold shops all over the city. Open a team to see what it holds.":
+    "الفريق هو مدير عمليات مع سياراته وسائقيه ومحلاته — لا منطقة. والمحلات تُسند للفريق واحداً واحداً، فقد يحمل فريق واحد محلات في أنحاء المدينة. افتح فريقاً لترى ما يحمله.",
+  "Vehicles and who drives them. Shared with Settings, since a manager has no Settings access of their own.":
+    "السيارات ومن يقودها. مشتركة مع الإعدادات، إذ لا يملك المدير صلاحية إعدادات خاصة به.",
+  "Every pre-survey or survey-stage outlet still waiting on a survey or a verification call.":
+    "كل محل مبدئي أو في مرحلة المساحة ما زال بانتظار مساحة أو مكالمة تحقق.",
+  "Each surveyor's home zone. Only one surveyor covers a zone at a time.":
+    "المنطقة الأصلية لكل مساح. ولا يغطي المنطقة إلا مساح واحد في الوقت ذاته.",
+  "Hand a shop you already know about to a surveyor to go and survey.":
+    "أعطِ محلاً تعرفه لمساح ليذهب ويمسحه.",
+  "Read-only here — a manager doesn't have Settings access to edit this.":
+    "للقراءة فقط هنا — لا يملك المدير صلاحية الإعدادات لتغييره.",
+  "A shipment has no page of its own — it is reached through its contract.":
+    "الشحنة لا صفحة لها — وتُفتح من خلال عقدها.",
+  "Monthly Target (Outlets)": "الهدف الشهري (محلات)",
+  "Surveyed So Far This Month": "المُمسوح حتى الآن هذا الشهر", "Working Days Left": "أيام العمل المتبقية",
+  "Manifests Today": "بيانات اليوم", "Reconciled Today": "المسوَّى اليوم",
+  Vehicles: "سيارات", Drivers: "سائقون", Shops: "محلات",
+  "Team 1": "الفريق 1", "Team 2": "الفريق 2", "Team 3": "الفريق 3",
+  "Kg Today": "الكجم اليوم", "Kg This Month": "الكجم هذا الشهر", "Avg Price / Kg": "متوسط السعر للكجم",
+  "no collections yet": "لا تحصيل بعد", "Open Balances": "أرصدة مفتوحة",
+  "Operations Manager": "مدير العمليات", Country: "البلد",
+  "Priced Right": "بسعر سليم", "Expensive but Taken": "غالٍ لكن مقبول", "Over-Priced": "مبالغ فيه",
+  Unresolved: "غير محسوم", Chains: "السلاسل", "Outlets Under a Chain": "محلات تحت سلسلة",
+  "Standalone Outlets": "محلات مستقلة", "Avg Time to Conversion": "متوسط زمن التحويل",
+  "Avg Time to Lapse": "متوسط زمن التوقف", "not available": "غير متاح",
+  "In verification": "قيد التحقق", Submitted: "مُقدَّم", "Submitted – deal agreed on site": "مُقدَّم — اتُّفق في الموقع",
+  "On a manifest": "على بيان", Draft: "مسودة", Assigned: "مُسند", "In Progress": "جارٍ", Closed: "مُغلق",
+  Declined: "مرفوض", "Pre-survey: Failed": "مبدئي: فشل",
+
+  // Finance rows, badges and outcomes. Names, plates and ZE- refs stay Latin.
+  "H. Fawzy → 6.35 for El Prince Imbaba": "ه. فوزي ← 6.35 لمحل الأمير إمبابة",
+  "His ceiling is 6.20 · asked 3 days ago · the shop gave 1,840 Kg last month":
+    "سقفه 6.20 · طلب منذ 3 أيام · المحل أعطى 1,840 كجم الشهر الماضي",
+  "Assigned 6.35 for this negotiation only — inside your own 6.50 limit":
+    "حُدِّد 6.35 لهذا التفاوض وحده — داخل حدّك 6.50",
+  "Refused — he keeps 6.20 and the negotiation carries on there":
+    "رُفض — يبقى على 6.20 ويستمر التفاوض هناك",
+  "N. Sobhy → 6.60 for Tabali Haram": "ن. صبحي ← 6.60 لتبالي الهرم",
+  "Above your own 6.50 limit · asked yesterday": "فوق حدّك 6.50 · طُلب أمس",
+  "Sent to senior management — above your own limit, so it is not yours to assign":
+    "أُرسل إلى الإدارة العليا — فوق حدّك، فليس لك أن تحدده",
+  "Refused here — no need to trouble senior management with it":
+    "رُفض هنا — لا داعي لإشغال الإدارة العليا به",
+  "2 IBCs — 6th October": "وعاءا IBC — أكتوبر",
+  "M. Selim, operations manager · 3 days ago · two big shops fill a vessel every other day":
+    "م. سليم، مدير العمليات · منذ 3 أيام · محلان كبيران يمليان وعاءً كل يومين",
+  "Approved — both added to the registry at 6th October": "تمت الموافقة — أُضيفا إلى سجل أكتوبر",
+  "Refused — IBC-16 is empty and can carry that shop for now":
+    "رُفض — IBC-16 فارغ ويكفي ذلك المحل حالياً",
+  "One 120 t main tank — Alexandria Yard": "خزان رئيسي 120 طن — ساحة الإسكندرية",
+  "S. Mansour, warehouse keeper · 9 days ago · T7 and T8 full before the shipment is due":
+    "س. منصور، أمين المخزن · منذ 9 أيام · T7 و T8 ممتلئان قبل موعد الشحنة",
+  "Approved — added to the registry, empty until the yard fills it":
+    "تمت الموافقة — أُضيف إلى السجل، فارغاً حتى تملأه الساحة",
+  "Refused — move the oil to 6th October instead": "رُفض — انقل الزيت إلى أكتوبر بدلاً من ذلك",
+  "CAI-4490 — Team 1": "CAI-4490 — الفريق 1",
+  "Asked today from Driver Assignment · cannot be put on a day until you approve it":
+    "طُلبت اليوم من إسناد السائقين · لا تُوضع على يوم حتى توافق",
+  "Approved — it can be put on a day from tomorrow": "تمت الموافقة — يمكن وضعها على يوم من الغد",
+  "Refused — Team 1 already has two trucks under capacity":
+    "رُفض — الفريق 1 لديه سيارتان دون سعتهما أصلاً",
+  "Karim Hosny — 1,000 EGP": "كريم حسني — 1,000 ج.م",
+  "Labour, Team 2 · asked yesterday · waiting on senior management":
+    "عمالة، الفريق 2 · طلب أمس · بانتظار الإدارة العليا",
+  "Sayed Kamal — 2,000 EGP": "سيد كمال — 2,000 ج.م",
+  "Driver, Team 1 · approved 14 Aug · 1,200 still owed at 400 a month":
+    "سائق، الفريق 1 · مُعتمدة 14 أغسطس · باقٍ 1,200 بخصم 400 شهرياً",
+  "Omar Shaker — 800 EGP": "عمر شاكر — 800 ج.م",
+  "Left Jun 2026 · never settled · still on the books":
+    "ترك العمل يونيو 2026 · لم تُسدَّد · ما زالت في الدفاتر",
+  "ZE-2026-0040 — Neste, Rotterdam": "ZE-2026-0040 — نيستي، روتردام",
+  "$15k held · their lab cleared 15 Sep · the final invoice is not raised yet":
+    "محتجز 15 ألف دولار · صفّى مختبرهم 15 سبتمبر · والفاتورة النهائية لم تُصدر بعد",
+  "EG-2026-E0114 raised for $15k — it appears on Sales under Invoices":
+    "صدرت EG-2026-E0114 بـ15 ألف دولار — وتظهر في المبيعات تحت الفواتير",
+  "Left for now — the $15k stays held": "تُرك الآن — تبقى الـ15 ألف دولار محتجزة",
+  "ZE-2026-0041 — Greenergy, UK": "ZE-2026-0041 — جرينرجي، بريطانيا",
+  "$12k held · their lab result 11 days overdue":
+    "محتجز 12 ألف دولار · نتيجة مختبرهم متأخرة 11 يوماً",
+  "ZE-2026-0042 — Olleco, UK": "ZE-2026-0042 — أوليكو، بريطانيا",
+  "$9k held · samples with their lab since 14 Sep":
+    "محتجز 9 آلاف دولار · العينات في مختبرهم منذ 14 سبتمبر",
+};
+
+class Component extends DCLogic {
+  componentDidMount() {
+    try {
+      const s = localStorage.getItem("zeitco-lang");
+      if (s === "ar" || s === "en") this.setState({ lang: s });
+    } catch (e) {}
+    this.watch = (e) => { if (e.key === "zeitco-lang" && e.newValue) this.setState({ lang: e.newValue }); };
+    window.addEventListener("storage", this.watch);
+  }
+  componentWillUnmount() { window.removeEventListener("storage", this.watch); }
+
+  get lang() { return this.state.lang || this.props.language || "en"; }
+  setLang(l) { try { localStorage.setItem("zeitco-lang", l); } catch (e) {} this.setState({ lang: l }); }
+
+  // One walk over the built view swaps every known string. Anything not in the
+  // dictionary — a name, a plate, a ZE- reference — is left exactly as it is.
+  arabize(v) {
+    if (this.lang !== "ar") return v;
+    if (typeof v === "string") return AR[v] || v;
+    if (Array.isArray(v)) return v.map((x) => this.arabize(x));
+    if (v && typeof v === "object" && typeof v !== "function") {
+      const out = {};
+      for (const k in v) out[k] = typeof v[k] === "function" ? v[k] : this.arabize(v[k]);
+      return out;
+    }
+    return v;
+  }
+
+  decided(key) { return (this.state.decisions || {})[key] || ""; }
+  decide(key, outcome) {
+    this.setState({ decisions: { ...(this.state.decisions || {}), [key]: outcome } });
+  }
+
+  state = { dept: null, sec: {}, team: null, period: "overall", history: true, addingVehicle: false, decisions: {} };
+
+  get dept() { return "finance"; }
+
+  get todayLine() { return "Sunday 21 September"; }
+  get def() { return DEPTS.find((d) => d.key === this.dept) || DEPTS[0]; }
+  get sec() {
+    const d = this.def;
+    const chosen = this.state.sec[d.key];
+    const first = (d.items.find((i) => !i.link) || {}).key;
+    return chosen || first;
+  }
+  hint(text) { return (this.props.showHints ?? true) ? text : null; }
+  pickDept(key) { this.setState({ dept: key, team: null }); }
+  pickSec(key) { this.setState((s) => ({ sec: { ...s.sec, [this.def.key]: key }, team: null })); }
+
+  blocks() {
+    if (this.state.team) return this.teamBlocks();
+    const k = this.dept + ":" + this.sec;
+    const h = (t) => this.hint(t);
+    switch (k) {
+      case "callCenter:verificationQueue":
+        return [{ title: "Verification Queue", hint: h("Outlets waiting on a verification call."), isRows: true,
+          rows: [
+            row("Nada Grill House", "ZC-0421 · Nasr City · waiting 2 days", "In verification"),
+            row("Koshary El Tahrir — Dokki", "ZC-0418 · Dokki · waiting 1 day", "Submitted"),
+            row("Abou Tarek Branch 3", "ZC-0409 · Downtown · waiting 3 days", "Submitted – deal agreed on site"),
+            row("Sea Gate Fish", "ZC-0402 · Maadi · waiting 4 days", "In verification"),
+            row("Cilantro Mohandessin", "ZC-0396 · Mohandessin · waiting 1 day", "Submitted"),
+            row("Zooba Zamalek", "ZC-0388 · Zamalek · waiting 5 days", "Submitted"),
+          ],
+          linkLabel: "View All Outlets →", linkHref: "outlet-page-v2.dc.html" }];
+      case "callCenter:followUpTasks":
+        return [{ title: "Follow-up Tasks", hint: h("Every open follow-up task, across every outlet and owner."),
+          isChips: true, openCount: 23,
+          chips: [
+            { label: "Number Unreachable", count: 7 }, { label: "Decision Maker Changed", count: 4 },
+            { label: "Price Question", count: 6 }, { label: "Document Missing", count: 6 },
+          ],
+          isRows: true,
+          rows: [
+            row("Nada Grill House", "number unreachable · Due 14 Sep · Owner: H. Fawzy"),
+            row("El Prince Imbaba", "price question · Due 14 Sep · Owner: M. Saleh"),
+            row("Kazaz Fried Chicken", "document missing · Due 15 Sep · Owner: H. Fawzy"),
+            row("Tabali Haram", "decision maker changed · Due 16 Sep · Owner: R. Gamal"),
+            row("Bab El Hara Grill", "number unreachable · Due 16 Sep · Owner: M. Saleh"),
+          ],
+          note: "Sorted by soonest due. A task carries its own owner — reassigning it is done on the outlet record." }];
+      case "callCenter:collectionOrders":
+        return [{ title: "Collection Orders", hint: h("Recent collection orders placed."), isRows: true,
+          rows: [
+            row("El Prince Imbaba", "15 Sep · 240 Kg expected", "On a manifest"),
+            row("Nada Grill House", "15 Sep · 180 Kg expected", "Scheduled"),
+            row("Abou Tarek Branch 3", "16 Sep · 320 Kg expected", "Scheduled"),
+            row("Sea Gate Fish", "16 Sep · 150 Kg expected", "Awaiting date"),
+            row("Zooba Zamalek", "17 Sep · 90 Kg expected", "Awaiting date"),
+          ] }];
+
+      case "crm:activeSuppliers":
+      case "crm:lapsedDeclined": {
+        const analytics = this.crmAnalytics();
+        const active = this.sec === "activeSuppliers";
+        return analytics.concat([{
+          title: active ? "Active Suppliers" : "Lapsed / Declined", isRows: true,
+          rows: active ? [
+            row("El Prince Imbaba", "ZC-0104 · 1,840 Kg this month", "Active Supplier"),
+            row("Abou Tarek Branch 3", "ZC-0409 · 960 Kg this month", "Active Supplier"),
+            row("Kazaz Fried Chicken", "ZC-0221 · 720 Kg this month", "Active Supplier"),
+            row("Tabali Haram", "ZC-0187 · 640 Kg this month", "Active Supplier"),
+            row("Bab El Hara Grill", "ZC-0298 · 410 Kg this month", "Active Supplier"),
+          ] : [
+            row("Gad Mohandessin", "ZC-0061 · no collection for 94 days", "Lapsed Supplier"),
+            row("Hadramout Nasr City", "ZC-0142 · no collection for 71 days", "Lapsed Supplier"),
+            row("Farahat Grill", "ZC-0233 · refused at survey", "Declined"),
+            row("Shabrawy Heliopolis", "ZC-0310 · sells to a competitor", "Declined"),
+          ],
+          linkLabel: "Open in Outlets →", linkHref: "outlet-page-v2.dc.html" }]);
+      }
+
+      case "operations:teams":
+        return [{ title: "Teams", hint: h("A team is an operations manager plus his vehicles, drivers and shops — not an area. Shops are assigned to a team one at a time, so one team can hold shops all over the city. Open a team to see what it holds."),
+          isTeams: true,
+          teams: TEAMS.map((t) => ({
+            name: t.name, manager: t.manager, footnote: "EG",
+            open: () => this.setState({ team: t.id }),
+            stats: [
+              stat("Vehicles", t.vehicles), stat("Drivers", t.drivers), stat("Shops", t.shops),
+              stat("Manifests Today", t.manifests), stat("Kg Today", t.kgToday), stat("Kg This Month", t.kgMonth),
+              stat("Avg Price / Kg", t.avg || "no collections yet", t.avg ? INK : "#8A9188"),
+              stat("Open Balances", t.balances, t.balances === "0.00 EGP" ? INK : NEG),
+            ],
+          })) }];
+      case "operations:todaysManifests":
+        return [{ title: "Today's Manifests", isFigure: true, figure: "14", figureLabel: "Manifests Today",
+          breakdown: [
+            { label: "Draft", value: "2", color: INK }, { label: "Assigned", value: "5", color: INK },
+            { label: "In Progress", value: "4", color: INK }, { label: "Closed", value: "3", color: INK },
+          ],
+          note: "Building and editing the day happens on the manifest board — this is the count only.",
+          linkLabel: "Open the Full Manifest Board →", linkHref: "operations-day.dc.html" }];
+      case "finance:driverAssignment":
+        return [{ title: "Driver Assignment", hint: h("Vehicles and who drives them. This sits with you because a vehicle is an asset — an operations manager asks, and you decide."),
+          isRows: true, hasAction: true,
+          actionLabel: this.state.addingVehicle ? "Cancel" : "Add Vehicle",
+          action: () => this.setState({ addingVehicle: !this.state.addingVehicle }),
+          form: this.state.addingVehicle ? {
+            title: "Add a vehicle",
+            note: "A vehicle is an asset, so this goes to the financial manager to approve — the same as adding a tank. It cannot be put on a day until he does.",
+            fields: [
+              { label: "Plate", hint: "e.g. CAI-4490" },
+              { label: "Team", hint: "which team it belongs to" },
+              { label: "Main driver", hint: "who normally drives it" },
+              { label: "Capacity", hint: "Kg" },
+            ],
+            save: "Send to the financial manager",
+            send: () => this.setState({
+              addingVehicle: false,
+              vehicleRequests: (this.state.vehicleRequests || []).concat([{
+                plate: "CAI-4490", asked: "asked today",
+              }]),
+            }),
+          } : null,
+          rows: (this.state.vehicleRequests || []).map((v) =>
+            Object.assign(row(v.plate + " — waiting on the financial manager",
+              "Requested " + v.asked + " · cannot be put on a day until he approves it"),
+              { pending: true, border: "#E8C9A0", bg: "#FDF6EA",
+                badge: "Waiting", badgeBg: "#FBF0DF", badgeColor: "#8A5B0B" })
+          ).concat([
+            row("CAI-4471", "Team 1 · MAIN Tarek Hosny · SUB Ayman Fouad"),
+            row("CAI-4482", "Team 1 · MAIN Mahmoud Eid · SUB —"),
+            row("GIZ-1130", "Team 2 · MAIN Kareem Nabil · SUB Sayed Abdo"),
+            row("GIZ-1148", "Team 2 · MAIN Hossam Ragab · SUB —"),
+            row("CAI-2207", "Team 3 · MAIN Yasser Lotfy · SUB Emad Shaker"),
+          ]),
+          note: "Changing who drives a vehicle ends the current assignment and opens a new one — both stay in the vehicle's history." }];
+      case "operations:reconciliation":
+        return [
+          { title: "Reconciliation", isFigure: true, figure: "9", figureLabel: "Reconciled Today",
+            breakdown: [{ label: "Flagged for Investigation Today", value: "2", color: NEG }],
+            note: "A shortfall is recovered from the driver; a surplus is flagged rather than paid out." },
+          { title: "Outstanding Driver Balances", isRows: true,
+            rows: [
+              row("Tarek Hosny", "1,210.00 EGP carried forward · since 09 Sep"),
+              row("Yasser Lotfy", "640.00 EGP carried forward · since 11 Sep"),
+            ],
+            linkLabel: "Open the Full Manifest Board →", linkHref: "operations-day.dc.html" },
+        ];
+
+      case "survey:allSurveys":
+        return [{ title: "All Surveys", hint: h("Every pre-survey or survey-stage outlet still waiting on a survey or a verification call."),
+          isRows: true,
+          rows: [
+            row("Zooba Zamalek", "ZC-0388 · surveyor: A. Mansour", "Submitted"),
+            row("Sea Gate Fish", "ZC-0402 · surveyor: N. Sobhy", "In verification"),
+            row("Hadramout Faisal", "ZC-0431 · surveyor: A. Mansour", "Rework"),
+            row("Koshary Abou Emad", "ZC-0436 · zone: Haram", "Pre-survey: Open"),
+            row("Grill House Sheikh Zayed", "ZC-0440 · zone: Zayed", "Pre-survey: Open"),
+            row("Beit El Kebab", "ZC-0428 · shop shut at both visits", "Pre-survey: Failed"),
+          ],
+          linkLabel: "View All Outlets →", linkHref: "outlet-page-v2.dc.html" }];
+      case "finance:zoneAssignments":
+        return [
+          { title: "Zone Assignments", hint: h("Each surveyor's home zone. Only one surveyor covers a zone at a time."),
+            isRows: true,
+            rows: [
+              person("A. Mansour", "Surveyor · Survey", "Nasr City · since 12 Mar"),
+              person("N. Sobhy", "Surveyor · Survey", "Maadi · since 02 Jan"),
+              person("R. Fathy", "Surveyor · Survey", "Haram · since 28 Jun"),
+              person("S. Kamel", "Senior surveyor · Survey", "Zamalek + Downtown · since 14 Feb"),
+            ] },
+          { title: "Reassignment Requests", isRows: true,
+            rows: [
+              Object.assign(person("R. Fathy → Sheikh Zayed", "Surveyor · Survey · covers Haram today", this.decided("z1")
+                || "Asked 11 Sep · moving house · Haram would need cover"),
+                { hasActions: !this.decided("z1"), approveLabel: "Approve",
+                  approve: () => this.decide("z1", "Approved — moves on the next working day, Haram needs cover"),
+                  decline: () => this.decide("z1", "Declined — Haram would be left without a surveyor") }),
+              Object.assign(person("N. Sobhy → Maadi + Basatin", "Surveyor · Survey · covers Maadi today", this.decided("z2")
+                || "Asked 12 Sep · wants the neighbouring zone too"),
+                { hasActions: !this.decided("z2"), approveLabel: "Approve",
+                  approve: () => this.decide("z2", "Approved — he keeps Maadi and takes Basatin from Monday"),
+                  decline: () => this.decide("z2", "Declined — two zones is too much for one surveyor") }),
+            ],
+            note: "Approving moves the surveyor on the next working day; work already assigned stays with them." },
+        ];
+      case "survey:newPreLead":
+        return [{ title: "New Pre-Survey", hint: h("Hand a shop you already know about to a surveyor to go and survey."),
+          isForm: true,
+          fields: [
+            { label: "Shop Name (English)", placeholder: "Koshary Abou Emad" },
+            { label: "Shop Name (Arabic)", placeholder: "كشري أبو عماد" },
+            { label: "Phone", placeholder: "010…" },
+            { label: "Area / Zone", placeholder: "Haram" },
+            { label: "Address", placeholder: "Street, landmark" },
+            { label: "Assign to Surveyor", placeholder: "R. Fathy" },
+          ],
+          note: "A pre-survey is not a survey — the surveyor still has to stand at the door before anything can be typed." }];
+      case "survey:bySurveyor":
+        return [{ title: "By Surveyor", isNA: true, naLabel: "Per-surveyor performance breakdown — not yet built." }];
+      case "survey:surveyTargets":
+        return [{ title: "Survey Targets", hint: h("Read-only here — a manager doesn't have Settings access to edit this."),
+          isFigure: true, figure: "120", figureLabel: "Monthly Target (Outlets)",
+          breakdown: [{ label: "Surveyed So Far This Month", value: "74", color: INK }, { label: "Working Days Left", value: "11", color: INK }] }];
+
+      case "warehousing:scaleCalibration":
+        return [{ title: "Scale Calibration", isRows: true,
+          rows: [
+            row("SCALE-WH1-A", "Last calibrated 08 Sep 2026", "Calibrated"),
+            row("SCALE-WH1-B", "Last calibrated 02 Aug 2026", "Overdue"),
+            row("SCALE-WH2", "Never calibrated", "Overdue"),
+          ],
+          note: "Accepting a reading from an overdue scale needs an operations manager or above, and is recorded against them." }];
+      case "warehousing:overToleranceReport":
+        return [{ title: "Over-Tolerance Report", isFigure: true, figure: "4", figureLabel: "Over Tolerance This Month",
+          breakdown: [{ label: "Tolerance in Settings", value: "5.0%", color: INK }],
+          isRows: true,
+          rows: [
+            Object.assign(row("6.2% filtration loss", "Batch B-2291 · EG · filtered 11 Sep"), { border: "#E8B4AE", bg: "#FDF1EF" }),
+            Object.assign(row("5.8% filtration loss", "Batch B-2284 · EG · filtered 07 Sep"), { border: "#E8B4AE", bg: "#FDF1EF" }),
+            Object.assign(row("7.1% filtration loss", "Batch B-2276 · EG · filtered 02 Sep"), { border: "#E8B4AE", bg: "#FDF1EF" }),
+          ],
+          note: "Over tolerance flags a batch for investigation — it does not block it from carrying on through quality." }];
+
+      case "finance:priceCeilings":
+        return [{ title: "Price Ceilings", hint: h("A negotiator who logs above his ceiling stops there and the request comes here. Nothing can be logged on that negotiation until you answer."),
+          isRows: true,
+          rows: [
+            Object.assign(row("H. Fawzy → 6.35 for El Prince Imbaba", this.decided("c1")
+              || "His ceiling is 6.20 · asked 3 days ago · the shop gave 1,840 Kg last month", "Waiting"),
+              { hasActions: !this.decided("c1"), approveLabel: "Assign 6.35",
+                badgeBg: "#FBF0DF", badgeColor: "#8A5B0B", border: "#E8C9A0", bg: "#FDF6EA",
+                approve: () => this.decide("c1", "Assigned 6.35 for this negotiation only — inside your own 6.50 limit"),
+                decline: () => this.decide("c1", "Refused — he keeps 6.20 and the negotiation carries on there") }),
+            Object.assign(row("N. Sobhy → 6.60 for Tabali Haram", this.decided("c2")
+              || "Above your own 6.50 limit · asked yesterday", "Senior"),
+              { hasActions: !this.decided("c2"), approveLabel: "Send up",
+                badgeBg: "#FBE9E7", badgeColor: "#9A3B22", border: "#E8B4AE", bg: "#FDF4F2",
+                approve: () => this.decide("c2", "Sent to senior management — above your own limit, so it is not yours to assign"),
+                decline: () => this.decide("c2", "Refused here — no need to trouble senior management with it") }),
+          ],
+          note: "You decide up to your own 6.50 limit. Anything above it you can only pass upward, and the negotiation record shows which rung it went to." }];
+
+      case "finance:assetRequests":
+        return [{ title: "Tanks and Vehicles", hint: h("A vessel or a vehicle is an asset, so the registry is yours. An operations manager or a keeper can only request one."),
+          isRows: true,
+          rows: [
+            Object.assign(row("2 IBCs — 6th October", this.decided("a1")
+              || "M. Selim, operations manager · 3 days ago · two big shops fill a vessel every other day", "Waiting"),
+              { hasActions: !this.decided("a1"), approveLabel: "Approve",
+                badgeBg: "#FBF0DF", badgeColor: "#8A5B0B",
+                approve: () => this.decide("a1", "Approved — both added to the registry at 6th October"),
+                decline: () => this.decide("a1", "Refused — IBC-16 is empty and can carry that shop for now") }),
+            Object.assign(row("One 120 t main tank — Alexandria Yard", this.decided("a2")
+              || "S. Mansour, warehouse keeper · 9 days ago · T7 and T8 full before the shipment is due", "Waiting"),
+              { hasActions: !this.decided("a2"), approveLabel: "Approve",
+                badgeBg: "#FBF0DF", badgeColor: "#8A5B0B",
+                approve: () => this.decide("a2", "Approved — added to the registry, empty until the yard fills it"),
+                decline: () => this.decide("a2", "Refused — move the oil to 6th October instead") }),
+            Object.assign(row("CAI-4490 — Team 1", this.decided("a3")
+              || "Asked today from Driver Assignment · cannot be put on a day until you approve it", "Waiting"),
+              { hasActions: !this.decided("a3"), approveLabel: "Approve",
+                badgeBg: "#FBF0DF", badgeColor: "#8A5B0B",
+                approve: () => this.decide("a3", "Approved — it can be put on a day from tomorrow"),
+                decline: () => this.decide("a3", "Refused — Team 1 already has two trucks under capacity") }),
+          ],
+          note: "Approving writes it into the registry. Until then it sits in the yard's list marked as waiting on you, and cannot be put on a day or filled." }];
+
+      case "finance:wageLoans":
+        return [{ title: "Loans Against Wages", hint: h("Senior management decides every loan, whatever the size. You see them because the money leaves your accounts and the balance is carried against wages."),
+          isRows: true,
+          rows: [
+            row("Karim Hosny — 1,000 EGP", "Labour, Team 2 · asked yesterday · waiting on senior management", "Waiting"),
+            row("Sayed Kamal — 2,000 EGP", "Driver, Team 1 · approved 14 Aug · 1,200 still owed at 400 a month", "Repaying"),
+            row("Omar Shaker — 800 EGP", "Left Jun 2026 · never settled · still on the books", "Open"),
+          ],
+          note: "A leaver's balance does not disappear — Omar Shaker's 800 stays until it is written off, which is a decision, not an oversight." }];
+
+      case "finance:finalPayments":
+        return [{ title: "Final Payments", hint: h("The last 2.5 to 10 per cent of a shipment, held until the buyer's lab clears. Raising the final invoice is what claims it."),
+          isRows: true,
+          rows: [
+            Object.assign(row("ZE-2026-0040 — Neste, Rotterdam", this.decided("f1")
+              || "$15k held · their lab cleared 15 Sep · the final invoice is not raised yet", "Ready"),
+              { hasActions: !this.decided("f1"), approveLabel: "Raise the final invoice",
+                badgeBg: "#EAF2EC", badgeColor: GREEN,
+                approve: () => this.decide("f1", "EG-2026-E0114 raised for $15k — it appears on Sales under Invoices"),
+                decline: () => this.decide("f1", "Left for now — the $15k stays held") }),
+            row("ZE-2026-0041 — Greenergy, UK", "$12k held · their lab result 11 days overdue", "Waiting"),
+            row("ZE-2026-0042 — Olleco, UK", "$9k held · samples with their lab since 14 Sep", "Waiting"),
+          ],
+          note: "Only the first can be claimed today. The other two are waiting on a laboratory, not on anybody here.",
+          linkLabel: "Open Sales →", linkHref: "sales.dc.html" }];
+
+      case "finance:costPerKg":
+        return [{ title: "Cost Per Kg", isFigure: true, figure: "6.08", figureLabel: "EGP a Kg paid to the shops, this month",
+          breakdown: [
+            { label: "Ceiling", value: "6.20", color: INK },
+            { label: "Highest paid", value: "6.40", color: NEG },
+            { label: "Lowest paid", value: "5.60", color: INK },
+            { label: "Paid out", value: "129,747", color: INK },
+          ],
+          note: "This is what collection costs before processing, transport and freight. The full cost of a tonne sold sits on the shipment in Sales, and overhead is not in either figure until Finance itself is built." }];
+
+      case "sales:shipments":
+        return [{ title: "Shipments", hint: h("A shipment has no page of its own — it is reached through its contract."),
+          isRows: true,
+          rows: [
+            row("Verbio Rotterdam", "SHP-0142 · 24,000 Kg · 11 Sep", "In transit"),
+            row("Argent Energy UK", "SHP-0139 · 22,000 Kg · 08 Sep", "Documents pending"),
+            row("Eco Oils Hellas", "SHP-0137 · 18,500 Kg · 04 Sep", "Delivered"),
+            row("Verbio Rotterdam", "SHP-0145 · 24,000 Kg · loading now", "Loading"),
+          ],
+          linkLabel: "Open Contracts →" }];
+
+      case "finance:undefined":
+      default:
+        if (this.dept === "finance")
+          return [{ title: "Finance", isNA: true, naLabel: "MOD-700 not built yet — needs an accountant's input on transfer pricing and FX treatment first." }];
+        return [];
+    }
+  }
+
+  crmAnalytics() {
+    const total = 608;
+    const segs = [
+      { key: "inProgress", label: "In Progress", count: 128, bg: "#2B5C8A" },
+      { key: "bad", label: "Bad Lead", count: 41, bg: "#B3261E" },
+      { key: "good", label: "Good Lead", count: 96, bg: "#1F5240" },
+      { key: "negotiating", label: "Negotiating", count: 57, bg: "#C68A0F" },
+      { key: "converted", label: "Converted", count: 212, bg: "#3E8A63" },
+      { key: "lost", label: "Lost", count: 74, bg: "#9AA69F" },
+    ].map((s) => Object.assign({}, s, { pct: ((s.count / total) * 100).toFixed(1) + "%" }));
+    return [
+      { title: "Lead Funnel", isPeriod: true, isFunnel: true, funnelTotal: total,
+        funnelNote: this.state.period === "overall" ? "leads ever created" : "leads created in this period", segs },
+      { title: "Pricing Quality", isStats: true,
+        stats: [stat("Priced Right", 164), stat("Expensive but Taken", 38), stat("Over-Priced", 10), stat("Unresolved", 6)],
+        note: "Measured against the manifest rate on the day the deal closed." },
+      { title: "Chains", isStats: true,
+        stats: [stat("Chains", 14), stat("Outlets Under a Chain", 63), stat("Standalone Outlets", 545)] },
+      { title: "Productivity Today", isTiles: true,
+        tiles: [
+          { value: 12, label: "New Leads" }, { value: 19, label: "Verifications Completed" },
+          { value: 7, label: "Moved to Negotiating" }, { value: 4, label: "Deals Closed" },
+        ] },
+      { title: "Timing", isStats: true,
+        stats: [stat("Avg Time to Conversion", "9.4 days"), stat("Avg Time to Lapse", "not available", "#8A9188")],
+        note: "Time to lapse needs a lapse date on the record — not stored yet." },
+    ];
+  }
+
+  teamBlocks() {
+    const t = TEAMS.find((x) => x.id === this.state.team) || TEAMS[0];
+    const hist = this.state.history;
+    const blocks = [
+      { title: "Team", isStats: true,
+        stats: [stat("Operations Manager", t.manager), stat("Vehicles", t.vehicles), stat("Drivers", t.drivers), stat("Shops", t.shops), stat("Country", "EG")],
+        note: hist ? "Manager history: " + t.manager + " since 04 Feb 2026 · M. Sobhi 12 Jun 2025 – 03 Feb 2026" : null },
+      { title: "Current Vehicles (" + t.vehicles + ")", isRows: true,
+        rows: [
+          row("CAI-4471", hist ? "MAIN Tarek Hosny (since 02 Jul) · SUB Ayman Fouad · was: S. Ragheb until 01 Jul" : "MAIN Tarek Hosny · SUB Ayman Fouad"),
+          row("CAI-4482", hist ? "MAIN Mahmoud Eid (since 19 Aug) · was: K. Nabil until 18 Aug" : "MAIN Mahmoud Eid"),
+          row("CAI-4490", "MAIN Emad Shaker · SUB —"),
+          row("CAI-4503", "MAIN Ayman Fouad · SUB —"),
+        ] },
+      { title: "Current Shops (" + t.shops + ")", isRows: true,
+        rows: [
+          row("El Prince Imbaba", "ZC-0104 · Active Supplier"),
+          row("Abou Tarek Branch 3", "ZC-0409 · Active Supplier"),
+          row("Kazaz Fried Chicken", "ZC-0221 · Active Supplier"),
+          row("Bab El Hara Grill", "ZC-0298 · Active Supplier"),
+        ],
+        note: hist ? "Left this team: Gad Mohandessin (moved to Team 2, 22 Aug) · Hadramout Nasr City (lapsed, 04 Jul)" : null },
+    ];
+    return blocks;
+  }
+
+  renderVals() {
+    const dept = this.dept, def = this.def, sec = this.sec, inTeam = !!this.state.team;
+    const team = TEAMS.find((x) => x.id === this.state.team);
+    const ar = this.lang === "ar";
+    return this.arabize({
+      dir: ar ? "rtl" : "ltr",
+      openWord: ar ? "مفتوح" : "Open",
+      openTeamWord: ar ? "افتح الفريق ←" : "Open team →",
+      opsManagerWord: ar ? "مدير العمليات:" : "Operations Manager:",
+      backWord: ar ? "→ العودة إلى العمليات" : "← Back to Operations",
+      createWord: ar ? "إنشاء قبل المسح" : "Create pre-survey",
+      clearWord: ar ? "تفريغ" : "Clear",
+      face: ar ? "'Noto Kufi Arabic','IBM Plex Sans',sans-serif" : "'IBM Plex Sans',sans-serif",
+      langs: [["en", "EN"], ["ar", "ع"]].map(([k, label]) => ({
+        label, pick: () => this.setLang(k),
+        bg: this.lang === k ? GREEN : "#fff", color: this.lang === k ? "#fff" : "#55655D",
+      })),
+      topTabs: DEPTS.filter((d) => d.key === "finance").map((d) => ({
+        label: d.label, go: () => this.pickDept(d.key),
+        edge: d.key === dept ? GREEN : "transparent",
+        color: d.key === dept ? INK : "#55655D",
+      })),
+      // A pill row, like every other screen's sub-navigation — not a sidebar.
+      side: def.items.map((i) => {
+        const on = !i.link && i.key === sec && !inTeam;
+        return {
+          label: i.label + (i.link ? " ↗" : ""),
+          go: i.link
+            ? () => { window.location.href = i.link; }
+            : () => this.pickSec(i.key),
+          bg: on ? GREEN : "#fff",
+          color: on ? "#fff" : "#55655D",
+          border: on ? GREEN : "#8A9188",
+        };
+      }),
+      todayLine: this.todayLine,
+      dashWord: ar ? "→ العودة إلى اللوحة" : "← Back to the dashboard",
+      whoName: ar ? "سامي وهبة · المدير المالي" : "Sami Wahba · financial manager",
+      whoLine: ar
+        ? "كل ما ينتظر قرارك في مكان واحد. وما يتجاوز حدّك يكمل إلى الإدارة العليا."
+        : "Everything waiting on your decision, in one place. What exceeds your own limit carries on to senior management.",
+      // The same five-figure strip every other screen opens with, and each one
+      // jumps to the section that explains it.
+      figures: [
+        { label: ar ? "سقوف بانتظارك" : "Ceilings Waiting", value: "2", unit: "", color: "#B3261E",
+          note: ar ? "أقدمها 3 أيام · التفاوض متوقف" : "oldest 3 days · the negotiation is stopped",
+          bg: sec === "priceCeilings" ? "#F1F6F3" : "#fff", go: () => this.pickSec("priceCeilings") },
+        { label: ar ? "أصول مطلوبة" : "Assets Requested", value: "3", unit: "", color: "#8A5B0B",
+          note: ar ? "خزانان وسيارة" : "2 vessels and a vehicle",
+          bg: sec === "assetRequests" ? "#F1F6F3" : "#fff", go: () => this.pickSec("assetRequests") },
+        { label: ar ? "سلف قائمة" : "Loans Outstanding", value: "1,650", unit: "EGP", color: "#8A5B0B",
+          note: ar ? "3 أشخاص · 800 على من ترك العمل" : "3 people · 800 owed by a leaver",
+          bg: sec === "wageLoans" ? "#F1F6F3" : "#fff", go: () => this.pickSec("wageLoans") },
+        { label: ar ? "محتجز للمختبر" : "Held Pending Lab", value: "$36", unit: "k", color: "#8A5B0B",
+          note: ar ? "3 شحنات · 15 ألف جاهزة للمطالبة" : "3 shipments · $15k ready to claim",
+          bg: sec === "finalPayments" ? "#F1F6F3" : "#fff", go: () => this.pickSec("finalPayments") },
+        { label: ar ? "طلبات مناطق" : "Zone Requests", value: "2", unit: "", color: "#8A5B0B",
+          note: ar ? "مساحان يطلبان نقلاً" : "2 surveyors asking to move",
+          bg: sec === "zoneAssignments" ? "#F1F6F3" : "#fff", go: () => this.pickSec("zoneAssignments") },
+      ],
+      view: {
+        // Assembled from translated parts — a finished sentence can never match
+        // the dictionary, however many of its words are in it.
+        crumb: ["S. Wahba",
+          ar ? AR["financial manager"] : "financial manager",
+          ar ? (AR[def.label] || def.label) : def.label,
+          (() => {
+            const l = this.state.team ? "Teams" : (def.items.filter((i) => i.key === sec)[0] || {}).label || "";
+            return ar ? (AR[l] || AR[l + " ↗"] || l) : l;
+          })(),
+        ].filter(Boolean).join(" · "),
+        title: def.title,
+        heading: inTeam ? (team ? team.name + " — " + team.manager : "") : def.title,
+        description: inTeam ? "Read-only. Every vehicle, driver and shop this team holds now, and how each of those relationships changed." : def.description,
+      },
+      blocks: this.blocks(),
+      periods: ["today", "week", "month", "year", "overall"].map((p) => ({
+        label: p.charAt(0).toUpperCase() + p.slice(1),
+        pick: () => this.setState({ period: p }),
+        bg: this.state.period === p ? GREEN : "transparent",
+        color: this.state.period === p ? "#fff" : "#55655D",
+      })),
+      showBack: inTeam,
+      back: () => this.setState({ team: null }),
+      showHistoryToggle: inTeam,
+      historyLabel: this.state.history
+        ? (ar ? "إخفاء السجل" : "Hide history")
+        : (ar ? "إظهار السجل" : "Show history"),
+      toggleHistory: () => this.setState((s) => ({ history: !s.history })),
+    });
+  }
+}
+
+</script>
+</body>
+</html>
